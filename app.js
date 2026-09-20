@@ -1,16 +1,192 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore,collection,addDoc,getDocs,query,where,serverTimestamp,deleteDoc,doc,updateDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const firebaseConfig={apiKey:"AIzaSyAZ5vAkAEfIBpfLyhxgO7uvNdJ67KYKWD0",authDomain:"novashop-4ee63.firebaseapp.com",projectId:"novashop-4ee63",storageBucket:"novashop-4ee63.firebasestorage.app",messagingSenderId:"1044964015809",appId:"1:1044964015809:web:4eafe0b1aede48f8539e40",measurementId:"G-XNY5X2VMY9"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
-const ADMIN_EMAIL="pc2alex.les@gmail.com",ADMIN_CODE="NOVA-ADMIN-2026",ADMIN_KEY="novaAdminAuthorized";
-const $=id=>document.getElementById(id);
-const searchInput=$("searchInput"),categoriesEl=$("categories"),productsGrid=$("productGrid"),productCount=$("productCount")||{textContent:""};
-const cartBtn=$("cartBtn"),cartBadge=$("cartBadge"),cartOverlay=$("overlay"),cartDrawer=$("cartDrawer"),cartClose=$("closeCart"),cartItems=$("cartItems"),cartTotal=$("cartTotal"),checkoutBtn=$("checkoutBtn");
-const settingsBtn=$("settingsBtn"),accountBtn=$("accountBtn"),ordersBtn=$("ordersBtn"),adminBtn=$("adminBtn"),modal=$("modalLayer"),modalContent=$("modalContent"),modalClose=$("modalClose");
-const toastContainer=document.createElement("div");toastContainer.id="novaToastContainer";toastContainer.style.cssText="position:fixed;z-index:99999;left:50%;bottom:24px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;pointer-events:none;";document.body.appendChild(toastContainer);
-const FALLBACK_IMAGE="https://placehold.co/800x800/111827/ffffff?text=NovaShop";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  serverTimestamp,
+  deleteDoc,
+  doc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAZ5vAkAEfIBpfLyhxgO7uvNdJ67KYKWD0",
+  authDomain: "novashop-4ee63.firebaseapp.com",
+  projectId: "novashop-4ee63",
+  storageBucket: "novashop-4ee63.firebasestorage.app",
+  messagingSenderId: "1044964015809",
+  appId: "1:1044964015809:web:4eafe0b1aede48f8539e40",
+  measurementId: "G-XNY5X2VMY9"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+const ADMIN_EMAIL = "pc2alex.les@gmail.com";
+const ADMIN_CODE = "NOVA-ADMIN-2026";
+const ADMIN_KEY = "novaAdminAuthorized";
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const searchInput = $("searchInput");
+const categoriesEl = $("categories");
+const productsGrid = $("productGrid");
+const productCount = $("productCount") || { textContent: "" };
+
+const cartBtn = $("cartBtn");
+const cartBadge = $("cartBadge");
+const cartOverlay = $("overlay");
+const cartDrawer = $("cartDrawer");
+const cartClose = $("closeCart");
+const cartItems = $("cartItems");
+const cartTotal = $("cartTotal");
+const checkoutBtn = $("checkoutBtn");
+
+const settingsBtn = $("settingsBtn");
+const accountBtn = $("accountBtn");
+const ordersBtn = $("ordersBtn");
+const adminBtn = $("adminBtn");
+
+const modal = $("modalLayer");
+const modalContent = $("modalContent");
+const modalClose = $("modalClose");
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+const toastContainer = document.createElement("div");
+
+toastContainer.id = "novaToastContainer";
+
+toastContainer.style.cssText =
+  "position:fixed;" +
+  "z-index:99999;" +
+  "left:50%;" +
+  "bottom:24px;" +
+  "transform:translateX(-50%);" +
+  "display:flex;" +
+  "flex-direction:column;" +
+  "gap:8px;" +
+  "pointer-events:none;" +
+  "width:max-content;" +
+  "max-width:90vw;";
+
+document.body.appendChild(toastContainer);
+
+
+function toast(message) {
+
+  const element = document.createElement("div");
+
+  element.textContent = message;
+
+  element.style.cssText =
+    "background:#111827;" +
+    "color:white;" +
+    "padding:12px 16px;" +
+    "border-radius:12px;" +
+    "font-weight:700;" +
+    "font-size:14px;" +
+    "box-shadow:0 12px 30px rgba(0,0,0,.35);" +
+    "border:1px solid rgba(255,255,255,.08);" +
+    "text-align:center;";
+
+  toastContainer.appendChild(element);
+
+  setTimeout(() => {
+
+    element.style.opacity = "0";
+    element.style.transform = "translateY(5px)";
+    element.style.transition = "opacity .2s,transform .2s";
+
+    setTimeout(() => element.remove(), 220);
+
+  }, 2400);
+
+}
+
+
+/* =========================================================
+   IMAGE SYSTEM
+========================================================= */
+
+const FALLBACK_IMAGE =
+  "https://placehold.co/800x800/111827/ffffff?text=NovaShop";
+
+
+function imageUrl(url) {
+
+  if (!url) {
+    return FALLBACK_IMAGE;
+  }
+
+  return url;
+}
+
+
+function imageSrc(url) {
+
+  return escapeHTML(
+    imageUrl(url)
+  );
+}
+
+
+function imageError(img, original) {
+
+  if (!img) return;
+
+  const stage =
+    img.dataset.imageStage ||
+    "original";
+
+  if (stage === "original") {
+
+    img.dataset.imageStage = "fallback";
+    img.src = FALLBACK_IMAGE;
+
+  }
+
+}
+
+
+window.imageError = imageError;
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
 const products = [
 
   {
@@ -359,117 +535,165 @@ const products = [
   }
 
 ];
-let currentUser=null;
-let selectedCategory="Toutes";
-let searchValue="";
-let cart=[];
-let promoApplied=false;
 
-try{
-  cart=JSON.parse(localStorage.getItem("novaCart")||"[]");
-  if(!Array.isArray(cart)) cart=[];
-}catch{
-  cart=[];
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let selectedCategory = "Toutes";
+let searchValue = "";
+let cart = [];
+let promoApplied = false;
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+try {
+
+  cart =
+    JSON.parse(
+      localStorage.getItem("novaCart") || "[]"
+    );
+
+  if (!Array.isArray(cart)) {
+    cart = [];
+  }
+
+} catch {
+
+  cart = [];
+
 }
 
-const saveCart=()=>{
-  localStorage.setItem("novaCart",JSON.stringify(cart));
-};
 
-const escapeHTML=v=>
-  String(v??"")
+function saveCart() {
+
+  localStorage.setItem(
+    "novaCart",
+    JSON.stringify(cart)
+  );
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
 
-const imageUrl=u=>
-  !u
-    ? FALLBACK_IMAGE
-    : /^(\.\.?\/|data:|blob:)/.test(u)
-      ? u
-      : "https://wsrv.nl/?url="+encodeURIComponent(u);
+}
 
-const imageSrc=u=>
-  escapeHTML(imageUrl(u));
 
-window.imageError=(img,original)=>{
-  if(!img)return;
+function money(value) {
 
-  const stage=
-    img.dataset.stage||
-    "proxy";
+  const number =
+    Number(value || 0);
 
-  if(stage==="proxy"){
-    img.dataset.stage="original";
-    img.src=original||FALLBACK_IMAGE;
-  }else{
-    img.dataset.stage="fallback";
-    img.src=FALLBACK_IMAGE;
+  if (number === 0) {
+    return "Gratuit";
   }
-};
 
-const money=v=>
-  Number(v||0)===0
-    ? "Prix à venir"
-    : new Intl.NumberFormat(
-        "fr-FR",
-        {
-          style:"currency",
-          currency:"EUR"
-        }
-      ).format(Number(v||0));
+  return new Intl.NumberFormat(
+    "fr-FR",
+    {
+      style:"currency",
+      currency:"EUR"
+    }
+  ).format(number);
 
-const reviewData=p=>{
-  const n=Number(p.id.slice(1));
+}
+
+
+function reviewData(product) {
+
+  const number =
+    Number(
+      product.id
+        .replace("p","")
+    );
 
   return {
     count:
-      132+((n*173)%1604),
+      132 +
+      ((number * 173) % 1604),
 
     rating:
       Number(
         (
-          4.4+
-          ((n%6)*0.1)
+          4.4 +
+          ((number % 6) * 0.1)
         ).toFixed(1)
       )
   };
-};
 
-const starsHTML=r=>{
-  const rounded=Math.round(r);
+}
 
-  return "★★★★★".slice(0,rounded)+
-    "☆☆☆☆☆".slice(0,5-rounded);
-};
 
-function applyTheme(){
+function starsHTML(rating) {
 
-  const choice=
+  const rounded =
+    Math.round(rating);
+
+  return (
+    "★".repeat(rounded) +
+    "☆".repeat(5-rounded)
+  );
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function applyTheme() {
+
+  const choice =
     localStorage.getItem(
       "novaThemeChoice"
-    )||"dark";
+    ) || "dark";
 
   document.body.classList.toggle(
     "light",
-    choice==="light"||
+    choice === "light" ||
     (
-      choice==="auto"&&
+      choice === "auto" &&
+      window.matchMedia &&
       window.matchMedia(
-        "(prefers-color-scheme:light)"
+        "(prefers-color-scheme: light)"
       ).matches
     )
   );
+
 }
 
-function openModal(html){
+applyTheme();
 
-  if(!modal||!modalContent)return;
 
-  modalContent.innerHTML=
-    html||"";
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(html) {
+
+  if (!modal || !modalContent) {
+    return;
+  }
+
+  modalContent.innerHTML =
+    html || "";
 
   modal.classList.add("open");
 
@@ -477,13 +701,17 @@ function openModal(html){
     "modal-open"
   );
 
-  document.body.style.overflow=
+  document.body.style.overflow =
     "hidden";
+
 }
 
-function closeModal(){
 
-  if(!modal)return;
+function closeModal() {
+
+  if (!modal) {
+    return;
+  }
 
   modal.classList.remove("open");
 
@@ -491,73 +719,68 @@ function closeModal(){
     "modal-open"
   );
 
-  document.body.style.overflow="";
+  document.body.style.overflow =
+    "";
+
 }
 
-if(modalClose){
-  modalClose.onclick=
+
+if (modalClose) {
+  modalClose.onclick =
     closeModal;
 }
 
-if(modal){
+if (modal) {
+
   modal.addEventListener(
     "click",
-    event=>{
-      if(event.target===modal){
+    event => {
+
+      if (event.target === modal) {
         closeModal();
       }
+
     }
   );
+
 }
 
-function filteredProducts(){
 
-  const s=
-    searchValue
-      .trim()
-      .toLowerCase();
+/* =========================================================
+   CATEGORIES
+========================================================= */
 
-  return products.filter(
-    p=>
-      (
-        selectedCategory==="Toutes"||
-        p.category===selectedCategory
-      )&&
-      (
-        !s||
-        p.name
-          .toLowerCase()
-          .includes(s)||
-        p.category
-          .toLowerCase()
-          .includes(s)
-      )
-  );
-}
+function getCategories() {
 
-function renderCategories(){
-
-  if(!categoriesEl)return;
-
-  const categories=[
+  return [
     "Toutes",
     ...new Set(
       products.map(
-        p=>p.category
+        product =>
+          product.category
       )
     )
   ];
 
-  categoriesEl.innerHTML=
-    categories
+}
+
+
+function renderCategories() {
+
+  if (!categoriesEl) {
+    return;
+  }
+
+  categoriesEl.innerHTML =
+    getCategories()
       .map(
-        category=>
+        category =>
           `
           <button
             class="category-btn ${
-              category===selectedCategory
-                ?"active"
-                :""
+              category === selectedCategory
+                ? "active"
+                : ""
             }"
             data-category="${escapeHTML(category)}"
           >
@@ -571,20 +794,71 @@ function renderCategories(){
     .querySelectorAll(
       "[data-category]"
     )
-    .forEach(button=>{
-      button.onclick=()=>{
-        selectedCategory=
-          button.dataset.category;
+    .forEach(
+      button => {
 
-        renderCategories();
-        renderProducts();
-      };
-    });
+        button.onclick = () => {
+
+          selectedCategory =
+            button.dataset.category;
+
+          renderCategories();
+          renderProducts();
+
+        };
+
+      }
+    );
+
 }
 
-function productCardHTML(product){
 
-  const reviews=
+/* =========================================================
+   FILTER
+========================================================= */
+
+function filteredProducts() {
+
+  const search =
+    searchValue
+      .trim()
+      .toLowerCase();
+
+  return products.filter(
+    product => {
+
+      const categoryOK =
+        selectedCategory === "Toutes" ||
+        product.category ===
+          selectedCategory;
+
+      const searchOK =
+        !search ||
+        product.name
+          .toLowerCase()
+          .includes(search) ||
+        product.category
+          .toLowerCase()
+          .includes(search);
+
+      return (
+        categoryOK &&
+        searchOK
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+function productCardHTML(product) {
+
+  const reviews =
     reviewData(product);
 
   return `
@@ -598,8 +872,12 @@ function productCardHTML(product){
 
         ${
           product.new
-            ? `<span class="new-badge">Nouveau</span>`
-            :""
+            ? `
+              <span class="new-badge">
+                Nouveau
+              </span>
+            `
+            : ""
         }
 
         <img
@@ -672,88 +950,148 @@ function productCardHTML(product){
 
     </article>
   `;
+
 }
 
-function renderProducts(){
 
-  if(!productsGrid)return;
+/* =========================================================
+   PRODUCTS RENDER
+========================================================= */
 
-  const list=
-    filteredProducts();
+function renderProducts() {
 
-  if(productCount){
-    productCount.textContent=
-      `${list.length} produit${
-        list.length>1
-          ?"s"
-          :""
-      }`;
+  if (!productsGrid) {
+    return;
   }
 
-  productsGrid.innerHTML=
-    list.length
-      ? list
-          .map(productCardHTML)
-          .join("")
-      :
-        `
-        <div class="empty">
+  const list =
+    filteredProducts();
 
-          <div class="empty-icon">
-            ⌕
-          </div>
+  if (productCount) {
 
-          <h3>
-            Aucun produit trouvé
-          </h3>
+    productCount.textContent =
+      `${list.length} produit${
+        list.length > 1
+          ? "s"
+          : ""
+      }`;
 
-          <p>
-            Essaie une autre recherche ou une autre catégorie.
-          </p>
+  }
 
+  if (!list.length) {
+
+    productsGrid.innerHTML =
+      `
+      <div class="empty">
+
+        <div class="empty-icon">
+          ⌕
         </div>
-        `;
+
+        <h3>
+          Aucun produit trouvé
+        </h3>
+
+        <p>
+          Essaie une autre recherche ou une autre catégorie.
+        </p>
+
+      </div>
+      `;
+
+    return;
+
+  }
+
+  productsGrid.innerHTML =
+    list
+      .map(productCardHTML)
+      .join("");
 
   productsGrid
     .querySelectorAll(
       "[data-view]"
     )
-    .forEach(button=>{
-      button.onclick=()=>{
-        openProduct(
-          button.dataset.view
-        );
-      };
-    });
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            openProduct(
+              button.dataset.view
+            );
+
+          };
+
+      }
+    );
 
   productsGrid
     .querySelectorAll(
       "[data-add]"
     )
-    .forEach(button=>{
-      button.onclick=()=>{
-        addToCart(
-          button.dataset.add
-        );
-      };
-    });
-}
+    .forEach(
+      button => {
 
-function openProduct(id){
+        button.onclick =
+          () => {
 
-  const p=
-    products.find(
-      x=>x.id===id
+            addToCart(
+              button.dataset.add
+            );
+
+          };
+
+      }
     );
 
-  if(!p)return;
+}
 
-  const r=
-    reviewData(p);
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+if (searchInput) {
+
+  searchInput.addEventListener(
+    "input",
+    event => {
+
+      searchValue =
+        event.target.value || "";
+
+      renderProducts();
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function openProduct(productId) {
+
+  const product =
+    products.find(
+      p =>
+        p.id === productId
+    );
+
+  if (!product) {
+    return;
+  }
+
+  const reviews =
+    reviewData(product);
 
   openModal(
     `
-    <div class="panel product-product-panel">
+    <div class="panel">
 
       <button
         class="modal-close-inside"
@@ -767,10 +1105,10 @@ function openProduct(id){
         <div class="modal-image">
 
           <img
-            src="${imageSrc(p.image)}"
-            data-original="${escapeHTML(p.image)}"
+            src="${imageSrc(product.image)}"
+            data-original="${escapeHTML(product.image)}"
             onerror="imageError(this,this.dataset.original)"
-            alt=""
+            alt="${escapeHTML(product.name)}"
           >
 
         </div>
@@ -778,34 +1116,34 @@ function openProduct(id){
         <div class="modal-info">
 
           <div class="product-category">
-            ${escapeHTML(p.category)}
+            ${escapeHTML(product.category)}
           </div>
 
           <h2>
-            ${escapeHTML(p.name)}
+            ${escapeHTML(product.name)}
           </h2>
 
           <div class="rating">
 
             <span class="stars">
-              ${starsHTML(r.rating)}
+              ${starsHTML(reviews.rating)}
             </span>
 
-            ${r.rating
+            ${reviews.rating
               .toFixed(1)
               .replace(".",",")}
 
-            · ${r.count.toLocaleString("fr-FR")} avis
+            · ${reviews.count.toLocaleString("fr-FR")} avis
 
           </div>
 
           <div class="modal-price">
-            ${money(p.price)}
+            ${money(product.price)}
           </div>
 
           <button
             class="btn btn-primary btn-wide"
-            id="modalAdd"
+            id="modalAddProduct"
           >
             🛒 Ajouter au panier
           </button>
@@ -818,71 +1156,98 @@ function openProduct(id){
     `
   );
 
-  if($("closeProduct")){
-    $("closeProduct").onclick=
+  if ($("closeProduct")) {
+
+    $("closeProduct").onclick =
       closeModal;
+
   }
 
-  if($("modalAdd")){
-    $("modalAdd").onclick=()=>{
-      addToCart(p.id);
-      closeModal();
-    };
-  }
-}
+  if ($("modalAddProduct")) {
 
-function cartDetailed(){
+    $("modalAddProduct").onclick =
+      () => {
 
-  return cart
-    .map(item=>{
+        addToCart(product.id);
+        closeModal();
 
-      const p=
-        products.find(
-          x=>x.id===item.id
-        );
-
-      if(!p)return null;
-
-      return {
-        ...p,
-        qty:
-          Math.max(
-            1,
-            Number(item.qty)||1
-          )
       };
 
-    })
-    .filter(Boolean);
+  }
+
 }
 
-function cartSubtotal(){
+
+/* =========================================================
+   CART
+========================================================= */
+
+function cartDetailed() {
+
+  return cart
+    .map(
+      item => {
+
+        const product =
+          products.find(
+            p =>
+              p.id === item.id
+          );
+
+        if (!product) {
+          return null;
+        }
+
+        return {
+          ...product,
+          qty:
+            Math.max(
+              1,
+              Number(item.qty) || 1
+            )
+        };
+
+      }
+    )
+    .filter(Boolean);
+
+}
+
+
+function cartSubtotal() {
 
   return cartDetailed()
     .reduce(
-      (sum,item)=>
-        sum+
-        item.price*
+      (sum,item) =>
+        sum +
+        item.price *
         item.qty,
       0
     );
+
 }
 
-function addToCart(id){
 
-  const item=
+function addToCart(productId) {
+
+  const existing =
     cart.find(
-      x=>x.id===id
+      item =>
+        item.id === productId
     );
 
-  if(item){
-    item.qty=
-      Number(item.qty||0)+1;
-  }else{
+  if (existing) {
+
+    existing.qty =
+      Number(existing.qty || 0) + 1;
+
+  } else {
+
     cart.push({
-      id,
+      id:productId,
       qty:1
     });
+
   }
 
   saveCart();
@@ -891,84 +1256,105 @@ function addToCart(id){
   toast(
     "Produit ajouté au panier 🛒"
   );
+
 }
 
-function removeFromCart(id){
 
-  cart=
+function removeFromCart(productId) {
+
+  cart =
     cart.filter(
-      item=>item.id!==id
+      item =>
+        item.id !== productId
     );
 
   saveCart();
   renderCart();
+
 }
 
-function changeQty(id,delta){
 
-  const item=
+function changeCartQty(
+  productId,
+  amount
+) {
+
+  const item =
     cart.find(
-      x=>x.id===id
+      x =>
+        x.id === productId
     );
 
-  if(!item)return;
-
-  item.qty=
-    Number(item.qty||1)+
-    Number(delta||0);
-
-  if(item.qty<=0){
-    removeFromCart(id);
+  if (!item) {
     return;
   }
 
+  item.qty =
+    Number(item.qty || 1) +
+    Number(amount || 0);
+
+  if (item.qty <= 0) {
+
+    removeFromCart(
+      productId
+    );
+
+    return;
+
+  }
+
   saveCart();
   renderCart();
+
 }
 
-function renderCart(){
 
-  const items=
+/* =========================================================
+   CART RENDER
+========================================================= */
+
+function renderCart() {
+
+  const items =
     cartDetailed();
 
-  const count=
+  const count =
     items.reduce(
-      (sum,item)=>
-        sum+item.qty,
+      (sum,item) =>
+        sum + item.qty,
       0
     );
 
-  if(cartBadge){
+  if (cartBadge) {
 
-    cartBadge.textContent=
-      count>99
-        ?"99+"
-        :count;
+    cartBadge.textContent =
+      count > 99
+        ? "99+"
+        : count;
 
-    cartBadge.style.display=
+    cartBadge.style.display =
       count
-        ?""
-        :"none";
+        ? ""
+        : "none";
+
   }
 
-  if(cartTotal){
-    cartTotal.textContent=
+  if (cartTotal) {
+
+    cartTotal.textContent =
       money(
-        items.reduce(
-          (sum,item)=>
-            sum+
-            item.price*
-            item.qty,
-          0
-        )
+        cartSubtotal()
       );
+
   }
 
-  if(!cartItems)return;
+  if (!cartItems) {
+    return;
+  }
 
-  if(!items.length){
+  if (!items.length) {
 
-    cartItems.innerHTML=
+    cartItems.innerHTML =
       `
       <div class="empty">
 
@@ -988,104 +1374,134 @@ function renderCart(){
       `;
 
     return;
+
   }
 
-  cartItems.innerHTML=
-    items.map(
-      item=>
-        `
-        <div class="cart-item">
+  cartItems.innerHTML =
+    items
+      .map(
+        item =>
+          `
+          <div class="cart-item">
 
-          <img
-            src="${imageSrc(item.image)}"
-            data-original="${escapeHTML(item.image)}"
-            alt=""
-            onerror="imageError(this,this.dataset.original)"
-          >
+            <img
+              src="${imageSrc(item.image)}"
+              data-original="${escapeHTML(item.image)}"
+              alt=""
+              onerror="imageError(this,this.dataset.original)"
+            >
 
-          <div class="cart-item-info">
+            <div class="cart-item-info">
 
-            <div class="cart-item-name">
-              ${escapeHTML(item.name)}
+              <div class="cart-item-name">
+                ${escapeHTML(item.name)}
+              </div>
+
+              <div class="cart-item-price">
+                ${money(item.price)}
+              </div>
+
+              <div class="qty">
+
+                <button
+                  data-minus="${item.id}"
+                >
+                  −
+                </button>
+
+                <span>
+                  ${item.qty}
+                </span>
+
+                <button
+                  data-plus="${item.id}"
+                >
+                  +
+                </button>
+
+              </div>
+
             </div>
 
-            <div class="cart-item-price">
-              ${money(item.price)}
-            </div>
-
-            <div class="qty">
-
-              <button
-                data-minus="${item.id}"
-              >
-                −
-              </button>
-
-              <span>
-                ${item.qty}
-              </span>
-
-              <button
-                data-plus="${item.id}"
-              >
-                +
-              </button>
-
-            </div>
+            <button
+              class="remove"
+              data-remove="${item.id}"
+            >
+              🗑️
+            </button>
 
           </div>
-
-          <button
-            class="remove"
-            data-remove="${item.id}"
-          >
-            🗑️
-          </button>
-
-        </div>
-        `
-    ).join("");
+          `
+      )
+      .join("");
 
   cartItems
     .querySelectorAll(
       "[data-minus]"
     )
-    .forEach(b=>{
-      b.onclick=()=>{
-        changeQty(
-          b.dataset.minus,
-          -1
-        );
-      };
-    });
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            changeCartQty(
+              button.dataset.minus,
+              -1
+            );
+
+          };
+
+      }
+    );
 
   cartItems
     .querySelectorAll(
       "[data-plus]"
     )
-    .forEach(b=>{
-      b.onclick=()=>{
-        changeQty(
-          b.dataset.plus,
-          1
-        );
-      };
-    });
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            changeCartQty(
+              button.dataset.plus,
+              1
+            );
+
+          };
+
+      }
+    );
 
   cartItems
     .querySelectorAll(
       "[data-remove]"
     )
-    .forEach(b=>{
-      b.onclick=()=>{
-        removeFromCart(
-          b.dataset.remove
-        );
-      };
-    });
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            removeFromCart(
+              button.dataset.remove
+            );
+
+          };
+
+      }
+    );
+
 }
 
-function openCart(){
+
+/* =========================================================
+   CART OPEN / CLOSE
+========================================================= */
+
+function openCart() {
 
   cartOverlay?.classList.add(
     "open"
@@ -1094,9 +1510,11 @@ function openCart(){
   cartDrawer?.classList.add(
     "open"
   );
+
 }
 
-function closeCart(){
+
+function closeCart() {
 
   cartOverlay?.classList.remove(
     "open"
@@ -1105,7 +1523,9 @@ function closeCart(){
   cartDrawer?.classList.remove(
     "open"
   );
+
 }
+
 
 cartBtn?.addEventListener(
   "click",
@@ -1122,41 +1542,21 @@ cartOverlay?.addEventListener(
   closeCart
 );
 
-searchInput?.addEventListener(
-  "input",
-  event=>{
-    searchValue=
-      event.target.value||"";
 
-    renderProducts();
-  }
-);
+/* =========================================================
+   END PART 1
+========================================================= *//* =========================================================
+   ACCOUNT
+========================================================= */
 
-function toast(message){
+function authErrorMessage(
+  error
+) {
 
-  const t=
-    document.createElement("div");
+  const code =
+    error?.code || "";
 
-  t.textContent=
-    message;
-
-  t.style.cssText=
-    "background:#111827;"+
-    "color:#fff;"+
-    "padding:12px 16px;"+
-    "border-radius:12px;"+
-    "font-weight:700;"+
-    "box-shadow:0 10px 25px #0006;";
-
-  toastContainer.appendChild(t);
-
-  setTimeout(
-    ()=>t.remove(),
-    2400
-  );
-}function authError(code){
-
-  const errors={
+  const map = {
 
     "auth/invalid-email":
       "Adresse e-mail invalide.",
@@ -1174,22 +1574,27 @@ function toast(message){
       "Cette adresse est déjà utilisée.",
 
     "auth/weak-password":
-      "Mot de passe trop faible.",
+      "Le mot de passe est trop faible.",
 
     "auth/network-request-failed":
-      "Erreur réseau."
+      "Erreur réseau. Réessaie.",
+
+    "auth/too-many-requests":
+      "Trop de tentatives. Réessaie plus tard."
 
   };
 
-  return(
-    errors[code]||
+  return (
+    map[code] ||
     "Une erreur est survenue."
   );
+
 }
 
-function openAccount(){
 
-  if(currentUser){
+function openAccount() {
+
+  if (currentUser) {
 
     openModal(
       `
@@ -1201,13 +1606,13 @@ function openAccount(){
 
         <p>
           ${escapeHTML(
-            currentUser.email||""
+            currentUser.email || ""
           )}
         </p>
 
         <button
           class="btn btn-secondary btn-wide"
-          id="logout"
+          id="logoutButton"
         >
           🚪 Se déconnecter
         </button>
@@ -1216,27 +1621,38 @@ function openAccount(){
       `
     );
 
-    $("logout").onclick=
-      async()=>{
-        try{
+    $("logoutButton").onclick =
+      async () => {
+
+        try {
+
           await signOut(auth);
+
           closeModal();
+
           toast(
-            "Déconnexion réussie"
+            "Déconnexion réussie."
           );
-        }catch(error){
+
+        } catch (error) {
+
           toast(
-            authError(error.code)
+            authErrorMessage(error)
           );
+
         }
+
       };
 
     return;
+
   }
 
-  let mode="login";
 
-  const draw=()=>{
+  let mode = "login";
+
+
+  function drawAuth() {
 
     openModal(
       `
@@ -1244,9 +1660,9 @@ function openAccount(){
 
         <h2>
           ${
-            mode==="login"
-              ?"Connexion"
-              :"Créer un compte"
+            mode === "login"
+              ? "Connexion"
+              : "Créer un compte"
           }
         </h2>
 
@@ -1256,9 +1672,9 @@ function openAccount(){
             type="button"
             id="loginTab"
             class="auth-tab ${
-              mode==="login"
-                ?"active"
-                :""
+              mode === "login"
+                ? "active"
+                : ""
             }"
           >
             Connexion
@@ -1268,9 +1684,9 @@ function openAccount(){
             type="button"
             id="registerTab"
             class="auth-tab ${
-              mode==="register"
-                ?"active"
-                :""
+              mode === "register"
+                ? "active"
+                : ""
             }"
           >
             Créer un compte
@@ -1287,6 +1703,7 @@ function openAccount(){
           <input
             id="authEmail"
             type="email"
+            autocomplete="email"
             required
           >
 
@@ -1297,12 +1714,17 @@ function openAccount(){
           <input
             id="authPassword"
             type="password"
+            autocomplete="${
+              mode === "login"
+                ? "current-password"
+                : "new-password"
+            }"
             minlength="6"
             required
           >
 
           ${
-            mode==="register"
+            mode === "register"
               ? `
                 <label>
                   Confirmer le mot de passe
@@ -1311,15 +1733,16 @@ function openAccount(){
                 <input
                   id="authPassword2"
                   type="password"
+                  autocomplete="new-password"
                   minlength="6"
                   required
                 >
               `
-              :""
+              : ""
           }
 
           <div
-            id="authErr"
+            id="authError"
             class="form-error"
           ></div>
 
@@ -1328,9 +1751,9 @@ function openAccount(){
             type="submit"
           >
             ${
-              mode==="login"
-                ?"Se connecter"
-                :"Créer mon compte"
+              mode === "login"
+                ? "Se connecter"
+                : "Créer mon compte"
             }
           </button>
 
@@ -1340,47 +1763,59 @@ function openAccount(){
       `
     );
 
-    $("loginTab").onclick=()=>{
-      mode="login";
-      draw();
-    };
 
-    $("registerTab").onclick=()=>{
-      mode="register";
-      draw();
-    };
+    $("loginTab").onclick =
+      () => {
 
-    $("authForm").onsubmit=
-      async event=>{
+        mode = "login";
+        drawAuth();
+
+      };
+
+
+    $("registerTab").onclick =
+      () => {
+
+        mode = "register";
+        drawAuth();
+
+      };
+
+
+    $("authForm").onsubmit =
+      async event => {
 
         event.preventDefault();
 
-        const email=
+        const email =
           $("authEmail")
             .value
             .trim();
 
-        const password=
+        const password =
           $("authPassword")
             .value;
 
-        const errorEl=
-          $("authErr");
+        const error =
+          $("authError");
 
-        if(
-          mode==="register"&&
-          password!==$("authPassword2").value
-        ){
+        if (
+          mode === "register" &&
+          password !==
+            $("authPassword2").value
+        ) {
 
-          errorEl.textContent=
+          error.textContent =
             "Les mots de passe ne correspondent pas.";
 
           return;
+
         }
 
-        try{
 
-          if(mode==="login"){
+        try {
+
+          if (mode === "login") {
 
             await signInWithEmailAndPassword(
               auth,
@@ -1388,7 +1823,7 @@ function openAccount(){
               password
             );
 
-          }else{
+          } else {
 
             await createUserWithEmailAndPassword(
               auth,
@@ -1401,31 +1836,41 @@ function openAccount(){
           closeModal();
 
           toast(
-            mode==="login"
-              ?"Connexion réussie ✅"
-              :"Compte créé ✅"
+            mode === "login"
+              ? "Connexion réussie ✅"
+              : "Compte créé ✅"
           );
 
-        }catch(error){
+        } catch (authError) {
 
-          errorEl.textContent=
-            authError(error.code);
+          error.textContent =
+            authErrorMessage(
+              authError
+            );
 
         }
 
       };
 
-  };
+  }
 
-  draw();
+
+  drawAuth();
+
 }
 
-function openSettings(){
 
-  const theme=
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function openSettings() {
+
+  const theme =
     localStorage.getItem(
       "novaThemeChoice"
-    )||"dark";
+    ) || "dark";
+
 
   openModal(
     `
@@ -1439,14 +1884,16 @@ function openSettings(){
         Apparence
       </label>
 
-      <select id="themeSelect">
+      <select
+        id="themeSelect"
+      >
 
         <option
           value="dark"
           ${
-            theme==="dark"
-              ?"selected"
-              :""
+            theme === "dark"
+              ? "selected"
+              : ""
           }
         >
           🌙 Mode sombre
@@ -1455,9 +1902,9 @@ function openSettings(){
         <option
           value="light"
           ${
-            theme==="light"
-              ?"selected"
-              :""
+            theme === "light"
+              ? "selected"
+              : ""
           }
         >
           ☀️ Mode clair
@@ -1466,9 +1913,9 @@ function openSettings(){
         <option
           value="auto"
           ${
-            theme==="auto"
-              ?"selected"
-              :""
+            theme === "auto"
+              ? "selected"
+              : ""
           }
         >
           🖥️ Automatique
@@ -1480,66 +1927,109 @@ function openSettings(){
     `
   );
 
-  $("themeSelect").onchange=
-    event=>{
+
+  $("themeSelect").onchange =
+    event => {
+
       localStorage.setItem(
         "novaThemeChoice",
         event.target.value
       );
 
       applyTheme();
+
     };
+
 }
 
-function addressFromForm(){
 
-  return{
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function addressFromForm() {
+
+  return {
 
     firstName:
       $("checkoutFirstName")
         ?.value
-        .trim()||"",
+        .trim() || "",
 
     lastName:
       $("checkoutLastName")
         ?.value
-        .trim()||"",
+        .trim() || "",
 
     street:
       $("checkoutStreet")
         ?.value
-        .trim()||"",
+        .trim() || "",
 
     postalCode:
       $("checkoutPostal")
         ?.value
-        .trim()||"",
+        .trim() || "",
 
     city:
       $("checkoutCity")
         ?.value
-        .trim()||"",
+        .trim() || "",
 
     country:
       $("checkoutCountry")
         ?.value
-        .trim()||"France"
+        .trim() || "France"
 
   };
+
 }
 
-function renderCheckout(){
 
-  const items=
+function openCheckout() {
+
+  if (!currentUser) {
+
+    toast(
+      "Connecte-toi pour passer commande."
+    );
+
+    openAccount();
+
+    return;
+
+  }
+
+  if (!cartDetailed().length) {
+
+    toast(
+      "Ton panier est vide."
+    );
+
+    return;
+
+  }
+
+  promoApplied = false;
+
+  renderCheckout();
+
+}
+
+
+function renderCheckout() {
+
+  const items =
     cartDetailed();
 
-  const subtotal=
+  const subtotal =
     cartSubtotal();
 
-  const total=
+  const total =
     promoApplied
-      ?0
-      :subtotal;
+      ? 0
+      : subtotal;
+
 
   openModal(
     `
@@ -1567,6 +2057,7 @@ function renderCheckout(){
 
               <input
                 id="checkoutFirstName"
+                autocomplete="given-name"
                 required
               >
 
@@ -1580,6 +2071,7 @@ function renderCheckout(){
 
               <input
                 id="checkoutLastName"
+                autocomplete="family-name"
                 required
               >
 
@@ -1593,6 +2085,7 @@ function renderCheckout(){
 
           <input
             id="checkoutStreet"
+            autocomplete="street-address"
             required
           >
 
@@ -1606,6 +2099,7 @@ function renderCheckout(){
 
               <input
                 id="checkoutPostal"
+                autocomplete="postal-code"
                 required
               >
 
@@ -1619,6 +2113,7 @@ function renderCheckout(){
 
               <input
                 id="checkoutCity"
+                autocomplete="address-level2"
                 required
               >
 
@@ -1633,6 +2128,7 @@ function renderCheckout(){
           <input
             id="checkoutCountry"
             value="France"
+            autocomplete="country-name"
             required
           >
 
@@ -1645,6 +2141,7 @@ function renderCheckout(){
             <input
               id="promoCode"
               placeholder="Code promo"
+              autocomplete="off"
             >
 
             <button
@@ -1657,7 +2154,9 @@ function renderCheckout(){
 
           </div>
 
-          <div id="promoMessage"></div>
+          <div
+            id="promoMessage"
+          ></div>
 
           <h3>
             💳 Paiement
@@ -1670,13 +2169,15 @@ function renderCheckout(){
               id="paypalPayment"
               type="button"
             >
+
               <strong>
                 PayPal
               </strong>
 
               <span>
-                PayPal.Me
+                Paiement via PayPal.Me
               </span>
+
             </button>
 
             <button
@@ -1684,6 +2185,7 @@ function renderCheckout(){
               id="cardPayment"
               type="button"
             >
+
               <strong>
                 💳 Payer par CB
               </strong>
@@ -1691,13 +2193,16 @@ function renderCheckout(){
               <span>
                 Carte bancaire
               </span>
+
             </button>
 
           </div>
 
         </div>
 
-        <div class="checkout-summary">
+        <div
+          class="checkout-summary"
+        >
 
           <h3>
             🛒 Résumé
@@ -1705,18 +2210,21 @@ function renderCheckout(){
 
           ${
             items.map(
-              i=>
+              item =>
                 `
-                <div class="checkout-item">
+                <div
+                  class="checkout-item"
+                >
 
                   <span>
-                    ${escapeHTML(i.name)}
-                    ×${i.qty}
+                    ${escapeHTML(item.name)}
+                    ×${item.qty}
                   </span>
 
                   <strong>
                     ${money(
-                      i.price*i.qty
+                      item.price *
+                      item.qty
                     )}
                   </strong>
 
@@ -1735,9 +2243,9 @@ function renderCheckout(){
 
             <strong>
               ${
-                total===0
-                  ?"Gratuit"
-                  :money(total)
+                total === 0
+                  ? "Gratuit"
+                  : money(total)
               }
             </strong>
 
@@ -1751,134 +2259,164 @@ function renderCheckout(){
     `
   );
 
-  $("applyPromo").onclick=()=>{
 
-    const code=
-      $("promoCode")
-        .value
-        .trim()
-        .toUpperCase();
+  $("applyPromo").onclick =
+    () => {
 
-    if(code==="NOVA100"){
+      const code =
+        $("promoCode")
+          .value
+          .trim()
+          .toUpperCase();
 
-      promoApplied=true;
+      if (code === "NOVA100") {
 
-      toast(
-        "NOVA100 appliqué 🎉"
+        promoApplied = true;
+
+        toast(
+          "NOVA100 appliqué 🎉"
+        );
+
+        renderCheckout();
+
+      } else {
+
+        promoApplied = false;
+
+        $("promoMessage").innerHTML =
+          `
+          <span class="form-error">
+            Code promotionnel invalide.
+          </span>
+          `;
+
+      }
+
+    };
+
+
+  $("paypalPayment").onclick =
+    () => {
+
+      submitCheckout(
+        "paypal"
       );
 
-      renderCheckout();
+    };
 
-    }else{
 
-      promoApplied=false;
-
-      $("promoMessage").innerHTML=
-        `
-        <span class="form-error">
-          Code promotionnel invalide.
-        </span>
-        `;
-
-    }
-
-  };
-
-  $("paypalPayment").onclick=
-    ()=>submitCheckout("paypal");
-
-  $("cardPayment").onclick=
+  $("cardPayment").onclick =
     openCardPayment;
+
 }
 
-async function submitCheckout(method){
 
-  if(!currentUser){
+/* =========================================================
+   SUBMIT CHECKOUT
+========================================================= */
+
+async function submitCheckout(
+  method
+) {
+
+  if (!currentUser) {
 
     toast(
-      "Connecte-toi pour passer commande."
+      "Connecte-toi pour continuer."
     );
 
     openAccount();
 
     return;
+
   }
 
-  const items=
+  const items =
     cartDetailed();
 
-  if(!items.length){
+  if (!items.length) {
 
     toast(
       "Ton panier est vide."
     );
 
     return;
+
   }
 
-  const address=
+  const address =
     addressFromForm();
 
-  if(
+  if (
     Object.values(address)
       .some(
-        value=>!value
+        value => !value
       )
-  ){
+  ) {
 
     toast(
       "Remplis toute l'adresse."
     );
 
     return;
+
   }
 
-  const subtotal=
+  const subtotal =
     cartSubtotal();
 
-  const total=
+  const total =
     promoApplied
-      ?0
-      :subtotal;
+      ? 0
+      : subtotal;
 
-  if(method==="card"){
+
+  if (method === "card") {
 
     openCardPayment();
 
     return;
+
   }
 
-  try{
+
+  try {
 
     await addDoc(
-      collection(db,"orders"),
+      collection(
+        db,
+        "orders"
+      ),
       {
 
         userId:
           currentUser.uid,
 
         email:
-          currentUser.email||"",
+          currentUser.email || "",
 
         items:
           items.map(
-            i=>({
+            item => ({
 
-              id:i.id,
-              name:i.name,
-              price:i.price,
-              qty:i.qty
+              id:item.id,
+              name:item.name,
+              price:item.price,
+              qty:item.qty
 
             })
           ),
 
-        subtotal,
-        total,
+        subtotal:
+          Number(subtotal),
+
+        total:
+          Number(total),
 
         promoCode:
           promoApplied
-            ?"NOVA100"
-            :"",
+            ? "NOVA100"
+            : "",
 
         discount:
           subtotal-total,
@@ -1889,14 +2427,14 @@ async function submitCheckout(method){
           "Enregistrée",
 
         paymentMethod:
-          total===0
-            ?"NOVA100"
-            :"PayPal.Me",
+          total === 0
+            ? "NOVA100"
+            : "PayPal.Me",
 
         paymentStatus:
-          total===0
-            ?"free"
-            :"pending",
+          total === 0
+            ? "free"
+            : "pending",
 
         createdAt:
           serverTimestamp()
@@ -1904,13 +2442,15 @@ async function submitCheckout(method){
       }
     );
 
-    cart=[];
+
+    cart = [];
 
     saveCart();
     renderCart();
     closeModal();
 
-    if(total===0){
+
+    if (total === 0) {
 
       toast(
         "Commande gratuite enregistrée 🎉"
@@ -1918,43 +2458,56 @@ async function submitCheckout(method){
 
       setTimeout(
         openOrders,
-        250
+        300
       );
 
-    }else{
+    } else {
 
       toast(
         "Commande enregistrée. Ouverture de PayPal..."
       );
 
+      const paypalURL =
+        "https://paypal.me/SH0PNOVA/" +
+        encodeURIComponent(
+          Number(total)
+            .toFixed(2)
+        ) +
+        "EUR";
+
       setTimeout(
-        ()=>{
-          location.href=
-            "https://paypal.me/SH0PNOVA/"+
-            encodeURIComponent(
-              total.toFixed(2)
-            )+
-            "EUR";
+        () => {
+
+          window.location.href =
+            paypalURL;
+
         },
-        600
+        700
       );
 
     }
 
-  }catch(error){
+  } catch (error) {
 
     console.error(
-      "Commande:",
+      "Création commande:",
       error
     );
 
     toast(
       "Impossible d'enregistrer la commande."
     );
+
   }
+
 }
 
-function openCardPayment(){
+
+/* =========================================================
+   CARD PAYMENT
+========================================================= */
+
+function openCardPayment() {
 
   openModal(
     `
@@ -1980,8 +2533,8 @@ function openCardPayment(){
       <input
         id="cardNumber"
         inputmode="numeric"
-        maxlength="19"
         autocomplete="off"
+        maxlength="19"
         placeholder="0000 0000 0000 0000"
       >
 
@@ -1996,8 +2549,8 @@ function openCardPayment(){
           <input
             id="cardExpiry"
             inputmode="numeric"
-            maxlength="5"
             autocomplete="off"
+            maxlength="5"
             placeholder="MM/AA"
           >
 
@@ -2013,8 +2566,8 @@ function openCardPayment(){
             id="cardCVV"
             type="password"
             inputmode="numeric"
-            maxlength="4"
             autocomplete="off"
+            maxlength="4"
             placeholder="•••"
           >
 
@@ -2023,12 +2576,13 @@ function openCardPayment(){
       </div>
 
       <div
-        id="cardMessage"
+        id="cardPaymentMessage"
       ></div>
 
       <button
         class="btn btn-primary btn-wide"
         id="validateCard"
+        type="button"
       >
         💳 Valider le paiement
       </button>
@@ -2036,6 +2590,7 @@ function openCardPayment(){
       <button
         class="btn btn-secondary btn-wide"
         id="backCheckout"
+        type="button"
       >
         ← Retour
       </button>
@@ -2044,68 +2599,92 @@ function openCardPayment(){
     `
   );
 
-  $("cardNumber").oninput=()=>{
 
-    let value=
-      $("cardNumber")
-        .value
-        .replace(/\D/g,"")
-        .slice(0,16);
+  $("cardNumber").oninput =
+    () => {
 
-    $("cardNumber").value=
-      value
-        .replace(
-          /(.{4})/g,
-          "$1 "
-        )
-        .trim();
-  };
+      let value =
+        $("cardNumber")
+          .value
+          .replace(/\D/g,"")
+          .slice(0,16);
 
-  $("cardExpiry").oninput=()=>{
+      $("cardNumber").value =
+        value
+          .replace(
+            /(.{4})/g,
+            "$1 "
+          )
+          .trim();
 
-    let value=
-      $("cardExpiry")
-        .value
-        .replace(/\D/g,"")
-        .slice(0,4);
+    };
 
-    $("cardExpiry").value=
-      value.length>2
-        ?value.slice(0,2)+"/"+value.slice(2)
-        :value;
-  };
 
-  $("cardCVV").oninput=()=>{
+  $("cardExpiry").oninput =
+    () => {
 
-    $("cardCVV").value=
-      $("cardCVV")
-        .value
-        .replace(/\D/g,"")
-        .slice(0,4);
-  };
+      let value =
+        $("cardExpiry")
+          .value
+          .replace(/\D/g,"")
+          .slice(0,4);
 
-  $("validateCard").onclick=()=>{
+      $("cardExpiry").value =
+        value.length > 2
+          ? value.slice(0,2) +
+            "/" +
+            value.slice(2)
+          : value;
 
-    $("cardMessage").innerHTML=
-      `
-      <span class="form-error">
-        Carte incorrecte
-      </span>
-      `;
+    };
 
-    toast(
-      "Carte incorrecte"
-    );
 
-    $("cardName").value="";
-    $("cardNumber").value="";
-    $("cardExpiry").value="";
-    $("cardCVV").value="";
-  };
+  $("cardCVV").oninput =
+    () => {
 
-  $("backCheckout").onclick=
+      $("cardCVV").value =
+        $("cardCVV")
+          .value
+          .replace(/\D/g,"")
+          .slice(0,4);
+
+    };
+
+
+  $("validateCard").onclick =
+    () => {
+
+      $("cardPaymentMessage").innerHTML =
+        `
+        <span class="form-error">
+          Carte incorrecte
+        </span>
+        `;
+
+      toast(
+        "Carte incorrecte"
+      );
+
+      $("cardName").value = "";
+      $("cardNumber").value = "";
+      $("cardExpiry").value = "";
+      $("cardCVV").value = "";
+
+    };
+
+
+  $("backCheckout").onclick =
     renderCheckout;
-}const STATUS=[
+
+}
+
+
+/* =========================================================
+   ORDER STATUS
+========================================================= */
+
+const ORDER_STATUSES = [
+
   "Enregistrée",
   "Acceptée",
   "Préparation",
@@ -2114,10 +2693,54 @@ function openCardPayment(){
   "Livrée",
   "Annulée",
   "Remboursement en cours"
+
 ];
 
-const statusIcon=status=>
-  ({
+
+function statusClass(status) {
+
+  const value =
+    String(status || "")
+      .toLowerCase();
+
+  if (value === "livrée") {
+    return "delivered";
+  }
+
+  if (value === "annulée") {
+    return "cancelled";
+  }
+
+  if (
+    value ===
+    "remboursement en cours"
+  ) {
+    return "refund";
+  }
+
+  if (
+    value === "en transit" ||
+    value === "acceptée" ||
+    value === "préparation"
+  ) {
+    return "transit";
+  }
+
+  if (
+    value === "livraison proche"
+  ) {
+    return "nearby";
+  }
+
+  return "";
+
+}
+
+
+function statusIcon(status) {
+
+  const map = {
+
     "Enregistrée":"📝",
     "Acceptée":"✅",
     "Préparation":"📦",
@@ -2126,35 +2749,65 @@ const statusIcon=status=>
     "Livrée":"🎉",
     "Annulée":"❌",
     "Remboursement en cours":"💸"
-  }[status]||"📦");
 
-const statusClass=status=>
-  ({
-    "Livrée":"delivered",
-    "Annulée":"cancelled",
-    "Remboursement en cours":"refund",
-    "En transit":"transit",
-    "Acceptée":"transit",
-    "Préparation":"transit",
-    "Livraison proche":"nearby"
-  }[status]||"");
+  };
 
-const canDelete=order=>
-  order?.status==="Livrée"||
-  order?.status==="Annulée";
+  return (
+    map[status] ||
+    "📦"
+  );
 
-const formatDate=value=>{
+}
 
-  if(!value)
+
+function canDeleteOrder(order) {
+
+  return (
+    order?.status === "Livrée" ||
+    order?.status === "Annulée"
+  );
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(value) {
+
+  if (!value) {
+    return "Date inconnue";
+  }
+
+  let date;
+
+  if (
+    typeof value === "object" &&
+    typeof value.toDate === "function"
+  ) {
+
+    date = value.toDate();
+
+  } else {
+
+    date =
+      value instanceof Date
+        ? value
+        : new Date(value);
+
+  }
+
+  if (
+    !date ||
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
     return "Date inconnue";
 
-  const date=
-    value?.toDate
-      ?value.toDate()
-      :new Date(value);
-
-  if(Number.isNaN(date.getTime()))
-    return "Date inconnue";
+  }
 
   return new Intl.DateTimeFormat(
     "fr-FR",
@@ -2163,129 +2816,269 @@ const formatDate=value=>{
       timeStyle:"short"
     }
   ).format(date);
-};
 
-function orderTimelineHTML(status){
+}
 
-  const flow=[
+
+/* =========================================================
+   END PART 2
+========================================================= *//* =========================================================
+   ORDER TIMELINE
+========================================================= */
+
+function orderTimelineHTML(order) {
+
+  const currentStatus =
+    order.status ||
+    "Enregistrée";
+
+  const flow = [
+
     "Enregistrée",
     "Acceptée",
     "Préparation",
     "En transit",
     "Livraison proche",
     "Livrée"
+
   ];
 
-  const currentIndex=
-    flow.indexOf(status);
+  const currentIndex =
+    flow.indexOf(
+      currentStatus
+    );
 
-  return `
+
+  let html =
+    `
     <div class="order-timeline">
+    `;
 
-      ${
-        flow.map(
-          (step,index)=>{
 
-            const done=
-              status!=="Annulée"&&
-              status!=="Remboursement en cours"&&
-              currentIndex>=index;
+  flow.forEach(
+    (status,index) => {
 
-            return `
-              <div
-                class="timeline-step ${
-                  done
-                    ?"done"
-                    :""
-                }"
-              >
+      let done = false;
 
-                <div class="timeline-dot">
-                  ${
-                    done
-                      ?"✓"
-                      :index+1
-                  }
-                </div>
+      if (
+        currentStatus !== "Annulée" &&
+        currentStatus !==
+          "Remboursement en cours" &&
+        currentIndex >= index
+      ) {
 
-                <strong>
-                  ${escapeHTML(step)}
-                </strong>
+        done = true;
 
-              </div>
-            `;
-          }
-        ).join("")
       }
 
-      ${
-        status==="Annulée"
-          ?`
-            <div class="timeline-step done">
-              <div class="timeline-dot">
-                ❌
-              </div>
-              <strong>
-                Commande annulée
-              </strong>
-            </div>
-          `
-          :""
+
+      if (
+        (
+          currentStatus ===
+            "Annulée" ||
+          currentStatus ===
+            "Remboursement en cours"
+        ) &&
+        index === 0
+      ) {
+
+        done = true;
+
       }
 
-      ${
-        status==="Remboursement en cours"
-          ?`
-            <div class="timeline-step done">
-              <div class="timeline-dot">
-                💸
-              </div>
-              <strong>
-                Remboursement en cours
-              </strong>
-            </div>
-          `
-          :""
-      }
 
+      html +=
+        `
+        <div
+          class="timeline-step ${
+            done ? "done" : ""
+          }"
+        >
+
+          <div class="timeline-dot">
+            ${
+              done
+                ? "✓"
+                : index + 1
+            }
+          </div>
+
+          <div class="timeline-content">
+
+            <strong>
+              ${escapeHTML(status)}
+            </strong>
+
+          </div>
+
+        </div>
+        `;
+
+    }
+  );
+
+
+  if (
+    currentStatus ===
+    "Annulée"
+  ) {
+
+    html +=
+      `
+      <div
+        class="timeline-step done"
+      >
+
+        <div class="timeline-dot">
+          ❌
+        </div>
+
+        <div class="timeline-content">
+
+          <strong>
+            Commande annulée
+          </strong>
+
+        </div>
+
+      </div>
+      `;
+
+  }
+
+
+  if (
+    currentStatus ===
+    "Remboursement en cours"
+  ) {
+
+    html +=
+      `
+      <div
+        class="timeline-step done"
+      >
+
+        <div class="timeline-dot">
+          💸
+        </div>
+
+        <div class="timeline-content">
+
+          <strong>
+            Remboursement en cours
+          </strong>
+
+        </div>
+
+      </div>
+      `;
+
+  }
+
+
+  html +=
+    `
     </div>
-  `;
+    `;
+
+
+  return html;
+
 }
 
-async function getUserOrders(){
 
-  if(!currentUser)
+/* =========================================================
+   GET USER ORDERS
+========================================================= */
+
+async function getUserOrders() {
+
+  if (!currentUser) {
     return [];
+  }
 
-  const snapshot=
-    await getDocs(
-      query(
-        collection(db,"orders"),
-        where(
-          "userId",
-          "==",
-          currentUser.uid
-        )
+  const orderQuery =
+    query(
+      collection(
+        db,
+        "orders"
+      ),
+      where(
+        "userId",
+        "==",
+        currentUser.uid
       )
     );
 
-  return snapshot.docs
-    .map(
-      d=>({
-        id:d.id,
-        ...d.data()
-      })
-    )
-    .sort(
-      (a,b)=>
-        (b.createdAt?.seconds||0)-
-        (a.createdAt?.seconds||0)
+
+  const snapshot =
+    await getDocs(
+      orderQuery
     );
+
+
+  const orders =
+    snapshot.docs.map(
+      orderDoc => ({
+
+        id:orderDoc.id,
+        ...orderDoc.data()
+
+      })
+    );
+
+
+  orders.sort(
+    (a,b) => {
+
+      const getTime =
+        value => {
+
+          if (
+            value &&
+            typeof value.toDate ===
+              "function"
+          ) {
+
+            return value
+              .toDate()
+              .getTime();
+
+          }
+
+          const date =
+            new Date(value || 0);
+
+          return Number.isNaN(
+            date.getTime()
+          )
+            ? 0
+            : date.getTime();
+
+        };
+
+
+      return (
+        getTime(b.createdAt) -
+        getTime(a.createdAt)
+      );
+
+    }
+  );
+
+
+  return orders;
+
 }
 
-async function openOrders(){
 
-  if(!currentUser){
+/* =========================================================
+   OPEN ORDERS
+========================================================= */
+
+async function openOrders() {
+
+  if (!currentUser) {
 
     toast(
       "Connecte-toi pour voir tes commandes."
@@ -2294,7 +3087,9 @@ async function openOrders(){
     openAccount();
 
     return;
+
   }
+
 
   openModal(
     `
@@ -2304,27 +3099,46 @@ async function openOrders(){
         📦 Mes commandes
       </h2>
 
-      <div id="ordersList">
-        Chargement...
+      <div
+        id="ordersList"
+      >
+
+        <div class="empty">
+          <div class="empty-icon">
+            ⏳
+          </div>
+
+          <h3>
+            Chargement...
+          </h3>
+        </div>
+
       </div>
 
     </div>
     `
   );
 
-  const list=
+
+  const list =
     $("ordersList");
 
-  try{
 
-    const orders=
+  try {
+
+    const orders =
       await getUserOrders();
 
-    if(!orders.length){
 
-      list.innerHTML=
+    if (!orders.length) {
+
+      list.innerHTML =
         `
         <div class="empty">
+
+          <div class="empty-icon">
+            📦
+          </div>
 
           <h3>
             Aucune commande
@@ -2338,167 +3152,204 @@ async function openOrders(){
         `;
 
       return;
+
     }
 
-    list.innerHTML=
-      orders.map(
-        order=>{
 
-          const items=
-            Array.isArray(
-              order.items
-            )
-              ?order.items
-              :[];
+    list.innerHTML =
+      orders
+        .map(
+          order => {
 
-          const status=
-            order.status||
-            "Enregistrée";
+            const status =
+              order.status ||
+              "Enregistrée";
 
-          const itemCount=
-            items.reduce(
-              (sum,item)=>
-                sum+
-                Number(
-                  item.qty||0
-                ),
-              0
-            );
+            const items =
+              Array.isArray(
+                order.items
+              )
+                ? order.items
+                : [];
 
-          return `
-            <article
-              class="order nova-order-card"
-            >
+            const itemCount =
+              items.reduce(
+                (sum,item) =>
+                  sum +
+                  Number(
+                    item.qty || 0
+                  ),
+                0
+              );
 
-              <div
-                class="nova-order-head"
+
+            return `
+              <article
+                class="order nova-order-card"
+                data-order-id="${escapeHTML(order.id)}"
               >
 
-                <div>
+                <div
+                  class="nova-order-head"
+                >
 
-                  <strong>
-                    Commande #
-                    ${escapeHTML(
-                      order.id.slice(
-                        0,
-                        8
-                      )
-                    )}
-                  </strong>
+                  <div>
 
-                  <div class="order-date">
-                    ${escapeHTML(
-                      formatDate(
-                        order.createdAt
-                      )
-                    )}
+                    <strong>
+                      Commande #
+                      ${escapeHTML(
+                        order.id.slice(
+                          0,
+                          10
+                        )
+                      )}
+                    </strong>
+
+                    <div
+                      class="order-date"
+                    >
+                      ${escapeHTML(
+                        formatDate(
+                          order.createdAt
+                        )
+                      )}
+                    </div>
+
                   </div>
+
+                  <span
+                    class="nova-status ${
+                      statusClass(status)
+                    }"
+                  >
+                    ${statusIcon(status)}
+                    ${escapeHTML(status)}
+                  </span>
 
                 </div>
 
-                <span
-                  class="nova-status ${
-                    statusClass(status)
-                  }"
+
+                <div
+                  class="nova-order-preview"
                 >
-                  ${statusIcon(status)}
-                  ${escapeHTML(status)}
-                </span>
 
-              </div>
+                  <span>
+                    📦 ${itemCount}
+                    article${
+                      itemCount > 1
+                        ? "s"
+                        : ""
+                    }
+                  </span>
 
-              <div
-                class="nova-order-preview"
-              >
+                  <strong>
+                    ${
+                      Number(
+                        order.total || 0
+                      ) === 0
+                        ? "Gratuit"
+                        : money(
+                            order.total
+                          )
+                    }
+                  </strong>
 
-                <span>
-                  📦 ${itemCount}
-                  article${
-                    itemCount>1
-                      ?"s"
-                      :""
-                  }
-                </span>
+                </div>
 
-                <strong>
+
+                <div
+                  class="nova-order-actions"
+                >
+
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-wide nova-view-order"
+                    data-view-order="${escapeHTML(order.id)}"
+                  >
+                    👁️ Voir la commande
+                  </button>
+
                   ${
-                    Number(
-                      order.total||0
-                    )===0
-                      ?"Gratuit"
-                      :money(
-                        order.total
-                      )
+                    canDeleteOrder(
+                      order
+                    )
+                      ? `
+                        <button
+                          type="button"
+                          class="btn btn-danger btn-wide"
+                          data-delete-order="${escapeHTML(order.id)}"
+                        >
+                          🗑️ Supprimer la commande
+                        </button>
+                      `
+                      : ""
                   }
-                </strong>
 
-              </div>
+                </div>
 
-              <div
-                class="nova-order-actions"
-              >
+              </article>
+            `;
 
-                <button
-                  class="btn btn-primary btn-wide nova-view-order"
-                  data-view-order="${escapeHTML(order.id)}"
-                >
-                  👁️ Voir la commande
-                </button>
+          }
+        )
+        .join("");
 
-                ${
-                  canDelete(order)
-                    ?`
-                      <button
-                        class="btn btn-danger btn-wide"
-                        data-delete-order="${escapeHTML(order.id)}"
-                      >
-                        🗑️ Supprimer la commande
-                      </button>
-                    `
-                    :""
-                }
-
-              </div>
-
-            </article>
-          `;
-        }
-      ).join("");
 
     list
       .querySelectorAll(
         "[data-view-order]"
       )
-      .forEach(button=>{
-        button.onclick=()=>{
-          openOrderDetails(
-            button.dataset.viewOrder
-          );
-        };
-      });
+      .forEach(
+        button => {
+
+          button.onclick =
+            () => {
+
+              openOrderDetails(
+                button.dataset.viewOrder
+              );
+
+            };
+
+        }
+      );
+
 
     list
       .querySelectorAll(
         "[data-delete-order]"
       )
-      .forEach(button=>{
-        button.onclick=()=>{
-          deleteUserOrder(
-            button.dataset.deleteOrder
-          );
-        };
-      });
+      .forEach(
+        button => {
 
-  }catch(error){
+          button.onclick =
+            () => {
+
+              deleteUserOrder(
+                button.dataset.deleteOrder
+              );
+
+            };
+
+        }
+      );
+
+
+  } catch (error) {
 
     console.error(
       "Commandes:",
       error
     );
 
-    list.innerHTML=
+
+    list.innerHTML =
       `
       <div class="empty">
+
+        <div class="empty-icon">
+          ⚠️
+        </div>
 
         <h3>
           Impossible de charger les commandes
@@ -2514,70 +3365,100 @@ async function openOrders(){
       </div>
       `;
 
-    $("retryOrders").onclick=
+
+    $("retryOrders").onclick =
       openOrders;
+
   }
+
 }
 
-async function openOrderDetails(id){
 
-  if(!currentUser)
+/* =========================================================
+   ORDER DETAILS
+========================================================= */
+
+async function openOrderDetails(
+  orderId
+) {
+
+  if (!currentUser) {
     return;
+  }
 
-  try{
 
-    const orders=
+  try {
+
+    const orders =
       await getUserOrders();
 
-    const order=
+
+    const order =
       orders.find(
-        item=>item.id===id
+        item =>
+          item.id === orderId
       );
 
-    if(!order){
+
+    if (!order) {
 
       toast(
         "Commande introuvable."
       );
 
       return;
+
     }
 
-    const items=
+
+    const items =
       Array.isArray(order.items)
-        ?order.items
-        :[];
+        ? order.items
+        : [];
 
-    const address=
-      order.address||{};
+    const address =
+      order.address || {};
 
-    const status=
-      order.status||
+    const status =
+      order.status ||
       "Enregistrée";
+
 
     openModal(
       `
-      <div class="panel nova-order-details">
+      <div
+        class="panel nova-order-details"
+      >
 
         <button
+          type="button"
           class="btn btn-secondary btn-small"
           id="backOrders"
         >
           ← Mes commandes
         </button>
 
+
         <div
           class="nova-order-head"
-          style="margin-top:16px"
+          style="margin-top:16px;"
         >
 
           <div>
 
+            <div class="eyebrow">
+              COMMANDE
+            </div>
+
             <h2>
-              📦 Commande #${escapeHTML(order.id)}
+              📦 Commande #${escapeHTML(
+                order.id
+              )}
             </h2>
 
-            <div class="order-date">
+            <div
+              class="order-date"
+            >
               ${escapeHTML(
                 formatDate(
                   order.createdAt
@@ -2586,6 +3467,7 @@ async function openOrderDetails(id){
             </div>
 
           </div>
+
 
           <span
             class="nova-status ${
@@ -2597,6 +3479,7 @@ async function openOrderDetails(id){
           </span>
 
         </div>
+
 
         <div
           class="nova-order-detail-section"
@@ -2611,40 +3494,47 @@ async function openOrderDetails(id){
           >
 
             ${
-              items.map(
-                item=>
+              items.length
+                ? items.map(
+                    item =>
+                      `
+                      <div
+                        class="nova-order-item"
+                      >
+
+                        <span>
+                          ${escapeHTML(
+                            item.name ||
+                            "Produit"
+                          )}
+                          ×${Number(
+                            item.qty || 0
+                          )}
+                        </span>
+
+                        <strong>
+                          ${money(
+                            Number(
+                              item.price || 0
+                            ) *
+                            Number(
+                              item.qty || 0
+                            )
+                          )}
+                        </strong>
+
+                      </div>
+                      `
+                  ).join("")
+                : `
+                    <div class="empty">
+                      Aucun article.
+                    </div>
                   `
-                  <div
-                    class="nova-order-item"
-                  >
-
-                    <span>
-                      ${escapeHTML(
-                        item.name||
-                        "Produit"
-                      )}
-                      ×${Number(
-                        item.qty||0
-                      )}
-                    </span>
-
-                    <strong>
-                      ${money(
-                        Number(
-                          item.price||0
-                        )*
-                        Number(
-                          item.qty||0
-                        )
-                      )}
-                    </strong>
-
-                  </div>
-                  `
-              ).join("")
             }
 
           </div>
+
 
           <div
             class="nova-detail-total"
@@ -2657,16 +3547,19 @@ async function openOrderDetails(id){
             <strong>
               ${
                 Number(
-                  order.total||0
-                )===0
-                  ?"Gratuit"
-                  :money(order.total)
+                  order.total || 0
+                ) === 0
+                  ? "Gratuit"
+                  : money(
+                      order.total
+                    )
               }
             </strong>
 
           </div>
 
         </div>
+
 
         <div
           class="nova-order-detail-section"
@@ -2684,8 +3577,8 @@ async function openOrderDetails(id){
               📍 Destination :
               <strong>
                 ${escapeHTML(
-                  order.packageCity||
-                  address.city||
+                  order.packageCity ||
+                  address.city ||
                   "Non renseignée"
                 )}
               </strong>
@@ -2695,16 +3588,16 @@ async function openOrderDetails(id){
               🔎 Numéro de suivi :
               <strong>
                 ${escapeHTML(
-                  order.trackingNumber||
+                  order.trackingNumber ||
                   "Pas encore disponible"
                 )}
               </strong>
             </div>
 
             <div>
-              ⏱️ Durée :
+              ⏱️ Durée de livraison :
               ${escapeHTML(
-                order.deliveryDuration||
+                order.deliveryDuration ||
                 "Non renseignée"
               )}
             </div>
@@ -2713,7 +3606,7 @@ async function openOrderDetails(id){
               📅 Livraison estimée :
               <strong>
                 ${escapeHTML(
-                  order.estimatedDelivery||
+                  order.estimatedDelivery ||
                   "Non renseignée"
                 )}
               </strong>
@@ -2732,6 +3625,7 @@ async function openOrderDetails(id){
 
         </div>
 
+
         <div
           class="nova-order-detail-section"
         >
@@ -2746,12 +3640,12 @@ async function openOrderDetails(id){
 
             ${escapeHTML(
               (
-                address.firstName||
+                address.firstName ||
                 ""
-              )+
-              " "+
+              ) +
+              " " +
               (
-                address.lastName||
+                address.lastName ||
                 ""
               )
             )}
@@ -2759,7 +3653,7 @@ async function openOrderDetails(id){
             <br>
 
             ${escapeHTML(
-              address.street||
+              address.street ||
               ""
             )}
 
@@ -2767,12 +3661,12 @@ async function openOrderDetails(id){
 
             ${escapeHTML(
               (
-                address.postalCode||
+                address.postalCode ||
                 ""
-              )+
-              " "+
+              ) +
+              " " +
               (
-                address.city||
+                address.city ||
                 ""
               )
             )}
@@ -2780,13 +3674,14 @@ async function openOrderDetails(id){
             <br>
 
             ${escapeHTML(
-              address.country||
+              address.country ||
               ""
             )}
 
           </div>
 
         </div>
+
 
         <div
           class="nova-order-detail-section"
@@ -2802,7 +3697,7 @@ async function openOrderDetails(id){
 
             Méthode :
             ${escapeHTML(
-              order.paymentMethod||
+              order.paymentMethod ||
               "Non renseignée"
             )}
 
@@ -2810,13 +3705,14 @@ async function openOrderDetails(id){
 
             Statut :
             ${escapeHTML(
-              order.paymentStatus||
+              order.paymentStatus ||
               "pending"
             )}
 
           </div>
 
         </div>
+
 
         <div
           class="nova-order-detail-section"
@@ -2826,39 +3722,48 @@ async function openOrderDetails(id){
             📍 Progression
           </h3>
 
-          ${orderTimelineHTML(status)}
+          ${orderTimelineHTML(order)}
 
         </div>
 
+
         ${
-          canDelete(order)
-            ?`
+          canDeleteOrder(order)
+            ? `
               <button
-                class="btn btn-danger btn-wide"
+                type="button"
+                class="btn btn-danger btn-wide nova-delete-detail"
                 id="deleteDetailOrder"
               >
                 🗑️ Supprimer cette commande
               </button>
             `
-            :""
+            : ""
         }
 
       </div>
       `
     );
 
-    $("backOrders").onclick=
+
+    $("backOrders").onclick =
       openOrders;
 
-    if($("deleteDetailOrder")){
 
-      $("deleteDetailOrder").onclick=
-        ()=>{
-          deleteUserOrder(id);
+    if ($("deleteDetailOrder")) {
+
+      $("deleteDetailOrder").onclick =
+        () => {
+
+          deleteUserOrder(
+            order.id
+          );
+
         };
+
     }
 
-  }catch(error){
+  } catch (error) {
 
     console.error(
       "Détails commande:",
@@ -2868,99 +3773,145 @@ async function openOrderDetails(id){
     toast(
       "Impossible d'afficher la commande."
     );
+
   }
+
 }
 
-async function deleteUserOrder(id){
 
-  if(!currentUser)
+/* =========================================================
+   DELETE USER ORDER
+========================================================= */
+
+async function deleteUserOrder(
+  orderId
+) {
+
+  if (!currentUser) {
     return;
+  }
 
-  try{
 
-    const orders=
+  try {
+
+    const orders =
       await getUserOrders();
 
-    const order=
+
+    const order =
       orders.find(
-        item=>item.id===id
+        item =>
+          item.id === orderId
       );
 
-    if(
-      !order||
-      !canDelete(order)
-    ){
+
+    if (
+      !order ||
+      !canDeleteOrder(order)
+    ) {
 
       toast(
         "Cette commande ne peut pas encore être supprimée."
       );
 
       return;
+
     }
 
-    if(
-      !confirm(
+
+    if (
+      !window.confirm(
         "Supprimer définitivement cette commande ?"
       )
-    ){
+    ) {
+
       return;
+
     }
+
 
     await deleteDoc(
       doc(
         db,
         "orders",
-        id
+        orderId
       )
     );
+
 
     toast(
       "Commande supprimée."
     );
 
+
     openOrders();
 
-  }catch(error){
+  } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Suppression:",
+      error
+    );
 
     toast(
       "Impossible de supprimer la commande."
     );
+
   }
+
 }
 
-function isAdmin(){
 
-  return(
-    !!currentUser&&
+/* =========================================================
+   ADMIN
+========================================================= */
+
+function isAdminUser() {
+
+  if (!currentUser) {
+    return false;
+  }
+
+  return (
     String(
-      currentUser.email||""
+      currentUser.email || ""
     )
       .trim()
-      .toLowerCase()===
+      .toLowerCase() ===
     ADMIN_EMAIL
       .trim()
       .toLowerCase()
   );
+
 }
 
-function openAdmin(){
 
-  if(!isAdmin()){
+function isAdminAuthorized() {
+
+  return (
+    isAdminUser() &&
+    localStorage.getItem(
+      ADMIN_KEY
+    ) === "true"
+  );
+
+}
+
+
+function openAdmin() {
+
+  if (!isAdminUser()) {
 
     toast(
       "Accès administrateur refusé."
     );
 
     return;
+
   }
 
-  if(
-    localStorage.getItem(
-      ADMIN_KEY
-    )!=="true"
-  ){
+
+  if (!isAdminAuthorized()) {
 
     openModal(
       `
@@ -2975,8 +3926,9 @@ function openAdmin(){
         </p>
 
         <input
-          id="adminCode"
+          id="adminCodeInput"
           type="password"
+          autocomplete="off"
         >
 
         <div
@@ -2986,47 +3938,64 @@ function openAdmin(){
 
         <button
           class="btn btn-primary btn-wide"
-          id="adminEnter"
+          id="adminLoginButton"
         >
-          Accéder
+          🔓 Accéder au dashboard
         </button>
 
       </div>
       `
     );
 
-    $("adminEnter").onclick=()=>{
 
-      if(
-        $("adminCode").value===
-        ADMIN_CODE
-      ){
+    $("adminLoginButton").onclick =
+      () => {
 
-        localStorage.setItem(
-          ADMIN_KEY,
-          "true"
-        );
+        if (
+          $("adminCodeInput").value ===
+          ADMIN_CODE
+        ) {
 
-        closeModal();
+          localStorage.setItem(
+            ADMIN_KEY,
+            "true"
+          );
 
-        renderAdmin();
+          closeModal();
 
-      }else{
+          renderAdmin();
 
-        $("adminError")
-          .textContent=
-          "Code incorrect.";
+        } else {
 
-      }
-    };
+          $("adminError")
+            .textContent =
+            "Code incorrect.";
 
+        }
+
+      };
+
+
+    return;
+
+  }
+
+
+  renderAdmin();
+
+}
+
+
+/* =========================================================
+   ADMIN RENDER
+========================================================= */
+
+async function renderAdmin() {
+
+  if (!isAdminAuthorized()) {
     return;
   }
 
-  renderAdmin();
-}
-
-async function renderAdmin(){
 
   openModal(
     `
@@ -3056,7 +4025,9 @@ async function renderAdmin(){
 
       </div>
 
-      <div id="adminOrders">
+      <div
+        id="adminOrders"
+      >
         Chargement...
       </div>
 
@@ -3064,25 +4035,30 @@ async function renderAdmin(){
     `
   );
 
-  $("adminRefresh").onclick=
+
+  $("adminRefresh").onclick =
     renderAdmin;
 
-  $("adminLock").onclick=()=>{
 
-    localStorage.removeItem(
-      ADMIN_KEY
-    );
+  $("adminLock").onclick =
+    () => {
 
-    closeModal();
+      localStorage.removeItem(
+        ADMIN_KEY
+      );
 
-    toast(
-      "Administration verrouillée."
-    );
-  };
+      closeModal();
 
-  try{
+      toast(
+        "Administration verrouillée."
+      );
 
-    const snapshot=
+    };
+
+
+  try {
+
+    const snapshot =
       await getDocs(
         collection(
           db,
@@ -3090,32 +4066,67 @@ async function renderAdmin(){
         )
       );
 
-    const orders=
+
+    const orders =
       snapshot.docs
         .map(
-          d=>({
+          d => ({
             id:d.id,
             ...d.data()
           })
         )
         .sort(
-          (a,b)=>
-            (b.createdAt?.seconds||0)-
-            (a.createdAt?.seconds||0)
+          (a,b) =>
+            (
+              b.createdAt?.seconds ||
+              0
+            ) -
+            (
+              a.createdAt?.seconds ||
+              0
+            )
         );
 
-    $("adminOrders").innerHTML=
-      orders.length
-        ?orders.map(
-          order=>{
 
-            const status=
-              order.status||
+    const container =
+      $("adminOrders");
+
+
+    if (!orders.length) {
+
+      container.innerHTML =
+        `
+        <div class="empty">
+
+          <div class="empty-icon">
+            📦
+          </div>
+
+          <h3>
+            Aucune commande
+          </h3>
+
+        </div>
+        `;
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      orders
+        .map(
+          order => {
+
+            const status =
+              order.status ||
               "Enregistrée";
 
-            const address=
-              order.address||
+            const address =
+              order.address ||
               {};
+
 
             return `
               <div
@@ -3129,12 +4140,14 @@ async function renderAdmin(){
                   <div>
 
                     <strong>
-                      #${escapeHTML(order.id)}
+                      #${escapeHTML(
+                        order.id
+                      )}
                     </strong>
 
                     <div>
                       ${escapeHTML(
-                        order.email||
+                        order.email ||
                         ""
                       )}
                     </div>
@@ -3160,6 +4173,7 @@ async function renderAdmin(){
 
                 </div>
 
+
                 <div
                   class="admin-order-grid"
                 >
@@ -3171,30 +4185,36 @@ async function renderAdmin(){
                     </label>
 
                     <select
-                      data-status="${escapeHTML(order.id)}"
+                      data-admin-status="${escapeHTML(order.id)}"
                     >
 
                       ${
-                        STATUS.map(
-                          option=>
-                            `
-                            <option
-                              value="${escapeHTML(option)}"
-                              ${
-                                option===status
-                                  ?"selected"
-                                  :""
-                              }
-                            >
-                              ${escapeHTML(option)}
-                            </option>
-                            `
-                        ).join("")
+                        ORDER_STATUSES
+                          .map(
+                            statusOption =>
+                              `
+                              <option
+                                value="${escapeHTML(statusOption)}"
+                                ${
+                                  statusOption ===
+                                  status
+                                    ? "selected"
+                                    : ""
+                                }
+                              >
+                                ${escapeHTML(
+                                  statusOption
+                                )}
+                              </option>
+                              `
+                          )
+                          .join("")
                       }
 
                     </select>
 
                   </div>
+
 
                   <div>
 
@@ -3203,15 +4223,16 @@ async function renderAdmin(){
                     </label>
 
                     <input
-                      data-city="${escapeHTML(order.id)}"
+                      data-admin-city="${escapeHTML(order.id)}"
                       value="${escapeHTML(
-                        order.packageCity||
-                        address.city||
+                        order.packageCity ||
+                        address.city ||
                         ""
                       )}"
                     >
 
                   </div>
+
 
                   <div>
 
@@ -3220,14 +4241,15 @@ async function renderAdmin(){
                     </label>
 
                     <input
-                      data-tracking="${escapeHTML(order.id)}"
+                      data-admin-tracking="${escapeHTML(order.id)}"
                       value="${escapeHTML(
-                        order.trackingNumber||
+                        order.trackingNumber ||
                         ""
                       )}"
                     >
 
                   </div>
+
 
                   <div>
 
@@ -3236,14 +4258,15 @@ async function renderAdmin(){
                     </label>
 
                     <input
-                      data-duration="${escapeHTML(order.id)}"
+                      data-admin-duration="${escapeHTML(order.id)}"
                       value="${escapeHTML(
-                        order.deliveryDuration||
+                        order.deliveryDuration ||
                         ""
                       )}"
                     >
 
                   </div>
+
 
                   <div>
 
@@ -3253,9 +4276,9 @@ async function renderAdmin(){
 
                     <input
                       type="text"
-                      data-date="${escapeHTML(order.id)}"
+                      data-admin-date="${escapeHTML(order.id)}"
                       value="${escapeHTML(
-                        order.estimatedDelivery||
+                        order.estimatedDelivery ||
                         ""
                       )}"
                       placeholder="25 septembre"
@@ -3265,41 +4288,44 @@ async function renderAdmin(){
 
                 </div>
 
+
                 <div
                   class="admin-actions"
                 >
 
                   <button
                     class="btn btn-primary"
-                    data-save-order="${escapeHTML(order.id)}"
+                    data-save-admin="${escapeHTML(order.id)}"
                   >
                     💾 Enregistrer
                   </button>
 
                   ${
-                    order.paymentMethod==="PayPal.Me"&&
-                    order.paymentStatus!=="accepted"
-                      ?`
+                    order.paymentMethod ===
+                      "PayPal.Me" &&
+                    order.paymentStatus !==
+                      "accepted"
+                      ? `
                         <button
                           class="btn btn-primary"
-                          data-accept="${escapeHTML(order.id)}"
+                          data-accept-paypal="${escapeHTML(order.id)}"
                         >
                           ✅ Accepter PayPal
                         </button>
                       `
-                      :""
+                      : ""
                   }
 
                   <button
                     class="btn btn-secondary"
-                    data-print-order="${escapeHTML(order.id)}"
+                    data-print-invoice="${escapeHTML(order.id)}"
                   >
                     🧾 Facture
                   </button>
 
                   <button
                     class="btn btn-danger"
-                    data-admin-delete="${escapeHTML(order.id)}"
+                    data-delete-admin="${escapeHTML(order.id)}"
                   >
                     🗑️ Supprimer
                   </button>
@@ -3308,141 +4334,197 @@ async function renderAdmin(){
 
               </div>
             `;
+
           }
-        ).join("")
-        :
-        `
-        <div class="empty">
-          <h3>
-            Aucune commande
-          </h3>
-        </div>
-        `;
+        )
+        .join("");
 
-    $("adminOrders")
+
+    container
       .querySelectorAll(
-        "[data-save-order]"
+        "[data-save-admin]"
       )
       .forEach(
-        button=>{
-          button.onclick=
-            ()=>saveAdminOrder(
-              button.dataset.saveOrder
-            );
+        button => {
+
+          button.onclick =
+            () => {
+
+              saveAdminOrder(
+                button.dataset.saveAdmin
+              );
+
+            };
+
         }
       );
 
-    $("adminOrders")
+
+    container
       .querySelectorAll(
-        "[data-accept]"
+        "[data-accept-paypal]"
       )
       .forEach(
-        button=>{
-          button.onclick=
-            ()=>acceptPaypalOrder(
-              button.dataset.accept
-            );
+        button => {
+
+          button.onclick =
+            () => {
+
+              acceptPaypalOrder(
+                button.dataset.acceptPaypal
+              );
+
+            };
+
         }
       );
 
-    $("adminOrders")
+
+    container
       .querySelectorAll(
-        "[data-print-order]"
+        "[data-print-invoice]"
       )
       .forEach(
-        button=>{
-          button.onclick=
-            ()=>printInvoice(
-              button.dataset.printOrder
-            );
+        button => {
+
+          button.onclick =
+            () => {
+
+              printInvoice(
+                button.dataset.printInvoice
+              );
+
+            };
+
         }
       );
 
-    $("adminOrders")
+
+    container
       .querySelectorAll(
-        "[data-admin-delete]"
+        "[data-delete-admin]"
       )
       .forEach(
-        button=>{
-          button.onclick=
-            ()=>adminDeleteOrder(
-              button.dataset.adminDelete
-            );
+        button => {
+
+          button.onclick =
+            () => {
+
+              adminDeleteOrder(
+                button.dataset.deleteAdmin
+              );
+
+            };
+
         }
       );
 
-  }catch(error){
+  } catch (error) {
 
     console.error(
       "Admin:",
       error
     );
 
-    $("adminOrders").innerHTML=
+    $("adminOrders").innerHTML =
       `
       <div class="empty">
+
+        <div class="empty-icon">
+          ⚠️
+        </div>
+
         <h3>
           Erreur de chargement
         </h3>
+
       </div>
       `;
+
   }
+
 }
 
-async function saveAdminOrder(id){
 
-  if(
-    !isAdmin()||
-    localStorage.getItem(
-      ADMIN_KEY
-    )!=="true"
-  ){
+/* =========================================================
+   END PART 3
+========================================================= *//* =========================================================
+   ADMIN SAVE
+========================================================= */
+
+async function saveAdminOrder(
+  orderId
+) {
+
+  if (!isAdminAuthorized()) {
+
+    toast(
+      "Administration verrouillée."
+    );
+
     return;
+
   }
 
-  try{
+
+  try {
+
+    const status =
+      document.querySelector(
+        `[data-admin-status="${CSS.escape(orderId)}"]`
+      )?.value ||
+      "Enregistrée";
+
+
+    const packageCity =
+      document.querySelector(
+        `[data-admin-city="${CSS.escape(orderId)}"]`
+      )?.value
+        .trim() ||
+      "";
+
+
+    const trackingNumber =
+      document.querySelector(
+        `[data-admin-tracking="${CSS.escape(orderId)}"]`
+      )?.value
+        .trim() ||
+      "";
+
+
+    const deliveryDuration =
+      document.querySelector(
+        `[data-admin-duration="${CSS.escape(orderId)}"]`
+      )?.value
+        .trim() ||
+      "";
+
+
+    const estimatedDelivery =
+      document.querySelector(
+        `[data-admin-date="${CSS.escape(orderId)}"]`
+      )?.value
+        .trim() ||
+      "";
+
 
     await updateDoc(
       doc(
         db,
         "orders",
-        id
+        orderId
       ),
       {
 
-        status:
-          document.querySelector(
-            `[data-status="${CSS.escape(id)}"]`
-          )?.value||
-          "Enregistrée",
+        status,
 
-        packageCity:
-          document.querySelector(
-            `[data-city="${CSS.escape(id)}"]`
-          )?.value
-            .trim()||
-          "",
+        packageCity,
 
-        trackingNumber:
-          document.querySelector(
-            `[data-tracking="${CSS.escape(id)}"]`
-          )?.value
-            .trim()||
-          "",
+        trackingNumber,
 
-        deliveryDuration:
-          document.querySelector(
-            `[data-duration="${CSS.escape(id)}"]`
-          )?.value
-            .trim()||
-          "",
+        deliveryDuration,
 
-        estimatedDelivery:
-          document.querySelector(
-            `[data-date="${CSS.escape(id)}"]`
-          )?.value
-            .trim()||
-          "",
+        estimatedDelivery,
 
         updatedAt:
           serverTimestamp()
@@ -3450,34 +4532,56 @@ async function saveAdminOrder(id){
       }
     );
 
+
     toast(
       "Commande mise à jour ✅"
     );
 
+
     renderAdmin();
 
-  }catch(error){
+  } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Sauvegarde admin:",
+      error
+    );
 
     toast(
       "Impossible de mettre à jour la commande."
     );
+
   }
+
 }
 
-async function acceptPaypalOrder(id){
 
-  if(!isAdmin())
+/* =========================================================
+   ADMIN PAYPAL
+========================================================= */
+
+async function acceptPaypalOrder(
+  orderId
+) {
+
+  if (!isAdminAuthorized()) {
+
+    toast(
+      "Administration verrouillée."
+    );
+
     return;
 
-  try{
+  }
+
+
+  try {
 
     await updateDoc(
       doc(
         db,
         "orders",
-        id
+        orderId
       ),
       {
 
@@ -3493,64 +4597,105 @@ async function acceptPaypalOrder(id){
       }
     );
 
+
     toast(
       "Paiement accepté ✅"
     );
 
+
     renderAdmin();
 
-  }catch(error){
+  } catch (error) {
 
-    console.error(error);
+    console.error(
+      "PayPal:",
+      error
+    );
 
     toast(
-      "Erreur de paiement."
+      "Impossible d'accepter le paiement."
     );
+
   }
+
 }
 
-async function adminDeleteOrder(id){
 
-  if(
-    !isAdmin()||
-    !confirm(
-      "Supprimer définitivement cette commande ?"
-    )
-  ){
+/* =========================================================
+   ADMIN DELETE
+========================================================= */
+
+async function adminDeleteOrder(
+  orderId
+) {
+
+  if (!isAdminAuthorized()) {
+
+    toast(
+      "Administration verrouillée."
+    );
+
     return;
+
   }
 
-  try{
+
+  if (
+    !window.confirm(
+      "Supprimer définitivement cette commande ?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  try {
 
     await deleteDoc(
       doc(
         db,
         "orders",
-        id
+        orderId
       )
     );
+
 
     toast(
       "Commande supprimée."
     );
 
+
     renderAdmin();
 
-  }catch(error){
+  } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Suppression admin:",
+      error
+    );
 
     toast(
-      "Erreur de suppression."
+      "Impossible de supprimer la commande."
     );
+
   }
+
 }
 
-async function printInvoice(id){
 
-  try{
+/* =========================================================
+   INVOICE
+========================================================= */
 
-    const snapshot=
+async function printInvoice(
+  orderId
+) {
+
+  try {
+
+    const snapshot =
       await getDocs(
         collection(
           db,
@@ -3558,38 +4703,63 @@ async function printInvoice(id){
         )
       );
 
-    const docOrder=
+
+    const orderDoc =
       snapshot.docs.find(
-        d=>d.id===id
+        document =>
+          document.id === orderId
       );
 
-    if(!docOrder){
+
+    if (!orderDoc) {
+
       toast(
         "Commande introuvable."
       );
+
       return;
+
     }
 
-    const order={
-      id:docOrder.id,
-      ...docOrder.data()
+
+    const order = {
+
+      id:
+        orderDoc.id,
+
+      ...orderDoc.data()
+
     };
 
-    const win=
+
+    const invoiceWindow =
       window.open(
         "",
         "_blank",
         "width=900,height=700"
       );
 
-    if(!win){
+
+    if (!invoiceWindow) {
+
       toast(
         "Fenêtre bloquée par le navigateur."
       );
+
       return;
+
     }
 
-    win.document.write(
+
+    const items =
+      Array.isArray(
+        order.items
+      )
+        ? order.items
+        : [];
+
+
+    invoiceWindow.document.write(
       `
       <!DOCTYPE html>
 
@@ -3611,6 +4781,17 @@ async function printInvoice(id){
             color:#111;
           }
 
+          h1{
+            margin-bottom:5px;
+          }
+
+          .box{
+            padding:18px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            margin-top:20px;
+          }
+
           table{
             width:100%;
             border-collapse:collapse;
@@ -3622,13 +4803,6 @@ async function printInvoice(id){
             padding:10px;
             border-bottom:1px solid #ddd;
             text-align:left;
-          }
-
-          .box{
-            padding:15px;
-            border:1px solid #ddd;
-            border-radius:10px;
-            margin-top:20px;
           }
 
           .total{
@@ -3658,14 +4832,20 @@ async function printInvoice(id){
 
           <br>
 
-          Client :
+          <strong>
+            Client :
+          </strong>
+
           ${escapeHTML(
-            order.email||""
+            order.email || ""
           )}
 
           <br>
 
-          Date :
+          <strong>
+            Date :
+          </strong>
+
           ${escapeHTML(
             formatDate(
               order.createdAt
@@ -3674,13 +4854,17 @@ async function printInvoice(id){
 
           <br>
 
-          Statut :
+          <strong>
+            Statut :
+          </strong>
+
           ${escapeHTML(
-            order.status||
+            order.status ||
             "Enregistrée"
           )}
 
         </div>
+
 
         <table>
 
@@ -3693,7 +4877,7 @@ async function printInvoice(id){
               </th>
 
               <th>
-                Qté
+                Quantité
               </th>
 
               <th>
@@ -3711,76 +4895,77 @@ async function printInvoice(id){
           <tbody>
 
             ${
-              (
-                order.items||
-                []
-              ).map(
-                item=>
-                  `
-                  <tr>
+              items
+                .map(
+                  item =>
+                    `
+                    <tr>
 
-                    <td>
-                      ${escapeHTML(
-                        item.name||
-                        ""
-                      )}
-                    </td>
+                      <td>
+                        ${escapeHTML(
+                          item.name ||
+                          "Produit"
+                        )}
+                      </td>
 
-                    <td>
-                      ${Number(
-                        item.qty||
-                        0
-                      )}
-                    </td>
+                      <td>
+                        ${Number(
+                          item.qty || 0
+                        )}
+                      </td>
 
-                    <td>
-                      ${money(
-                        item.price
-                      )}
-                    </td>
+                      <td>
+                        ${money(
+                          item.price
+                        )}
+                      </td>
 
-                    <td>
-                      ${money(
-                        Number(
-                          item.price||
-                          0
-                        )*
-                        Number(
-                          item.qty||
-                          0
-                        )
-                      )}
-                    </td>
+                      <td>
+                        ${money(
+                          Number(
+                            item.price || 0
+                          ) *
+                          Number(
+                            item.qty || 0
+                          )
+                        )}
+                      </td>
 
-                  </tr>
-                  `
-              ).join("")
+                    </tr>
+                    `
+                )
+                .join("")
             }
 
           </tbody>
 
         </table>
 
+
         <div class="total">
 
           Total :
           ${
             Number(
-              order.total||
-              0
-            )===0
-              ?"Gratuit"
-              :money(
-                order.total
-              )
+              order.total || 0
+            ) === 0
+              ? "Gratuit"
+              : money(
+                  order.total
+                )
           }
 
         </div>
 
+
         <script>
-          window.onload=()=>{
+
+          window.onload = function(){
+
             window.print();
+
           };
+
         <\/script>
 
       </body>
@@ -3789,9 +4974,10 @@ async function printInvoice(id){
       `
     );
 
-    win.document.close();
 
-  }catch(error){
+    invoiceWindow.document.close();
+
+  } catch (error) {
 
     console.error(
       "Facture:",
@@ -3801,37 +4987,15 @@ async function printInvoice(id){
     toast(
       "Impossible de générer la facture."
     );
+
   }
+
 }
 
-checkoutBtn?.addEventListener(
-  "click",
-  ()=>{
-    if(!currentUser){
 
-      toast(
-        "Connecte-toi pour passer commande."
-      );
-
-      openAccount();
-
-      return;
-    }
-
-    if(!cartDetailed().length){
-
-      toast(
-        "Ton panier est vide."
-      );
-
-      return;
-    }
-
-    promoApplied=false;
-
-    renderCheckout();
-  }
-);
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 accountBtn?.addEventListener(
   "click",
@@ -3853,22 +5017,35 @@ adminBtn?.addEventListener(
   openAdmin
 );
 
+checkoutBtn?.addEventListener(
+  "click",
+  openCheckout
+);
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
 onAuthStateChanged(
   auth,
-  user=>{
+  user => {
 
-    currentUser=user;
+    currentUser =
+      user;
 
-    if(adminBtn){
 
-      adminBtn.style.display=
-        isAdmin()
-          ?"grid"
-          :"none";
+    if (adminBtn) {
+
+      adminBtn.style.display =
+        isAdminUser()
+          ? "grid"
+          : "none";
 
     }
 
-    if(!isAdmin()){
+
+    if (!isAdminUser()) {
 
       localStorage.removeItem(
         ADMIN_KEY
@@ -3876,14 +5053,30 @@ onAuthStateChanged(
 
     }
 
+
+    if (accountBtn) {
+
+      accountBtn.title =
+        user?.email ||
+        "Mon compte";
+
+    }
+
   }
 );
 
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
 document.addEventListener(
   "keydown",
-  event=>{
+  event => {
 
-    if(event.key==="Escape"){
+    if (
+      event.key === "Escape"
+    ) {
 
       closeModal();
       closeCart();
@@ -3895,19 +5088,25 @@ document.addEventListener(
 
 
 /* =========================================================
-   NOVASHOP STYLE
+   NOVASHOP CSS
 ========================================================= */
 
-const style=
+const novaStyle =
   document.createElement(
     "style"
   );
 
-style.textContent=`
 
-/* PRODUITS PC */
+novaStyle.textContent = `
+
+/* =========================================================
+   PRODUITS PC
+========================================================= */
 
 #productGrid{
+
+  display:grid!important;
+
   grid-template-columns:
     repeat(
       auto-fill,
@@ -3917,268 +5116,549 @@ style.textContent=`
   gap:14px!important;
 
   align-items:start!important;
+
 }
 
 #productGrid .product-card{
+
   width:100%!important;
+
   max-width:245px!important;
+
   margin:0 auto!important;
+
   min-width:0!important;
+
 }
 
 #productGrid .product-image{
+
   height:140px!important;
+
   min-height:140px!important;
+
   max-height:140px!important;
+
   overflow:hidden!important;
+
+  border-radius:12px!important;
+
 }
 
 #productGrid .product-image img{
+
   width:100%!important;
+
   height:100%!important;
+
   object-fit:contain!important;
+
   display:block!important;
+
 }
 
 #productGrid .product-body{
+
   padding:10px!important;
+
+}
+
+#productGrid .product-category{
+
+  font-size:10px!important;
+
 }
 
 #productGrid .product-name{
+
   font-size:13px!important;
+
   line-height:1.3!important;
+
   min-height:34px!important;
+
+  display:-webkit-box!important;
+
+  -webkit-line-clamp:2!important;
+
+  -webkit-box-orient:vertical!important;
+
+  overflow:hidden!important;
+
 }
 
 #productGrid .rating{
+
   font-size:10px!important;
+
   gap:3px!important;
+
+}
+
+#productGrid .stars{
+
+  letter-spacing:0!important;
+
 }
 
 #productGrid .price{
+
   font-size:16px!important;
+
 }
 
 
-/* BOUTONS PC */
+/* =========================================================
+   BOUTONS PRODUITS PC
+========================================================= */
 
 #productGrid .product-actions{
+
   display:flex!important;
+
   gap:8px!important;
+
+  margin-top:10px!important;
+
 }
 
 #productGrid .product-actions button{
+
   flex:1!important;
+
   min-height:38px!important;
+
   padding:8px 12px!important;
+
   border-radius:10px!important;
+
   font-size:13px!important;
+
   font-weight:700!important;
+
   cursor:pointer!important;
+
   transition:
     transform .15s ease,
     filter .15s ease,
     box-shadow .15s ease!important;
+
 }
 
 #productGrid .product-actions button:hover{
+
   transform:translateY(-2px);
+
   filter:brightness(1.08);
+
 }
 
 #productGrid .product-actions button:active{
+
   transform:translateY(0);
+
 }
 
 
-/* COMMANDES */
+/* =========================================================
+   COMMANDES
+========================================================= */
 
-.nova-order-actions{
-  display:flex!important;
-  flex-direction:column!important;
-  width:100%!important;
-  gap:10px!important;
-  margin-top:12px!important;
-}
+.nova-orders-panel,
+.nova-order-details{
 
-.nova-view-order{
-  display:flex!important;
   width:100%!important;
-  min-height:52px!important;
-  visibility:visible!important;
-  opacity:1!important;
-  align-items:center!important;
-  justify-content:center!important;
-  position:relative!important;
-  z-index:10!important;
+
+  max-width:100%!important;
+
+  overflow-x:hidden!important;
+
 }
 
 .nova-order-card{
-  overflow:hidden;
-  overflow-wrap:anywhere;
-  word-break:break-word;
+
+  width:100%!important;
+
+  max-width:100%!important;
+
+  overflow:hidden!important;
+
+  overflow-wrap:anywhere!important;
+
+  word-break:break-word!important;
+
 }
 
-.nova-order-preview,
-.nova-detail-total{
+.nova-order-head{
+
   display:flex;
+
   justify-content:space-between;
+
+  align-items:flex-start;
+
   gap:12px;
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:10px;
-  background:rgba(255,255,255,.035);
+
 }
 
-.nova-order-items{
-  display:grid;
-  gap:6px;
-  margin-top:10px;
+.nova-order-preview{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  margin-top:12px;
+
+  padding:10px 12px;
+
+  border-radius:10px;
+
+  background:rgba(255,255,255,.035);
+
+}
+
+.nova-order-actions{
+
+  display:flex!important;
+
+  flex-direction:column!important;
+
+  gap:10px!important;
+
+  width:100%!important;
+
+  margin-top:12px!important;
+
+}
+
+.nova-order-actions button.nova-view-order{
+
+  display:flex!important;
+
+  visibility:visible!important;
+
+  opacity:1!important;
+
+  width:100%!important;
+
+  max-width:100%!important;
+
+  min-height:52px!important;
+
+  align-items:center!important;
+
+  justify-content:center!important;
+
+  position:relative!important;
+
+  z-index:20!important;
+
+  flex:none!important;
+
 }
 
 .nova-order-item{
+
   display:flex;
+
   justify-content:space-between;
+
+  align-items:flex-start;
+
   gap:12px;
+
   padding:8px 10px;
+
   border-radius:10px;
+
   background:rgba(255,255,255,.035);
+
+  font-size:13px;
+
+}
+
+.nova-order-items{
+
+  display:grid;
+
+  gap:6px;
+
+  margin-top:10px;
+
 }
 
 .nova-package-box{
+
   margin-top:10px;
+
   padding:12px;
+
   border-radius:12px;
+
   background:rgba(255,255,255,.035);
+
   line-height:1.7;
+
   overflow-wrap:anywhere;
+
   word-break:break-word;
+
+}
+
+.nova-detail-total{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  margin-top:10px;
+
+  padding-top:10px;
+
+  border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+.nova-detail-status{
+
+  margin-top:10px;
+
+  padding-top:10px;
+
+  border-top:1px solid rgba(255,255,255,.08);
+
 }
 
 .nova-status{
+
   display:inline-flex;
+
   align-items:center;
+
   justify-content:center;
+
+  gap:5px;
+
   padding:7px 10px;
+
   border-radius:999px;
+
   background:rgba(255,255,255,.08);
-  font-weight:800;
+
   font-size:12px;
+
+  font-weight:800;
+
+  white-space:nowrap;
+
 }
 
 .nova-status.delivered{
+
   background:rgba(34,197,94,.15);
+
   color:#4ade80;
+
 }
 
 .nova-status.cancelled{
+
   background:rgba(239,68,68,.15);
+
   color:#f87171;
+
 }
 
 .nova-status.refund{
+
   background:rgba(245,158,11,.15);
+
   color:#fbbf24;
+
 }
 
 .nova-status.transit{
+
   background:rgba(59,130,246,.15);
+
   color:#60a5fa;
+
 }
 
 .nova-status.nearby{
+
   background:rgba(168,85,247,.15);
+
   color:#c084fc;
+
 }
 
 
-/* TIMELINE */
+/* =========================================================
+   TIMELINE
+========================================================= */
 
 .order-timeline{
+
   display:flex;
+
   flex-direction:column;
+
   gap:14px;
-  margin-top:10px;
+
+  margin-top:12px;
+
 }
 
 .timeline-step{
+
   display:flex;
+
   align-items:center;
+
   gap:10px;
+
   opacity:.45;
+
 }
 
 .timeline-step.done{
+
   opacity:1;
+
 }
 
 .timeline-dot{
-  width:28px;
-  height:28px;
-  min-width:28px;
+
+  width:30px;
+
+  height:30px;
+
+  min-width:30px;
+
   border-radius:50%;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   background:rgba(255,255,255,.08);
+
   font-size:12px;
+
+  font-weight:800;
+
 }
 
 .timeline-step.done .timeline-dot{
+
   background:rgba(34,197,94,.18);
+
 }
 
 
-/* ADMIN */
+/* =========================================================
+   ADMIN
+========================================================= */
+
+.admin-order{
+
+  margin-top:15px;
+
+  padding:15px;
+
+  border-radius:14px;
+
+  background:rgba(255,255,255,.035);
+
+  border:1px solid rgba(255,255,255,.06);
+
+  overflow:hidden;
+
+}
 
 .admin-order-grid{
+
   display:grid;
+
   grid-template-columns:
     repeat(
       auto-fit,
       minmax(180px,1fr)
     );
+
   gap:10px;
+
   margin-top:14px;
+
 }
 
 .admin-order-grid label{
+
   display:block;
-  font-size:12px;
-  font-weight:800;
+
   margin-bottom:5px;
+
+  font-size:12px;
+
+  font-weight:800;
+
 }
 
 .admin-order-grid input,
 .admin-order-grid select{
+
   width:100%;
+
 }
 
 .admin-actions{
+
   display:flex;
+
   flex-wrap:wrap;
+
   gap:8px;
+
   margin-top:12px;
+
 }
 
 .admin-actions button{
+
   flex:1;
+
   min-width:170px;
+
 }
 
 .admin-top-actions{
+
   display:flex;
-  gap:10px;
+
   flex-wrap:wrap;
+
+  gap:10px;
+
   margin-bottom:15px;
+
 }
 
 
-/* MOBILE */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:700px){
 
   #productGrid{
+
     grid-template-columns:
       repeat(
         2,
@@ -4186,88 +5666,174 @@ style.textContent=`
       )!important;
 
     gap:10px!important;
+
   }
 
   #productGrid .product-card{
+
     max-width:none!important;
+
   }
 
   #productGrid .product-image{
+
     height:115px!important;
+
     min-height:115px!important;
+
     max-height:115px!important;
+
   }
 
   #productGrid .product-body{
+
     padding:8px!important;
+
   }
 
   #productGrid .product-name{
+
     font-size:12px!important;
+
     min-height:31px!important;
+
   }
 
   #productGrid .rating-count{
+
     display:none!important;
+
   }
 
   #productGrid .price{
+
     font-size:15px!important;
+
   }
 
   #productGrid .product-actions{
+
     display:grid!important;
+
     grid-template-columns:1fr!important;
+
     gap:6px!important;
+
   }
 
   #productGrid .product-actions button{
+
     width:100%!important;
+
     min-height:38px!important;
-  }
 
-  .nova-view-order{
-    width:100%!important;
-    min-height:52px!important;
-  }
-
-  .admin-order-grid{
-    grid-template-columns:1fr;
-  }
-
-  .admin-actions{
-    flex-direction:column;
-  }
-
-  .admin-actions button{
-    width:100%;
-    min-width:0;
-  }
-
-  .admin-top-actions{
-    flex-direction:column;
-  }
-
-  .admin-top-actions button{
-    width:100%;
   }
 
   .nova-order-head{
-    display:flex;
+
     flex-direction:column!important;
+
     align-items:stretch!important;
+
   }
 
   .nova-order-head .nova-status{
+
+    width:100%!important;
+
+    white-space:normal!important;
+
+    text-align:center!important;
+
+  }
+
+  .nova-order-preview{
+
+    font-size:12px;
+
+  }
+
+  .nova-order-actions{
+
+    width:100%!important;
+
+  }
+
+  .nova-order-actions button{
+
+    width:100%!important;
+
+    max-width:100%!important;
+
+  }
+
+  .nova-order-actions button.nova-view-order{
+
+    display:flex!important;
+
+    visibility:visible!important;
+
+    opacity:1!important;
+
+    width:100%!important;
+
+    min-height:52px!important;
+
+  }
+
+  .nova-order-item{
+
+    font-size:12px;
+
+  }
+
+  .nova-package-box{
+
+    font-size:12px;
+
+    width:100%!important;
+
+  }
+
+  .admin-order-grid{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .admin-actions{
+
+    flex-direction:column;
+
+  }
+
+  .admin-actions button{
+
     width:100%;
+
+    min-width:0;
+
+  }
+
+  .admin-top-actions{
+
+    flex-direction:column;
+
+  }
+
+  .admin-top-actions button{
+
+    width:100%;
+
   }
 
 }
 
 `;
 
+
 document.head.appendChild(
-  style
+  novaStyle
 );
 
 
@@ -4275,19 +5841,22 @@ document.head.appendChild(
    INIT
 ========================================================= */
 
-applyTheme();
-
 renderCategories();
 
 renderProducts();
 
 renderCart();
 
-window.NovaShop={
+
+/* =========================================================
+   GLOBAL API
+========================================================= */
+
+window.NovaShop = {
 
   products,
 
-  get cart(){
+  get cart() {
     return cartDetailed();
   },
 
@@ -4303,9 +5872,38 @@ window.NovaShop={
 
   openOrders,
 
-  openAdmin
+  openAdmin,
+
+  state() {
+
+    return {
+
+      products:
+        products.length,
+
+      cart:
+        cartDetailed(),
+
+      category:
+        selectedCategory,
+
+      search:
+        searchValue,
+
+      user:
+        currentUser?.email ||
+        null
+
+    };
+
+  }
 
 };
+
+
+/* =========================================================
+   DEBUG
+========================================================= */
 
 console.log(
   "NovaShop chargé :",
@@ -4314,5 +5912,16 @@ console.log(
 );
 
 console.log(
-  "NovaShop : bouton Voir la commande actif"
+  "NovaShop images :",
+  "URLs directes"
 );
+
+console.log(
+  "NovaShop commandes :",
+  "bouton Voir la commande actif"
+);
+
+
+/* =========================================================
+   END
+========================================================= */

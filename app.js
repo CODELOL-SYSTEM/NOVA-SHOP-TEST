@@ -54,106 +54,3960 @@ const products=[
 {id:"p41",name:"MSI GeForce RTX 3050 LP E 6G OC",category:"Cartes graphiques",price:100,image:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTCe_rha_tAAHPWnQ8VV7GIvF-uSqUaEyU61TSnwgM4CK8g3-x_3Hq4wOgH36Ri63eAiWHsvhmRJHzVrUQR9-IwMx31WH0w"},
 {id:"p42",name:"ASUS Dual Radeon RX 7600 EVO OC Edition 8GB GDDR6",category:"Cartes graphiques",price:140,image:"https://m.media-amazon.com/images/I/81QItJufypL._AC_SL1500_.jpg"},
 {id:"p43",name:"PC Gamer Fixe, Ryzen 7 5700G, Vega 8, 16G DDR4, 1T SSD",category:"PC Gamer",price:650,image:"https://m.media-amazon.com/images/I/81M3iU5S4QL._AC_SL1500_.jpg",new:true}
-];
-let currentUser=null,selectedCategory="Toutes",searchValue="",cart=[],promoApplied=false;
-try{cart=JSON.parse(localStorage.getItem("novaCart")||"[]");if(!Array.isArray(cart))cart=[];}catch{cart=[];}
-const saveCart=()=>localStorage.setItem("novaCart",JSON.stringify(cart));
-const escapeHTML=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-const imageUrl=u=>!u?FALLBACK_IMAGE:/^(\.\.?\/|data:|blob:)/.test(u)?u:"https://wsrv.nl/?url="+encodeURIComponent(u);
-const imageSrc=u=>escapeHTML(imageUrl(u));
-window.imageError=(img,original)=>{if(!img)return;const s=img.dataset.stage||"proxy";if(s==="proxy"){img.dataset.stage="original";img.src=original||FALLBACK_IMAGE;}else{img.dataset.stage="fallback";img.src=FALLBACK_IMAGE;}};
-const money=v=>v===0?"Prix à venir":new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"}).format(Number(v||0));
-const reviewData=p=>{const n=Number(p.id.slice(1));return{count:132+((n*173)%1604),rating:Number((4.4+((n%6)*.1)).toFixed(1))}};
-const starsHTML=r=>"★★★★★".slice(0,Math.round(r))+"☆☆☆☆☆".slice(0,5-Math.round(r));
-function applyTheme(){const c=localStorage.getItem("novaThemeChoice")||"dark";document.body.classList.toggle("light",c==="light"||(c==="auto"&&matchMedia("(prefers-color-scheme:light)").matches));}
-function toast(m){const t=document.createElement("div");t.textContent=m;t.style.cssText="background:#111827;color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;box-shadow:0 10px 25px #0006;";toastContainer.appendChild(t);setTimeout(()=>t.remove(),2400);} 
-const openModal=html=>{modalContent.innerHTML=html||"";modal.classList.add("open");document.body.style.overflow="hidden"};
-const closeModal=()=>{modal.classList.remove("open");document.body.style.overflow=""};
-modalClose?.addEventListener("click",closeModal);modal?.addEventListener("click",e=>{if(e.target===modal)closeModal()});
-function filteredProducts(){const s=searchValue.trim().toLowerCase();return products.filter(p=>(selectedCategory==="Toutes"||p.category===selectedCategory)&&(!s||p.name.toLowerCase().includes(s)||p.category.toLowerCase().includes(s)))}
-function renderCategories(){if(!categoriesEl)return;categoriesEl.innerHTML=["Toutes",...new Set(products.map(p=>p.category))].map(c=>`<button class="category-btn ${c===selectedCategory?"active":""}" data-category="${escapeHTML(c)}">${escapeHTML(c)}</button>`).join("");categoriesEl.querySelectorAll("[data-category]").forEach(b=>b.onclick=()=>{selectedCategory=b.dataset.category;renderCategories();renderProducts()})}
-function productCardHTML(p){const r=reviewData(p);return `<article class="product-card nova-compact-card"><div class="product-image nova-compact-image">${p.new?'<span class="new-badge">Nouveau</span>':""}<img src="${imageSrc(p.image)}" data-original="${escapeHTML(p.image)}" alt="${escapeHTML(p.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="imageError(this,this.dataset.original)"></div><div class="product-body"><div class="product-category">${escapeHTML(p.category)}</div><div class="product-name">${escapeHTML(p.name)}</div><div class="rating"><span class="stars">${starsHTML(r.rating)}</span><span>${r.rating.toFixed(1).replace(".",",")}</span><span class="rating-count">· ${r.count.toLocaleString("fr-FR")} avis</span></div><div class="product-bottom"><div class="price">${money(p.price)}</div></div><div class="product-actions"><button class="btn btn-secondary btn-small" data-view="${p.id}">Voir</button><button class="btn btn-primary btn-small" data-add="${p.id}">🛒 Ajouter</button></div></div></article>`}
-function renderProducts(){const list=filteredProducts();if(productCount)productCount.textContent=`${list.length} produit${list.length>1?"s":""}`;productsGrid.innerHTML=list.length?list.map(productCardHTML).join(""):`<div class="empty"><div class="empty-icon">⌕</div><h3>Aucun produit trouvé</h3><p>Essaie une autre recherche ou une autre catégorie.</p></div>`;productsGrid.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>openProduct(b.dataset.view));productsGrid.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>addToCart(b.dataset.add,b));}
-function openProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const r=reviewData(p);openModal(`<div class="panel"><button class="modal-close-inside" id="closeProduct">✕</button><div class="product-modal"><div class="modal-image"><img src="${imageSrc(p.image)}" data-original="${escapeHTML(p.image)}" onerror="imageError(this,this.dataset.original)" alt=""></div><div class="modal-info"><div class="product-category">${escapeHTML(p.category)}</div><h2>${escapeHTML(p.name)}</h2><div class="rating"><span class="stars">${starsHTML(r.rating)}</span> ${r.rating.toFixed(1).replace(".",",")} · ${r.count.toLocaleString("fr-FR")} avis</div><div class="modal-price">${money(p.price)}</div><button class="btn btn-primary btn-wide" id="modalAdd">🛒 Ajouter au panier</button></div></div></div>`);$("closeProduct").onclick=closeModal;$("modalAdd").onclick=()=>{addToCart(p.id);closeModal()};}
-function cartDetailed(){return cart.map(i=>{const p=products.find(x=>x.id===i.id);return p?{...p,qty:Math.max(1,Number(i.qty)||1)}:null}).filter(Boolean)}
-function addToCart(id){const i=cart.find(x=>x.id===id);if(i)i.qty++;else cart.push({id,qty:1});saveCart();renderCart();toast("Produit ajouté au panier 🛒")}
-function removeFromCart(id){cart=cart.filter(i=>i.id!==id);saveCart();renderCart()}function changeQty(id,d){const i=cart.find(x=>x.id===id);if(!i)return;i.qty+=d;if(i.qty<=0)return removeFromCart(id);saveCart();renderCart()}
-function renderCart(){const items=cartDetailed();const count=items.reduce((s,i)=>s+i.qty,0);if(cartBadge){cartBadge.textContent=count>99?"99+":count;cartBadge.style.display=count?"":"none"}if(cartTotal)cartTotal.textContent=money(items.reduce((s,i)=>s+i.price*i.qty,0));if(!cartItems)return;cartItems.innerHTML=items.length?items.map(i=>`<div class="cart-item"><img src="${imageSrc(i.image)}" data-original="${escapeHTML(i.image)}" onerror="imageError(this,this.dataset.original)" alt=""><div class="cart-item-info"><div class="cart-item-name">${escapeHTML(i.name)}</div><div class="cart-item-price">${money(i.price)}</div><div class="qty"><button data-minus="${i.id}">−</button><span>${i.qty}</span><button data-plus="${i.id}">+</button></div></div><button class="remove" data-remove="${i.id}">Suppr.</button></div>`).join(""):`<div class="empty"><div class="empty-icon">🛒</div><h3>Ton panier est vide</h3></div>`;cartItems.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.minus,-1));cartItems.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>changeQty(b.dataset.plus,1));cartItems.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>removeFromCart(b.dataset.remove));}
-function openCart(){cartOverlay?.classList.add("open");cartDrawer?.classList.add("open")};function closeCart(){cartOverlay?.classList.remove("open");cartDrawer?.classList.remove("open")};cartBtn?.addEventListener("click",openCart);cartClose?.addEventListener("click",closeCart);cartOverlay?.addEventListener("click",closeCart);
-searchInput?.addEventListener("input",e=>{searchValue=e.target.value||"";renderProducts});
-function authError(code){return({"auth/invalid-email":"Adresse e-mail invalide.","auth/user-not-found":"Aucun compte avec cette adresse.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/email-already-in-use":"Cette adresse est déjà utilisée.","auth/weak-password":"Mot de passe trop faible.","auth/network-request-failed":"Erreur réseau."}[code]||"Une erreur est survenue.")}
-function openAccount(){
-  if(currentUser){
-    openModal(`<div class="panel"><h2>Mon compte</h2><p>${escapeHTML(currentUser.email||"")}</p><button class="btn btn-secondary btn-wide" id="logout">🚪 Se déconnecter</button></div>`);
-    $("logout").onclick=async()=>{try{await signOut(auth);closeModal();toast("Déconnexion réussie")}catch(e){toast(authError(e.code))}};
+];let currentUser=null;
+let selectedCategory="Toutes";
+let searchValue="";
+let cart=[];
+let promoApplied=false;
+
+try{
+  cart=JSON.parse(localStorage.getItem("novaCart")||"[]");
+  if(!Array.isArray(cart)) cart=[];
+}catch{
+  cart=[];
+}
+
+const saveCart=()=>{
+  localStorage.setItem("novaCart",JSON.stringify(cart));
+};
+
+const escapeHTML=v=>
+  String(v??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+const imageUrl=u=>
+  !u
+    ? FALLBACK_IMAGE
+    : /^(\.\.?\/|data:|blob:)/.test(u)
+      ? u
+      : "https://wsrv.nl/?url="+encodeURIComponent(u);
+
+const imageSrc=u=>
+  escapeHTML(imageUrl(u));
+
+window.imageError=(img,original)=>{
+  if(!img)return;
+
+  const stage=
+    img.dataset.stage||
+    "proxy";
+
+  if(stage==="proxy"){
+    img.dataset.stage="original";
+    img.src=original||FALLBACK_IMAGE;
+  }else{
+    img.dataset.stage="fallback";
+    img.src=FALLBACK_IMAGE;
+  }
+};
+
+const money=v=>
+  Number(v||0)===0
+    ? "Prix à venir"
+    : new Intl.NumberFormat(
+        "fr-FR",
+        {
+          style:"currency",
+          currency:"EUR"
+        }
+      ).format(Number(v||0));
+
+const reviewData=p=>{
+  const n=Number(p.id.slice(1));
+
+  return {
+    count:
+      132+((n*173)%1604),
+
+    rating:
+      Number(
+        (
+          4.4+
+          ((n%6)*0.1)
+        ).toFixed(1)
+      )
+  };
+};
+
+const starsHTML=r=>{
+  const rounded=Math.round(r);
+
+  return "★★★★★".slice(0,rounded)+
+    "☆☆☆☆☆".slice(0,5-rounded);
+};
+
+function applyTheme(){
+
+  const choice=
+    localStorage.getItem(
+      "novaThemeChoice"
+    )||"dark";
+
+  document.body.classList.toggle(
+    "light",
+    choice==="light"||
+    (
+      choice==="auto"&&
+      window.matchMedia(
+        "(prefers-color-scheme:light)"
+      ).matches
+    )
+  );
+}
+
+function openModal(html){
+
+  if(!modal||!modalContent)return;
+
+  modalContent.innerHTML=
+    html||"";
+
+  modal.classList.add("open");
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+  document.body.style.overflow=
+    "hidden";
+}
+
+function closeModal(){
+
+  if(!modal)return;
+
+  modal.classList.remove("open");
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+  document.body.style.overflow="";
+}
+
+if(modalClose){
+  modalClose.onclick=
+    closeModal;
+}
+
+if(modal){
+  modal.addEventListener(
+    "click",
+    event=>{
+      if(event.target===modal){
+        closeModal();
+      }
+    }
+  );
+}
+
+function filteredProducts(){
+
+  const s=
+    searchValue
+      .trim()
+      .toLowerCase();
+
+  return products.filter(
+    p=>
+      (
+        selectedCategory==="Toutes"||
+        p.category===selectedCategory
+      )&&
+      (
+        !s||
+        p.name
+          .toLowerCase()
+          .includes(s)||
+        p.category
+          .toLowerCase()
+          .includes(s)
+      )
+  );
+}
+
+function renderCategories(){
+
+  if(!categoriesEl)return;
+
+  const categories=[
+    "Toutes",
+    ...new Set(
+      products.map(
+        p=>p.category
+      )
+    )
+  ];
+
+  categoriesEl.innerHTML=
+    categories
+      .map(
+        category=>
+          `
+          <button
+            class="category-btn ${
+              category===selectedCategory
+                ?"active"
+                :""
+            }"
+            data-category="${escapeHTML(category)}"
+          >
+            ${escapeHTML(category)}
+          </button>
+          `
+      )
+      .join("");
+
+  categoriesEl
+    .querySelectorAll(
+      "[data-category]"
+    )
+    .forEach(button=>{
+      button.onclick=()=>{
+        selectedCategory=
+          button.dataset.category;
+
+        renderCategories();
+        renderProducts();
+      };
+    });
+}
+
+function productCardHTML(product){
+
+  const reviews=
+    reviewData(product);
+
+  return `
+    <article
+      class="product-card nova-compact-card"
+    >
+
+      <div
+        class="product-image nova-compact-image"
+      >
+
+        ${
+          product.new
+            ? `<span class="new-badge">Nouveau</span>`
+            :""
+        }
+
+        <img
+          src="${imageSrc(product.image)}"
+          data-original="${escapeHTML(product.image)}"
+          alt="${escapeHTML(product.name)}"
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          onerror="imageError(this,this.dataset.original)"
+        >
+
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-category">
+          ${escapeHTML(product.category)}
+        </div>
+
+        <div class="product-name">
+          ${escapeHTML(product.name)}
+        </div>
+
+        <div class="rating">
+
+          <span class="stars">
+            ${starsHTML(reviews.rating)}
+          </span>
+
+          <span>
+            ${reviews.rating
+              .toFixed(1)
+              .replace(".",",")}
+          </span>
+
+          <span class="rating-count">
+            · ${reviews.count.toLocaleString("fr-FR")} avis
+          </span>
+
+        </div>
+
+        <div class="product-bottom">
+
+          <div class="price">
+            ${money(product.price)}
+          </div>
+
+        </div>
+
+        <div class="product-actions">
+
+          <button
+            class="btn btn-secondary btn-small"
+            data-view="${product.id}"
+          >
+            Voir
+          </button>
+
+          <button
+            class="btn btn-primary btn-small"
+            data-add="${product.id}"
+          >
+            🛒 Ajouter
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+function renderProducts(){
+
+  if(!productsGrid)return;
+
+  const list=
+    filteredProducts();
+
+  if(productCount){
+    productCount.textContent=
+      `${list.length} produit${
+        list.length>1
+          ?"s"
+          :""
+      }`;
+  }
+
+  productsGrid.innerHTML=
+    list.length
+      ? list
+          .map(productCardHTML)
+          .join("")
+      :
+        `
+        <div class="empty">
+
+          <div class="empty-icon">
+            ⌕
+          </div>
+
+          <h3>
+            Aucun produit trouvé
+          </h3>
+
+          <p>
+            Essaie une autre recherche ou une autre catégorie.
+          </p>
+
+        </div>
+        `;
+
+  productsGrid
+    .querySelectorAll(
+      "[data-view]"
+    )
+    .forEach(button=>{
+      button.onclick=()=>{
+        openProduct(
+          button.dataset.view
+        );
+      };
+    });
+
+  productsGrid
+    .querySelectorAll(
+      "[data-add]"
+    )
+    .forEach(button=>{
+      button.onclick=()=>{
+        addToCart(
+          button.dataset.add
+        );
+      };
+    });
+}
+
+function openProduct(id){
+
+  const p=
+    products.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  const r=
+    reviewData(p);
+
+  openModal(
+    `
+    <div class="panel product-product-panel">
+
+      <button
+        class="modal-close-inside"
+        id="closeProduct"
+      >
+        ✕
+      </button>
+
+      <div class="product-modal">
+
+        <div class="modal-image">
+
+          <img
+            src="${imageSrc(p.image)}"
+            data-original="${escapeHTML(p.image)}"
+            onerror="imageError(this,this.dataset.original)"
+            alt=""
+          >
+
+        </div>
+
+        <div class="modal-info">
+
+          <div class="product-category">
+            ${escapeHTML(p.category)}
+          </div>
+
+          <h2>
+            ${escapeHTML(p.name)}
+          </h2>
+
+          <div class="rating">
+
+            <span class="stars">
+              ${starsHTML(r.rating)}
+            </span>
+
+            ${r.rating
+              .toFixed(1)
+              .replace(".",",")}
+
+            · ${r.count.toLocaleString("fr-FR")} avis
+
+          </div>
+
+          <div class="modal-price">
+            ${money(p.price)}
+          </div>
+
+          <button
+            class="btn btn-primary btn-wide"
+            id="modalAdd"
+          >
+            🛒 Ajouter au panier
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+    `
+  );
+
+  if($("closeProduct")){
+    $("closeProduct").onclick=
+      closeModal;
+  }
+
+  if($("modalAdd")){
+    $("modalAdd").onclick=()=>{
+      addToCart(p.id);
+      closeModal();
+    };
+  }
+}
+
+function cartDetailed(){
+
+  return cart
+    .map(item=>{
+
+      const p=
+        products.find(
+          x=>x.id===item.id
+        );
+
+      if(!p)return null;
+
+      return {
+        ...p,
+        qty:
+          Math.max(
+            1,
+            Number(item.qty)||1
+          )
+      };
+
+    })
+    .filter(Boolean);
+}
+
+function cartSubtotal(){
+
+  return cartDetailed()
+    .reduce(
+      (sum,item)=>
+        sum+
+        item.price*
+        item.qty,
+      0
+    );
+}
+
+function addToCart(id){
+
+  const item=
+    cart.find(
+      x=>x.id===id
+    );
+
+  if(item){
+    item.qty=
+      Number(item.qty||0)+1;
+  }else{
+    cart.push({
+      id,
+      qty:1
+    });
+  }
+
+  saveCart();
+  renderCart();
+
+  toast(
+    "Produit ajouté au panier 🛒"
+  );
+}
+
+function removeFromCart(id){
+
+  cart=
+    cart.filter(
+      item=>item.id!==id
+    );
+
+  saveCart();
+  renderCart();
+}
+
+function changeQty(id,delta){
+
+  const item=
+    cart.find(
+      x=>x.id===id
+    );
+
+  if(!item)return;
+
+  item.qty=
+    Number(item.qty||1)+
+    Number(delta||0);
+
+  if(item.qty<=0){
+    removeFromCart(id);
     return;
   }
-  let mode="login";
-  const draw=()=>{
-    openModal(`<div class="panel"><h2>${mode==="login"?"Connexion":"Créer un compte"}</h2><div class="auth-tabs"><button type="button" id="loginTab" class="auth-tab ${mode==="login"?"active":""}">Connexion</button><button type="button" id="registerTab" class="auth-tab ${mode==="register"?"active":""}">Créer un compte</button></div><form id="authForm"><label>E-mail</label><input id="authEmail" type="email" required><label>Mot de passe</label><input id="authPassword" type="password" minlength="6" required>${mode==="register"?`<label>Confirmer le mot de passe</label><input id="authPassword2" type="password" minlength="6" required>`:""}<div id="authErr" class="form-error"></div><button class="btn btn-primary btn-wide" type="submit">${mode==="login"?"Se connecter":"Créer mon compte"}</button></form></div>`);
-    $("loginTab").onclick=()=>{mode="login";draw()};
-    $("registerTab").onclick=()=>{mode="register";draw()};
-    $("authForm").onsubmit=async e=>{
-      e.preventDefault();
-      const em=$("authEmail").value.trim(),pw=$("authPassword").value,er=$("authErr");
-      if(mode==="register"&&pw!==$("authPassword2").value){er.textContent="Les mots de passe ne correspondent pas.";return}
-      try{
-        if(mode==="login")await signInWithEmailAndPassword(auth,em,pw);
-        else await createUserWithEmailAndPassword(auth,em,pw);
-        closeModal();toast(mode==="login"?"Connexion réussie ✅":"Compte créé ✅");
-      }catch(x){er.textContent=authError(x.code)}
-    };
+
+  saveCart();
+  renderCart();
+}
+
+function renderCart(){
+
+  const items=
+    cartDetailed();
+
+  const count=
+    items.reduce(
+      (sum,item)=>
+        sum+item.qty,
+      0
+    );
+
+  if(cartBadge){
+
+    cartBadge.textContent=
+      count>99
+        ?"99+"
+        :count;
+
+    cartBadge.style.display=
+      count
+        ?""
+        :"none";
+  }
+
+  if(cartTotal){
+    cartTotal.textContent=
+      money(
+        items.reduce(
+          (sum,item)=>
+            sum+
+            item.price*
+            item.qty,
+          0
+        )
+      );
+  }
+
+  if(!cartItems)return;
+
+  if(!items.length){
+
+    cartItems.innerHTML=
+      `
+      <div class="empty">
+
+        <div class="empty-icon">
+          🛒
+        </div>
+
+        <h3>
+          Ton panier est vide
+        </h3>
+
+        <p>
+          Ajoute des produits pour commencer.
+        </p>
+
+      </div>
+      `;
+
+    return;
+  }
+
+  cartItems.innerHTML=
+    items.map(
+      item=>
+        `
+        <div class="cart-item">
+
+          <img
+            src="${imageSrc(item.image)}"
+            data-original="${escapeHTML(item.image)}"
+            alt=""
+            onerror="imageError(this,this.dataset.original)"
+          >
+
+          <div class="cart-item-info">
+
+            <div class="cart-item-name">
+              ${escapeHTML(item.name)}
+            </div>
+
+            <div class="cart-item-price">
+              ${money(item.price)}
+            </div>
+
+            <div class="qty">
+
+              <button
+                data-minus="${item.id}"
+              >
+                −
+              </button>
+
+              <span>
+                ${item.qty}
+              </span>
+
+              <button
+                data-plus="${item.id}"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+          <button
+            class="remove"
+            data-remove="${item.id}"
+          >
+            🗑️
+          </button>
+
+        </div>
+        `
+    ).join("");
+
+  cartItems
+    .querySelectorAll(
+      "[data-minus]"
+    )
+    .forEach(b=>{
+      b.onclick=()=>{
+        changeQty(
+          b.dataset.minus,
+          -1
+        );
+      };
+    });
+
+  cartItems
+    .querySelectorAll(
+      "[data-plus]"
+    )
+    .forEach(b=>{
+      b.onclick=()=>{
+        changeQty(
+          b.dataset.plus,
+          1
+        );
+      };
+    });
+
+  cartItems
+    .querySelectorAll(
+      "[data-remove]"
+    )
+    .forEach(b=>{
+      b.onclick=()=>{
+        removeFromCart(
+          b.dataset.remove
+        );
+      };
+    });
+}
+
+function openCart(){
+
+  cartOverlay?.classList.add(
+    "open"
+  );
+
+  cartDrawer?.classList.add(
+    "open"
+  );
+}
+
+function closeCart(){
+
+  cartOverlay?.classList.remove(
+    "open"
+  );
+
+  cartDrawer?.classList.remove(
+    "open"
+  );
+}
+
+cartBtn?.addEventListener(
+  "click",
+  openCart
+);
+
+cartClose?.addEventListener(
+  "click",
+  closeCart
+);
+
+cartOverlay?.addEventListener(
+  "click",
+  closeCart
+);
+
+searchInput?.addEventListener(
+  "input",
+  event=>{
+    searchValue=
+      event.target.value||"";
+
+    renderProducts();
+  }
+);
+
+function toast(message){
+
+  const t=
+    document.createElement("div");
+
+  t.textContent=
+    message;
+
+  t.style.cssText=
+    "background:#111827;"+
+    "color:#fff;"+
+    "padding:12px 16px;"+
+    "border-radius:12px;"+
+    "font-weight:700;"+
+    "box-shadow:0 10px 25px #0006;";
+
+  toastContainer.appendChild(t);
+
+  setTimeout(
+    ()=>t.remove(),
+    2400
+  );
+}function authError(code){
+
+  const errors={
+
+    "auth/invalid-email":
+      "Adresse e-mail invalide.",
+
+    "auth/user-not-found":
+      "Aucun compte avec cette adresse.",
+
+    "auth/wrong-password":
+      "Mot de passe incorrect.",
+
+    "auth/invalid-credential":
+      "E-mail ou mot de passe incorrect.",
+
+    "auth/email-already-in-use":
+      "Cette adresse est déjà utilisée.",
+
+    "auth/weak-password":
+      "Mot de passe trop faible.",
+
+    "auth/network-request-failed":
+      "Erreur réseau."
+
   };
+
+  return(
+    errors[code]||
+    "Une erreur est survenue."
+  );
+}
+
+function openAccount(){
+
+  if(currentUser){
+
+    openModal(
+      `
+      <div class="panel">
+
+        <h2>
+          Mon compte
+        </h2>
+
+        <p>
+          ${escapeHTML(
+            currentUser.email||""
+          )}
+        </p>
+
+        <button
+          class="btn btn-secondary btn-wide"
+          id="logout"
+        >
+          🚪 Se déconnecter
+        </button>
+
+      </div>
+      `
+    );
+
+    $("logout").onclick=
+      async()=>{
+        try{
+          await signOut(auth);
+          closeModal();
+          toast(
+            "Déconnexion réussie"
+          );
+        }catch(error){
+          toast(
+            authError(error.code)
+          );
+        }
+      };
+
+    return;
+  }
+
+  let mode="login";
+
+  const draw=()=>{
+
+    openModal(
+      `
+      <div class="panel">
+
+        <h2>
+          ${
+            mode==="login"
+              ?"Connexion"
+              :"Créer un compte"
+          }
+        </h2>
+
+        <div class="auth-tabs">
+
+          <button
+            type="button"
+            id="loginTab"
+            class="auth-tab ${
+              mode==="login"
+                ?"active"
+                :""
+            }"
+          >
+            Connexion
+          </button>
+
+          <button
+            type="button"
+            id="registerTab"
+            class="auth-tab ${
+              mode==="register"
+                ?"active"
+                :""
+            }"
+          >
+            Créer un compte
+          </button>
+
+        </div>
+
+        <form id="authForm">
+
+          <label>
+            E-mail
+          </label>
+
+          <input
+            id="authEmail"
+            type="email"
+            required
+          >
+
+          <label>
+            Mot de passe
+          </label>
+
+          <input
+            id="authPassword"
+            type="password"
+            minlength="6"
+            required
+          >
+
+          ${
+            mode==="register"
+              ? `
+                <label>
+                  Confirmer le mot de passe
+                </label>
+
+                <input
+                  id="authPassword2"
+                  type="password"
+                  minlength="6"
+                  required
+                >
+              `
+              :""
+          }
+
+          <div
+            id="authErr"
+            class="form-error"
+          ></div>
+
+          <button
+            class="btn btn-primary btn-wide"
+            type="submit"
+          >
+            ${
+              mode==="login"
+                ?"Se connecter"
+                :"Créer mon compte"
+            }
+          </button>
+
+        </form>
+
+      </div>
+      `
+    );
+
+    $("loginTab").onclick=()=>{
+      mode="login";
+      draw();
+    };
+
+    $("registerTab").onclick=()=>{
+      mode="register";
+      draw();
+    };
+
+    $("authForm").onsubmit=
+      async event=>{
+
+        event.preventDefault();
+
+        const email=
+          $("authEmail")
+            .value
+            .trim();
+
+        const password=
+          $("authPassword")
+            .value;
+
+        const errorEl=
+          $("authErr");
+
+        if(
+          mode==="register"&&
+          password!==$("authPassword2").value
+        ){
+
+          errorEl.textContent=
+            "Les mots de passe ne correspondent pas.";
+
+          return;
+        }
+
+        try{
+
+          if(mode==="login"){
+
+            await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+          }else{
+
+            await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
+          }
+
+          closeModal();
+
+          toast(
+            mode==="login"
+              ?"Connexion réussie ✅"
+              :"Compte créé ✅"
+          );
+
+        }catch(error){
+
+          errorEl.textContent=
+            authError(error.code);
+
+        }
+
+      };
+
+  };
+
   draw();
 }
 
-function openSettings(){const theme=localStorage.getItem("novaThemeChoice")||"dark";openModal(`<div class="panel"><h2>Paramètres</h2><label>Apparence</label><select id="themeSelect"><option value="dark" ${theme==="dark"?"selected":""}>🌙 Sombre</option><option value="light" ${theme==="light"?"selected":""}>☀️ Clair</option><option value="auto" ${theme==="auto"?"selected":""}>🖥️ Automatique</option></select></div>`);$("themeSelect").onchange=e=>{localStorage.setItem("novaThemeChoice",e.target.value);applyTheme()}}
-function addressFromForm(){return{firstName:$("checkoutFirstName")?.value.trim()||"",lastName:$("checkoutLastName")?.value.trim()||"",street:$("checkoutStreet")?.value.trim()||"",postalCode:$("checkoutPostal")?.value.trim()||"",city:$("checkoutCity")?.value.trim()||"",country:$("checkoutCountry")?.value.trim()||"France"}}
-function renderCheckout(){const items=cartDetailed(),sub=items.reduce((s,i)=>s+i.price*i.qty,0),total=promoApplied?0:sub;openModal(`<div class="panel"><h2>Finaliser la commande</h2><div class="checkout-grid"><div><h3>📦 Adresse de livraison</h3><div class="form-row"><div><label>Prénom</label><input id="checkoutFirstName" required></div><div><label>Nom</label><input id="checkoutLastName" required></div></div><label>Adresse</label><input id="checkoutStreet" required><div class="form-row"><div><label>Code postal</label><input id="checkoutPostal" required></div><div><label>Ville</label><input id="checkoutCity" required></div></div><label>Pays</label><input id="checkoutCountry" value="France" required><h3>🎟️ Code promotionnel</h3><div class="promo-row"><input id="promoCode" placeholder="Code promo"><button class="btn btn-secondary" id="applyPromo" type="button">Appliquer</button></div><div id="promoMessage"></div><h3>💳 Paiement</h3><div class="payment-options"><button class="payment-option" id="paypalPayment" type="button"><strong>PayPal</strong><span>PayPal.Me</span></button><button class="payment-option" id="cardPayment" type="button"><strong>💳 Payer par CB</strong><span>Carte bancaire</span></button></div></div><div class="checkout-summary"><h3>🛒 Résumé</h3>${items.map(i=>`<div class="checkout-item"><span>${escapeHTML(i.name)} ×${i.qty}</span><strong>${money(i.price*i.qty)}</strong></div>`).join("")}<div class="checkout-total-final"><span>Total</span><strong>${total===0?"Gratuit":money(total)}</strong></div></div></div></div>`);$("applyPromo").onclick=()=>{if($("promoCode").value.trim().toUpperCase()==="NOVA100"){promoApplied=true;toast("NOVA100 appliqué 🎉");renderCheckout()}else{$("promoMessage").innerHTML='<span class="form-error">Code invalide.</span>'}};$("paypalPayment").onclick=()=>submitCheckout("paypal");$("cardPayment").onclick=openCardPayment}
-async function submitCheckout(method){if(!currentUser){toast("Connecte-toi pour passer commande.");openAccount();return}const items=cartDetailed();if(!items.length){toast("Ton panier est vide.");return}const address=addressFromForm();if(Object.values(address).some(v=>!v)){toast("Remplis toute l'adresse.");return}const subtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=promoApplied?0:subtotal;if(method==="card"){openCardPayment();return}try{await addDoc(collection(db,"orders"),{userId:currentUser.uid,email:currentUser.email||"",items:items.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty})),subtotal,total,promoCode:promoApplied?"NOVA100":"",discount:subtotal-total,address,status:"Enregistrée",paymentMethod:total===0?"NOVA100":"PayPal.Me",paymentStatus:total===0?"free":"pending",createdAt:serverTimestamp()});cart=[];saveCart();renderCart();closeModal();if(total===0){toast("Commande gratuite enregistrée 🎉");setTimeout(openOrders,250)}else{toast("Commande enregistrée. Ouverture de PayPal...");setTimeout(()=>location.href="https://paypal.me/SH0PNOVA/"+encodeURIComponent(total.toFixed(2))+"EUR",600)}}catch(e){console.error(e);toast("Impossible d'enregistrer la commande.")}}
-function openCardPayment(){openModal(`<div class="panel"><h2>💳 Paiement par carte</h2><label>Nom complet</label><input id="cardName" autocomplete="off"><label>Numéro de carte</label><input id="cardNumber" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000"><div class="form-row"><div><label>Expiration</label><input id="cardExpiry" inputmode="numeric" maxlength="5" placeholder="MM/AA"></div><div><label>CVV</label><input id="cardCVV" type="password" inputmode="numeric" maxlength="4" placeholder="•••"></div></div><div id="cardMessage"></div><button class="btn btn-primary btn-wide" id="validateCard">💳 Valider le paiement</button><button class="btn btn-secondary btn-wide" id="backCheckout">← Retour</button></div>`);$("cardNumber").oninput=()=>$("cardNumber").value=$("cardNumber").value.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();$("cardExpiry").oninput=()=>{let v=$("cardExpiry").value.replace(/\D/g,"").slice(0,4);$("cardExpiry").value=v.length>2?v.slice(0,2)+"/"+v.slice(2):v};$("cardCVV").oninput=()=>$("cardCVV").value=$("cardCVV").value.replace(/\D/g,"").slice(0,4);$("validateCard").onclick=()=>{$("cardMessage").innerHTML='<span class="form-error">Carte incorrecte</span>';toast("Carte incorrecte");$("cardName").value=$("cardNumber").value=$("cardExpiry").value=$("cardCVV").value=""};$("backCheckout").onclick=renderCheckout}
-const STATUS=["Enregistrée","Acceptée","Préparation","En transit","Livraison proche","Livrée","Annulée","Remboursement en cours"];
-const statusIcon=s=>({"Enregistrée":"📝","Acceptée":"✅","Préparation":"📦","En transit":"🚚","Livraison proche":"📍","Livrée":"🎉","Annulée":"❌","Remboursement en cours":"💸"}[s]||"📦");
-const statusClass=s=>({"Livrée":"delivered","Annulée":"cancelled","Remboursement en cours":"refund","En transit":"transit","Acceptée":"transit","Préparation":"transit","Livraison proche":"nearby"}[s]||"");
-const canDelete=o=>o?.status==="Livrée"||o?.status==="Annulée";
-const formatDate=v=>{if(!v)return"Date inconnue";const d=v?.toDate?v.toDate():new Date(v);return isNaN(d.getTime())?"Date inconnue":new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium",timeStyle:"short"}).format(d)};function timeline(status){const flow=["Enregistrée","Acceptée","Préparation","En transit","Livraison proche","Livrée"],idx=flow.indexOf(status);return `<div class="order-timeline">${flow.map((s,i)=>`<div class="timeline-step ${((status!=="Annulée"&&status!=="Remboursement en cours")&&idx>=i)||i===0?"done":""}"><div class="timeline-dot">${((status!=="Annulée"&&status!=="Remboursement en cours")&&idx>=i)||i===0?"✓":i+1}</div><strong>${s}</strong></div>`).join("")}${status==="Annulée"?'<div class="timeline-step done"><div class="timeline-dot">❌</div><strong>Commande annulée</strong></div>':status==="Remboursement en cours"?'<div class="timeline-step done"><div class="timeline-dot">💸</div><strong>Remboursement en cours</strong></div>':""}</div>`}
-async function getUserOrders(){if(!currentUser)return[];const s=await getDocs(query(collection(db,"orders"),where("userId","==",currentUser.uid)));return s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}
-async function openOrders(){if(!currentUser){toast("Connecte-toi pour voir tes commandes.");openAccount();return}openModal(`<div class="panel nova-orders-panel"><h2>📦 Mes commandes</h2><div id="ordersList">Chargement...</div></div>`);const list=$("ordersList");try{const orders=await getUserOrders();if(!orders.length){list.innerHTML='<div class="empty"><h3>Aucune commande</h3><p>Tes commandes apparaîtront ici.</p></div>';return}list.innerHTML=orders.map(o=>{const items=Array.isArray(o.items)?o.items:[],st=o.status||"Enregistrée";return `<article class="order nova-order-card"><div class="nova-order-head"><div><strong>Commande #${escapeHTML(o.id.slice(0,8))}</strong><div class="order-date">${formatDate(o.createdAt)}</div></div><span class="nova-status ${statusClass(st)}">${statusIcon(st)} ${escapeHTML(st)}</span></div><div class="nova-order-preview"><span>📦 ${items.reduce((s,i)=>s+Number(i.qty||0),0)} article${items.reduce((s,i)=>s+Number(i.qty||0),0)>1?"s":""}</span><strong>${Number(o.total||0)===0?"Gratuit":money(o.total)}</strong></div><div class="nova-order-actions"><button class="btn btn-primary btn-wide nova-view-order" style="display:flex!important;width:100%!important;min-height:52px!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:10!important;" data-view-order="${escapeHTML(o.id)}">👁️ Voir la commande</button>${canDelete(o)?`<button class="btn btn-danger btn-wide" data-delete-order="${escapeHTML(o.id)}">🗑️ Supprimer la commande</button>`:""}</div></article>`}).join("");list.querySelectorAll("[data-view-order]").forEach(b=>b.onclick=()=>openOrderDetails(b.dataset.viewOrder));list.querySelectorAll("[data-delete-order]").forEach(b=>b.onclick=()=>deleteUserOrder(b.dataset.deleteOrder))}catch(e){list.innerHTML='<div class="empty"><h3>Impossible de charger les commandes</h3><p>Réessaie dans un instant.</p></div>';console.error(e)}}
-async function openOrderDetails(id){if(!currentUser)return;try{const order=(await getUserOrders()).find(o=>o.id===id);if(!order){toast("Commande introuvable.");return}const items=Array.isArray(order.items)?order.items:[],a=order.address||{},st=order.status||"Enregistrée";openModal(`<div class="panel nova-order-details"><button class="btn btn-secondary btn-small" id="backOrders">← Mes commandes</button><div class="nova-order-head" style="margin-top:16px"><div><h2>📦 Commande #${escapeHTML(order.id)}</h2><div class="order-date">${formatDate(order.createdAt)}</div></div><span class="nova-status ${statusClass(st)}">${statusIcon(st)} ${escapeHTML(st)}</span></div><div class="nova-order-detail-section"><h3>🛍️ Articles</h3><div class="nova-order-items">${items.map(i=>`<div class="nova-order-item"><span>${escapeHTML(i.name||"Produit")} ×${Number(i.qty||0)}</span><strong>${money(Number(i.price||0)*Number(i.qty||0))}</strong></div>`).join("")}</div><div class="nova-detail-total"><span>Total</span><strong>${Number(order.total||0)===0?"Gratuit":money(order.total)}</strong></div></div><div class="nova-order-detail-section"><h3>🚚 Suivi du colis</h3><div class="nova-package-box"><div>📍 Destination : <strong>${escapeHTML(order.packageCity||a.city||"Non renseignée")}</strong></div><div>🔎 Numéro de suivi : <strong>${escapeHTML(order.trackingNumber||"Pas encore disponible")}</strong></div><div>⏱️ Durée : ${escapeHTML(order.deliveryDuration||"Non renseignée")}</div><div>📅 Livraison estimée : <strong>${escapeHTML(order.estimatedDelivery||"Non renseignée")}</strong></div><div class="nova-detail-status">📦 Statut actuel : <strong>${escapeHTML(st)}</strong></div></div></div><div class="nova-order-detail-section"><h3>🏠 Adresse</h3><div class="nova-package-box">${escapeHTML(`${a.firstName||""} ${a.lastName||""}`)}<br>${escapeHTML(a.street||"")}<br>${escapeHTML(`${a.postalCode||""} ${a.city||""}`)}<br>${escapeHTML(a.country||"")}</div></div><div class="nova-order-detail-section"><h3>💳 Paiement</h3><div class="nova-package-box">Méthode : ${escapeHTML(order.paymentMethod||"Non renseignée")}<br>Statut : ${escapeHTML(order.paymentStatus||"pending")}</div></div><div class="nova-order-detail-section"><h3>📍 Progression</h3>${timeline(st)}</div>${canDelete(order)?'<button class="btn btn-danger btn-wide" id="deleteDetailOrder">🗑️ Supprimer cette commande</button>':""}</div>`);$("backOrders").onclick=openOrders;if($("deleteDetailOrder"))$("deleteDetailOrder").onclick=()=>deleteUserOrder(id)}catch(e){console.error(e);toast("Impossible d'afficher la commande.")}}
-async function deleteUserOrder(id){if(!currentUser)return;const order=(await getUserOrders()).find(o=>o.id===id);if(!order||!canDelete(order)){toast("Cette commande ne peut pas encore être supprimée.");return}if(!confirm("Supprimer définitivement cette commande ?"))return;try{await deleteDoc(doc(db,"orders",id));toast("Commande supprimée.");openOrders()}catch(e){toast("Impossible de supprimer la commande.")}}
-function isAdmin(){return !!currentUser&&String(currentUser.email||"").trim().toLowerCase()===ADMIN_EMAIL.toLowerCase()}
-function openAdmin(){if(!isAdmin()){toast("Accès administrateur refusé.");return}if(localStorage.getItem(ADMIN_KEY)!=="true"){openModal(`<div class="panel"><h2>🔐 Administration</h2><p>Entre le code administrateur.</p><input id="adminCode" type="password"><div id="adminError" class="form-error"></div><button class="btn btn-primary btn-wide" id="adminEnter">Accéder</button></div>`);$("adminEnter").onclick=()=>{if($("adminCode").value===ADMIN_CODE){localStorage.setItem(ADMIN_KEY,"true");closeModal();renderAdmin()}else $("adminError").textContent="Code incorrect."};return}renderAdmin()}
-async function renderAdmin(){openModal(`<div class="panel"><h2>🛠️ Dashboard administrateur</h2><div class="admin-top-actions"><button class="btn btn-secondary" id="adminRefresh">🔄 Actualiser</button><button class="btn btn-secondary" id="adminLock">🔒 Verrouiller</button></div><div id="adminOrders">Chargement...</div></div>`);$("adminRefresh").onclick=renderAdmin;$("adminLock").onclick=()=>{localStorage.removeItem(ADMIN_KEY);closeModal();toast("Administration verrouillée")};try{const s=await getDocs(collection(db,"orders")),orders=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));$("adminOrders").innerHTML=orders.length?orders.map(o=>{const st=o.status||"Enregistrée",a=o.address||{};return `<div class="admin-order"><div class="nova-order-head"><div><strong>#${escapeHTML(o.id)}</strong><div>${escapeHTML(o.email||"")}</div><div>${formatDate(o.createdAt)}</div></div><span class="nova-status ${statusClass(st)}">${statusIcon(st)} ${escapeHTML(st)}</span></div><div class="admin-order-grid"><div><label>Statut</label><select data-status="${escapeHTML(o.id)}">${STATUS.map(s=>`<option value="${escapeHTML(s)}" ${s===st?"selected":""}>${escapeHTML(s)}</option>`).join("")}</select></div><div><label>Ville</label><input data-city="${escapeHTML(o.id)}" value="${escapeHTML(o.packageCity||a.city||"")}></div><div><label>Numéro de suivi</label><input data-tracking="${escapeHTML(o.id)}" value="${escapeHTML(o.trackingNumber||"")}></div><div><label>Durée</label><input data-duration="${escapeHTML(o.id)}" value="${escapeHTML(o.deliveryDuration||"")}></div><div><label>Livraison estimée</label><input type="date" data-date="${escapeHTML(o.id)}" value="${escapeHTML(o.estimatedDelivery||"")}></div></div><div class="admin-actions"><button class="btn btn-primary" data-save-order="${escapeHTML(o.id)}">💾 Enregistrer</button><button class="btn btn-secondary" data-print-order="${escapeHTML(o.id)}">🧾 Facture</button>${o.paymentMethod==="PayPal.Me"&&o.paymentStatus!=="accepted"?`<button class="btn btn-primary" data-accept="${escapeHTML(o.id)}">✅ Accepter PayPal</button>`:""}<button class="btn btn-danger" data-admin-delete="${escapeHTML(o.id)}">🗑️ Supprimer</button></div></div>`}).join(""):'<div class="empty"><h3>Aucune commande</h3></div>';$("adminOrders").querySelectorAll("[data-save-order]").forEach(b=>b.onclick=()=>saveAdminOrder(b.dataset.saveOrder));$("adminOrders").querySelectorAll("[data-accept]").forEach(b=>b.onclick=()=>acceptPaypalOrder(b.dataset.accept));$("adminOrders").querySelectorAll("[data-admin-delete]").forEach(b=>b.onclick=()=>adminDeleteOrder(b.dataset.adminDelete));$("adminOrders").querySelectorAll("[data-print-order]").forEach(b=>b.onclick=()=>printInvoice(b.dataset.printOrder))}catch(e){console.error(e);$("adminOrders").innerHTML='<div class="empty"><h3>Erreur de chargement</h3></div>'}}
-async function saveAdminOrder(id){if(!isAdmin()||localStorage.getItem(ADMIN_KEY)!=="true")return;try{await updateDoc(doc(db,"orders",id),{status:document.querySelector(`[data-status="${CSS.escape(id)}"]`)?.value||"Enregistrée",packageCity:document.querySelector(`[data-city="${CSS.escape(id)}"]`)?.value.trim()||"",trackingNumber:document.querySelector(`[data-tracking="${CSS.escape(id)}"]`)?.value.trim()||"",deliveryDuration:document.querySelector(`[data-duration="${CSS.escape(id)}"]`)?.value.trim()||"",estimatedDelivery:document.querySelector(`[data-date="${CSS.escape(id)}"]`)?.value||"",updatedAt:serverTimestamp()});toast("Commande mise à jour ✅");renderAdmin()}catch(e){toast("Impossible de mettre à jour la commande.")}}
-async function acceptPaypalOrder(id){if(!isAdmin())return;try{await updateDoc(doc(db,"orders",id),{paymentStatus:"accepted",status:"Acceptée",paymentAcceptedAt:serverTimestamp()});toast("Paiement accepté ✅");renderAdmin()}catch(e){toast("Erreur de paiement")}}
-async function adminDeleteOrder(id){if(!isAdmin()||!confirm("Supprimer définitivement cette commande ?"))return;try{await deleteDoc(doc(db,"orders",id));toast("Commande supprimée");renderAdmin()}catch(e){toast("Erreur de suppression")}}
-async function printInvoice(id){try{const s=await getDocs(collection(db,"orders")),d=s.docs.find(x=>x.id===id);if(!d)return;const o={id:d.id,...d.data()},w=open("","_blank","width=900,height=700");if(!w)return;w.document.write(`<html lang="fr"><head><meta charset="utf-8"><title>Facture NovaShop</title><style>body{font-family:Arial;padding:40px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}.box{padding:15px;border:1px solid #ddd;border-radius:10px;margin-top:20px}.total{text-align:right;font-size:22px;font-weight:bold;margin-top:20px}</style></head><body><h1>NovaShop</h1><div class="box">Commande #${escapeHTML(o.id)}<br>Client : ${escapeHTML(o.email||"")}<br>Date : ${formatDate(o.createdAt)}<br>Statut : ${escapeHTML(o.status||"Enregistrée")}</div><table><thead><tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th></tr></thead><tbody>${(o.items||[]).map(i=>`<tr><td>${escapeHTML(i.name||"")}</td><td>${Number(i.qty||0)}</td><td>${money(i.price)}</td><td>${money(Number(i.price||0)*Number(i.qty||0))}</td></tr>`).join("")}</tbody></table><div class="total">Total : ${Number(o.total||0)===0?"Gratuit":money(o.total)}</div><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}catch(e){toast("Impossible de générer la facture")}}
-checkoutBtn?.addEventListener("click",()=>{if(!currentUser){toast("Connecte-toi pour passer commande.");openAccount();return}if(!cartDetailed().length){toast("Ton panier est vide.");return}promoApplied=false;renderCheckout()});accountBtn?.addEventListener("click",openAccount);ordersBtn?.addEventListener("click",openOrders);settingsBtn?.addEventListener("click",openSettings);adminBtn?.addEventListener("click",openAdmin);
-onAuthStateChanged(auth,u=>{currentUser=u;if(adminBtn)adminBtn.style.display=isAdmin()?"grid":"none";if(!isAdmin())localStorage.removeItem(ADMIN_KEY)});
-const style=document.createElement("style");style.textContent=`
-#productGrid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))!important;gap:14px!important;align-items:start!important}
-#productGrid .product-card{width:100%!important;max-width:245px!important;margin:0 auto!important;min-width:0!important}
-#productGrid .product-image{height:140px!important;min-height:140px!important;max-height:140px!important;overflow:hidden!important}
-#productGrid .product-image img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
-#productGrid .product-body{padding:10px!important}
-#productGrid .product-name{font-size:13px!important;line-height:1.3!important;min-height:34px!important}
-#productGrid .rating{font-size:10px!important;gap:3px!important}
-#productGrid .price{font-size:16px!important}
-#productGrid .product-actions{display:grid!important;grid-template-columns:1fr 1.2fr!important;gap:6px!important}
-#productGrid .product-actions button{min-height:35px!important;padding:6px!important;font-size:12px!important}
-.nova-order-actions{display:flex!important;flex-direction:column!important;width:100%!important;gap:10px!important;margin-top:12px!important}
-.nova-view-order{display:flex!important;width:100%!important;min-height:52px!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important}
-.nova-order-card,.nova-package-box,.nova-orders-panel,.nova-order-details{overflow-wrap:anywhere;word-break:break-word}
-.nova-order-preview,.nova-detail-total{display:flex;justify-content:space-between;gap:12px;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.035)}
-.nova-order-items{display:grid;gap:6px;margin-top:10px}
-.nova-order-item{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.035)}
-.nova-package-box{margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,.035);line-height:1.7}
-.nova-status{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-weight:800;font-size:12px}
-.nova-status.delivered{background:rgba(34,197,94,.15);color:#4ade80}.nova-status.cancelled{background:rgba(239,68,68,.15);color:#f87171}.nova-status.refund{background:rgba(245,158,11,.15);color:#fbbf24}.nova-status.transit{background:rgba(59,130,246,.15);color:#60a5fa}.nova-status.nearby{background:rgba(168,85,247,.15);color:#c084fc}
-.order-timeline{display:flex;flex-direction:column;gap:14px;margin-top:10px}.timeline-step{display:flex;align-items:center;gap:10px;opacity:.45}.timeline-step.done{opacity:1}.timeline-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);font-size:12px}.timeline-step.done .timeline-dot{background:rgba(34,197,94,.18)}
-.admin-order-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}.admin-order-grid label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}.admin-order-grid input,.admin-order-grid select{width:100%}.admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.admin-actions button{flex:1;min-width:170px}
-@media(max-width:700px){#productGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}#productGrid .product-card{max-width:none!important}#productGrid .product-image{height:115px!important;min-height:115px!important;max-height:115px!important}#productGrid .product-body{padding:8px!important}#productGrid .product-name{font-size:12px!important;min-height:31px!important}#productGrid .rating-count{display:none!important}#productGrid .price{font-size:15px!important}#productGrid .product-actions{grid-template-columns:1fr!important}.nova-view-order{display:flex!important;width:100%!important;min-height:52px!important}.admin-order-grid{grid-template-columns:1fr}.admin-actions{flex-direction:column}.admin-actions button{width:100%;min-width:0}}
-`;document.head.appendChild(style);
-applyTheme();renderCategories();renderProducts();renderCart();
-window.NovaShop={products,get cart(){return cartDetailed()},openCart,closeCart,openProduct,renderProducts,renderCart,openOrders,openAdmin};
-console.log("NovaShop chargé :",products.length,"produits");
+function openSettings(){
+
+  const theme=
+    localStorage.getItem(
+      "novaThemeChoice"
+    )||"dark";
+
+  openModal(
+    `
+    <div class="panel">
+
+      <h2>
+        ⚙️ Paramètres
+      </h2>
+
+      <label>
+        Apparence
+      </label>
+
+      <select id="themeSelect">
+
+        <option
+          value="dark"
+          ${
+            theme==="dark"
+              ?"selected"
+              :""
+          }
+        >
+          🌙 Mode sombre
+        </option>
+
+        <option
+          value="light"
+          ${
+            theme==="light"
+              ?"selected"
+              :""
+          }
+        >
+          ☀️ Mode clair
+        </option>
+
+        <option
+          value="auto"
+          ${
+            theme==="auto"
+              ?"selected"
+              :""
+          }
+        >
+          🖥️ Automatique
+        </option>
+
+      </select>
+
+    </div>
+    `
+  );
+
+  $("themeSelect").onchange=
+    event=>{
+      localStorage.setItem(
+        "novaThemeChoice",
+        event.target.value
+      );
+
+      applyTheme();
+    };
+}
+
+function addressFromForm(){
+
+  return{
+
+    firstName:
+      $("checkoutFirstName")
+        ?.value
+        .trim()||"",
+
+    lastName:
+      $("checkoutLastName")
+        ?.value
+        .trim()||"",
+
+    street:
+      $("checkoutStreet")
+        ?.value
+        .trim()||"",
+
+    postalCode:
+      $("checkoutPostal")
+        ?.value
+        .trim()||"",
+
+    city:
+      $("checkoutCity")
+        ?.value
+        .trim()||"",
+
+    country:
+      $("checkoutCountry")
+        ?.value
+        .trim()||"France"
+
+  };
+}
+
+function renderCheckout(){
+
+  const items=
+    cartDetailed();
+
+  const subtotal=
+    cartSubtotal();
+
+  const total=
+    promoApplied
+      ?0
+      :subtotal;
+
+  openModal(
+    `
+    <div class="panel">
+
+      <h2>
+        Finaliser la commande
+      </h2>
+
+      <div class="checkout-grid">
+
+        <div>
+
+          <h3>
+            📦 Adresse de livraison
+          </h3>
+
+          <div class="form-row">
+
+            <div>
+
+              <label>
+                Prénom
+              </label>
+
+              <input
+                id="checkoutFirstName"
+                required
+              >
+
+            </div>
+
+            <div>
+
+              <label>
+                Nom
+              </label>
+
+              <input
+                id="checkoutLastName"
+                required
+              >
+
+            </div>
+
+          </div>
+
+          <label>
+            Adresse
+          </label>
+
+          <input
+            id="checkoutStreet"
+            required
+          >
+
+          <div class="form-row">
+
+            <div>
+
+              <label>
+                Code postal
+              </label>
+
+              <input
+                id="checkoutPostal"
+                required
+              >
+
+            </div>
+
+            <div>
+
+              <label>
+                Ville
+              </label>
+
+              <input
+                id="checkoutCity"
+                required
+              >
+
+            </div>
+
+          </div>
+
+          <label>
+            Pays
+          </label>
+
+          <input
+            id="checkoutCountry"
+            value="France"
+            required
+          >
+
+          <h3>
+            🎟️ Code promotionnel
+          </h3>
+
+          <div class="promo-row">
+
+            <input
+              id="promoCode"
+              placeholder="Code promo"
+            >
+
+            <button
+              class="btn btn-secondary"
+              id="applyPromo"
+              type="button"
+            >
+              Appliquer
+            </button>
+
+          </div>
+
+          <div id="promoMessage"></div>
+
+          <h3>
+            💳 Paiement
+          </h3>
+
+          <div class="payment-options">
+
+            <button
+              class="payment-option"
+              id="paypalPayment"
+              type="button"
+            >
+              <strong>
+                PayPal
+              </strong>
+
+              <span>
+                PayPal.Me
+              </span>
+            </button>
+
+            <button
+              class="payment-option"
+              id="cardPayment"
+              type="button"
+            >
+              <strong>
+                💳 Payer par CB
+              </strong>
+
+              <span>
+                Carte bancaire
+              </span>
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="checkout-summary">
+
+          <h3>
+            🛒 Résumé
+          </h3>
+
+          ${
+            items.map(
+              i=>
+                `
+                <div class="checkout-item">
+
+                  <span>
+                    ${escapeHTML(i.name)}
+                    ×${i.qty}
+                  </span>
+
+                  <strong>
+                    ${money(
+                      i.price*i.qty
+                    )}
+                  </strong>
+
+                </div>
+                `
+            ).join("")
+          }
+
+          <div
+            class="checkout-total-final"
+          >
+
+            <span>
+              Total
+            </span>
+
+            <strong>
+              ${
+                total===0
+                  ?"Gratuit"
+                  :money(total)
+              }
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    `
+  );
+
+  $("applyPromo").onclick=()=>{
+
+    const code=
+      $("promoCode")
+        .value
+        .trim()
+        .toUpperCase();
+
+    if(code==="NOVA100"){
+
+      promoApplied=true;
+
+      toast(
+        "NOVA100 appliqué 🎉"
+      );
+
+      renderCheckout();
+
+    }else{
+
+      promoApplied=false;
+
+      $("promoMessage").innerHTML=
+        `
+        <span class="form-error">
+          Code promotionnel invalide.
+        </span>
+        `;
+
+    }
+
+  };
+
+  $("paypalPayment").onclick=
+    ()=>submitCheckout("paypal");
+
+  $("cardPayment").onclick=
+    openCardPayment;
+}
+
+async function submitCheckout(method){
+
+  if(!currentUser){
+
+    toast(
+      "Connecte-toi pour passer commande."
+    );
+
+    openAccount();
+
+    return;
+  }
+
+  const items=
+    cartDetailed();
+
+  if(!items.length){
+
+    toast(
+      "Ton panier est vide."
+    );
+
+    return;
+  }
+
+  const address=
+    addressFromForm();
+
+  if(
+    Object.values(address)
+      .some(
+        value=>!value
+      )
+  ){
+
+    toast(
+      "Remplis toute l'adresse."
+    );
+
+    return;
+  }
+
+  const subtotal=
+    cartSubtotal();
+
+  const total=
+    promoApplied
+      ?0
+      :subtotal;
+
+  if(method==="card"){
+
+    openCardPayment();
+
+    return;
+  }
+
+  try{
+
+    await addDoc(
+      collection(db,"orders"),
+      {
+
+        userId:
+          currentUser.uid,
+
+        email:
+          currentUser.email||"",
+
+        items:
+          items.map(
+            i=>({
+
+              id:i.id,
+              name:i.name,
+              price:i.price,
+              qty:i.qty
+
+            })
+          ),
+
+        subtotal,
+        total,
+
+        promoCode:
+          promoApplied
+            ?"NOVA100"
+            :"",
+
+        discount:
+          subtotal-total,
+
+        address,
+
+        status:
+          "Enregistrée",
+
+        paymentMethod:
+          total===0
+            ?"NOVA100"
+            :"PayPal.Me",
+
+        paymentStatus:
+          total===0
+            ?"free"
+            :"pending",
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+    cart=[];
+
+    saveCart();
+    renderCart();
+    closeModal();
+
+    if(total===0){
+
+      toast(
+        "Commande gratuite enregistrée 🎉"
+      );
+
+      setTimeout(
+        openOrders,
+        250
+      );
+
+    }else{
+
+      toast(
+        "Commande enregistrée. Ouverture de PayPal..."
+      );
+
+      setTimeout(
+        ()=>{
+          location.href=
+            "https://paypal.me/SH0PNOVA/"+
+            encodeURIComponent(
+              total.toFixed(2)
+            )+
+            "EUR";
+        },
+        600
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Commande:",
+      error
+    );
+
+    toast(
+      "Impossible d'enregistrer la commande."
+    );
+  }
+}
+
+function openCardPayment(){
+
+  openModal(
+    `
+    <div class="panel">
+
+      <h2>
+        💳 Paiement par carte
+      </h2>
+
+      <label>
+        Nom complet
+      </label>
+
+      <input
+        id="cardName"
+        autocomplete="off"
+      >
+
+      <label>
+        Numéro de carte
+      </label>
+
+      <input
+        id="cardNumber"
+        inputmode="numeric"
+        maxlength="19"
+        autocomplete="off"
+        placeholder="0000 0000 0000 0000"
+      >
+
+      <div class="form-row">
+
+        <div>
+
+          <label>
+            Expiration
+          </label>
+
+          <input
+            id="cardExpiry"
+            inputmode="numeric"
+            maxlength="5"
+            autocomplete="off"
+            placeholder="MM/AA"
+          >
+
+        </div>
+
+        <div>
+
+          <label>
+            CVV
+          </label>
+
+          <input
+            id="cardCVV"
+            type="password"
+            inputmode="numeric"
+            maxlength="4"
+            autocomplete="off"
+            placeholder="•••"
+          >
+
+        </div>
+
+      </div>
+
+      <div
+        id="cardMessage"
+      ></div>
+
+      <button
+        class="btn btn-primary btn-wide"
+        id="validateCard"
+      >
+        💳 Valider le paiement
+      </button>
+
+      <button
+        class="btn btn-secondary btn-wide"
+        id="backCheckout"
+      >
+        ← Retour
+      </button>
+
+    </div>
+    `
+  );
+
+  $("cardNumber").oninput=()=>{
+
+    let value=
+      $("cardNumber")
+        .value
+        .replace(/\D/g,"")
+        .slice(0,16);
+
+    $("cardNumber").value=
+      value
+        .replace(
+          /(.{4})/g,
+          "$1 "
+        )
+        .trim();
+  };
+
+  $("cardExpiry").oninput=()=>{
+
+    let value=
+      $("cardExpiry")
+        .value
+        .replace(/\D/g,"")
+        .slice(0,4);
+
+    $("cardExpiry").value=
+      value.length>2
+        ?value.slice(0,2)+"/"+value.slice(2)
+        :value;
+  };
+
+  $("cardCVV").oninput=()=>{
+
+    $("cardCVV").value=
+      $("cardCVV")
+        .value
+        .replace(/\D/g,"")
+        .slice(0,4);
+  };
+
+  $("validateCard").onclick=()=>{
+
+    $("cardMessage").innerHTML=
+      `
+      <span class="form-error">
+        Carte incorrecte
+      </span>
+      `;
+
+    toast(
+      "Carte incorrecte"
+    );
+
+    $("cardName").value="";
+    $("cardNumber").value="";
+    $("cardExpiry").value="";
+    $("cardCVV").value="";
+  };
+
+  $("backCheckout").onclick=
+    renderCheckout;
+}const STATUS=[
+  "Enregistrée",
+  "Acceptée",
+  "Préparation",
+  "En transit",
+  "Livraison proche",
+  "Livrée",
+  "Annulée",
+  "Remboursement en cours"
+];
+
+const statusIcon=status=>
+  ({
+    "Enregistrée":"📝",
+    "Acceptée":"✅",
+    "Préparation":"📦",
+    "En transit":"🚚",
+    "Livraison proche":"📍",
+    "Livrée":"🎉",
+    "Annulée":"❌",
+    "Remboursement en cours":"💸"
+  }[status]||"📦");
+
+const statusClass=status=>
+  ({
+    "Livrée":"delivered",
+    "Annulée":"cancelled",
+    "Remboursement en cours":"refund",
+    "En transit":"transit",
+    "Acceptée":"transit",
+    "Préparation":"transit",
+    "Livraison proche":"nearby"
+  }[status]||"");
+
+const canDelete=order=>
+  order?.status==="Livrée"||
+  order?.status==="Annulée";
+
+const formatDate=value=>{
+
+  if(!value)
+    return "Date inconnue";
+
+  const date=
+    value?.toDate
+      ?value.toDate()
+      :new Date(value);
+
+  if(Number.isNaN(date.getTime()))
+    return "Date inconnue";
+
+  return new Intl.DateTimeFormat(
+    "fr-FR",
+    {
+      dateStyle:"medium",
+      timeStyle:"short"
+    }
+  ).format(date);
+};
+
+function orderTimelineHTML(status){
+
+  const flow=[
+    "Enregistrée",
+    "Acceptée",
+    "Préparation",
+    "En transit",
+    "Livraison proche",
+    "Livrée"
+  ];
+
+  const currentIndex=
+    flow.indexOf(status);
+
+  return `
+    <div class="order-timeline">
+
+      ${
+        flow.map(
+          (step,index)=>{
+
+            const done=
+              status!=="Annulée"&&
+              status!=="Remboursement en cours"&&
+              currentIndex>=index;
+
+            return `
+              <div
+                class="timeline-step ${
+                  done
+                    ?"done"
+                    :""
+                }"
+              >
+
+                <div class="timeline-dot">
+                  ${
+                    done
+                      ?"✓"
+                      :index+1
+                  }
+                </div>
+
+                <strong>
+                  ${escapeHTML(step)}
+                </strong>
+
+              </div>
+            `;
+          }
+        ).join("")
+      }
+
+      ${
+        status==="Annulée"
+          ?`
+            <div class="timeline-step done">
+              <div class="timeline-dot">
+                ❌
+              </div>
+              <strong>
+                Commande annulée
+              </strong>
+            </div>
+          `
+          :""
+      }
+
+      ${
+        status==="Remboursement en cours"
+          ?`
+            <div class="timeline-step done">
+              <div class="timeline-dot">
+                💸
+              </div>
+              <strong>
+                Remboursement en cours
+              </strong>
+            </div>
+          `
+          :""
+      }
+
+    </div>
+  `;
+}
+
+async function getUserOrders(){
+
+  if(!currentUser)
+    return [];
+
+  const snapshot=
+    await getDocs(
+      query(
+        collection(db,"orders"),
+        where(
+          "userId",
+          "==",
+          currentUser.uid
+        )
+      )
+    );
+
+  return snapshot.docs
+    .map(
+      d=>({
+        id:d.id,
+        ...d.data()
+      })
+    )
+    .sort(
+      (a,b)=>
+        (b.createdAt?.seconds||0)-
+        (a.createdAt?.seconds||0)
+    );
+}
+
+async function openOrders(){
+
+  if(!currentUser){
+
+    toast(
+      "Connecte-toi pour voir tes commandes."
+    );
+
+    openAccount();
+
+    return;
+  }
+
+  openModal(
+    `
+    <div class="panel nova-orders-panel">
+
+      <h2>
+        📦 Mes commandes
+      </h2>
+
+      <div id="ordersList">
+        Chargement...
+      </div>
+
+    </div>
+    `
+  );
+
+  const list=
+    $("ordersList");
+
+  try{
+
+    const orders=
+      await getUserOrders();
+
+    if(!orders.length){
+
+      list.innerHTML=
+        `
+        <div class="empty">
+
+          <h3>
+            Aucune commande
+          </h3>
+
+          <p>
+            Tes commandes apparaîtront ici.
+          </p>
+
+        </div>
+        `;
+
+      return;
+    }
+
+    list.innerHTML=
+      orders.map(
+        order=>{
+
+          const items=
+            Array.isArray(
+              order.items
+            )
+              ?order.items
+              :[];
+
+          const status=
+            order.status||
+            "Enregistrée";
+
+          const itemCount=
+            items.reduce(
+              (sum,item)=>
+                sum+
+                Number(
+                  item.qty||0
+                ),
+              0
+            );
+
+          return `
+            <article
+              class="order nova-order-card"
+            >
+
+              <div
+                class="nova-order-head"
+              >
+
+                <div>
+
+                  <strong>
+                    Commande #
+                    ${escapeHTML(
+                      order.id.slice(
+                        0,
+                        8
+                      )
+                    )}
+                  </strong>
+
+                  <div class="order-date">
+                    ${escapeHTML(
+                      formatDate(
+                        order.createdAt
+                      )
+                    )}
+                  </div>
+
+                </div>
+
+                <span
+                  class="nova-status ${
+                    statusClass(status)
+                  }"
+                >
+                  ${statusIcon(status)}
+                  ${escapeHTML(status)}
+                </span>
+
+              </div>
+
+              <div
+                class="nova-order-preview"
+              >
+
+                <span>
+                  📦 ${itemCount}
+                  article${
+                    itemCount>1
+                      ?"s"
+                      :""
+                  }
+                </span>
+
+                <strong>
+                  ${
+                    Number(
+                      order.total||0
+                    )===0
+                      ?"Gratuit"
+                      :money(
+                        order.total
+                      )
+                  }
+                </strong>
+
+              </div>
+
+              <div
+                class="nova-order-actions"
+              >
+
+                <button
+                  class="btn btn-primary btn-wide nova-view-order"
+                  data-view-order="${escapeHTML(order.id)}"
+                >
+                  👁️ Voir la commande
+                </button>
+
+                ${
+                  canDelete(order)
+                    ?`
+                      <button
+                        class="btn btn-danger btn-wide"
+                        data-delete-order="${escapeHTML(order.id)}"
+                      >
+                        🗑️ Supprimer la commande
+                      </button>
+                    `
+                    :""
+                }
+
+              </div>
+
+            </article>
+          `;
+        }
+      ).join("");
+
+    list
+      .querySelectorAll(
+        "[data-view-order]"
+      )
+      .forEach(button=>{
+        button.onclick=()=>{
+          openOrderDetails(
+            button.dataset.viewOrder
+          );
+        };
+      });
+
+    list
+      .querySelectorAll(
+        "[data-delete-order]"
+      )
+      .forEach(button=>{
+        button.onclick=()=>{
+          deleteUserOrder(
+            button.dataset.deleteOrder
+          );
+        };
+      });
+
+  }catch(error){
+
+    console.error(
+      "Commandes:",
+      error
+    );
+
+    list.innerHTML=
+      `
+      <div class="empty">
+
+        <h3>
+          Impossible de charger les commandes
+        </h3>
+
+        <button
+          class="btn btn-primary btn-small"
+          id="retryOrders"
+        >
+          Réessayer
+        </button>
+
+      </div>
+      `;
+
+    $("retryOrders").onclick=
+      openOrders;
+  }
+}
+
+async function openOrderDetails(id){
+
+  if(!currentUser)
+    return;
+
+  try{
+
+    const orders=
+      await getUserOrders();
+
+    const order=
+      orders.find(
+        item=>item.id===id
+      );
+
+    if(!order){
+
+      toast(
+        "Commande introuvable."
+      );
+
+      return;
+    }
+
+    const items=
+      Array.isArray(order.items)
+        ?order.items
+        :[];
+
+    const address=
+      order.address||{};
+
+    const status=
+      order.status||
+      "Enregistrée";
+
+    openModal(
+      `
+      <div class="panel nova-order-details">
+
+        <button
+          class="btn btn-secondary btn-small"
+          id="backOrders"
+        >
+          ← Mes commandes
+        </button>
+
+        <div
+          class="nova-order-head"
+          style="margin-top:16px"
+        >
+
+          <div>
+
+            <h2>
+              📦 Commande #${escapeHTML(order.id)}
+            </h2>
+
+            <div class="order-date">
+              ${escapeHTML(
+                formatDate(
+                  order.createdAt
+                )
+              )}
+            </div>
+
+          </div>
+
+          <span
+            class="nova-status ${
+              statusClass(status)
+            }"
+          >
+            ${statusIcon(status)}
+            ${escapeHTML(status)}
+          </span>
+
+        </div>
+
+        <div
+          class="nova-order-detail-section"
+        >
+
+          <h3>
+            🛍️ Articles
+          </h3>
+
+          <div
+            class="nova-order-items"
+          >
+
+            ${
+              items.map(
+                item=>
+                  `
+                  <div
+                    class="nova-order-item"
+                  >
+
+                    <span>
+                      ${escapeHTML(
+                        item.name||
+                        "Produit"
+                      )}
+                      ×${Number(
+                        item.qty||0
+                      )}
+                    </span>
+
+                    <strong>
+                      ${money(
+                        Number(
+                          item.price||0
+                        )*
+                        Number(
+                          item.qty||0
+                        )
+                      )}
+                    </strong>
+
+                  </div>
+                  `
+              ).join("")
+            }
+
+          </div>
+
+          <div
+            class="nova-detail-total"
+          >
+
+            <span>
+              Total
+            </span>
+
+            <strong>
+              ${
+                Number(
+                  order.total||0
+                )===0
+                  ?"Gratuit"
+                  :money(order.total)
+              }
+            </strong>
+
+          </div>
+
+        </div>
+
+        <div
+          class="nova-order-detail-section"
+        >
+
+          <h3>
+            🚚 Suivi du colis
+          </h3>
+
+          <div
+            class="nova-package-box"
+          >
+
+            <div>
+              📍 Destination :
+              <strong>
+                ${escapeHTML(
+                  order.packageCity||
+                  address.city||
+                  "Non renseignée"
+                )}
+              </strong>
+            </div>
+
+            <div>
+              🔎 Numéro de suivi :
+              <strong>
+                ${escapeHTML(
+                  order.trackingNumber||
+                  "Pas encore disponible"
+                )}
+              </strong>
+            </div>
+
+            <div>
+              ⏱️ Durée :
+              ${escapeHTML(
+                order.deliveryDuration||
+                "Non renseignée"
+              )}
+            </div>
+
+            <div>
+              📅 Livraison estimée :
+              <strong>
+                ${escapeHTML(
+                  order.estimatedDelivery||
+                  "Non renseignée"
+                )}
+              </strong>
+            </div>
+
+            <div
+              class="nova-detail-status"
+            >
+              📦 Statut actuel :
+              <strong>
+                ${escapeHTML(status)}
+              </strong>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          class="nova-order-detail-section"
+        >
+
+          <h3>
+            🏠 Adresse
+          </h3>
+
+          <div
+            class="nova-package-box"
+          >
+
+            ${escapeHTML(
+              (
+                address.firstName||
+                ""
+              )+
+              " "+
+              (
+                address.lastName||
+                ""
+              )
+            )}
+
+            <br>
+
+            ${escapeHTML(
+              address.street||
+              ""
+            )}
+
+            <br>
+
+            ${escapeHTML(
+              (
+                address.postalCode||
+                ""
+              )+
+              " "+
+              (
+                address.city||
+                ""
+              )
+            )}
+
+            <br>
+
+            ${escapeHTML(
+              address.country||
+              ""
+            )}
+
+          </div>
+
+        </div>
+
+        <div
+          class="nova-order-detail-section"
+        >
+
+          <h3>
+            💳 Paiement
+          </h3>
+
+          <div
+            class="nova-package-box"
+          >
+
+            Méthode :
+            ${escapeHTML(
+              order.paymentMethod||
+              "Non renseignée"
+            )}
+
+            <br>
+
+            Statut :
+            ${escapeHTML(
+              order.paymentStatus||
+              "pending"
+            )}
+
+          </div>
+
+        </div>
+
+        <div
+          class="nova-order-detail-section"
+        >
+
+          <h3>
+            📍 Progression
+          </h3>
+
+          ${orderTimelineHTML(status)}
+
+        </div>
+
+        ${
+          canDelete(order)
+            ?`
+              <button
+                class="btn btn-danger btn-wide"
+                id="deleteDetailOrder"
+              >
+                🗑️ Supprimer cette commande
+              </button>
+            `
+            :""
+        }
+
+      </div>
+      `
+    );
+
+    $("backOrders").onclick=
+      openOrders;
+
+    if($("deleteDetailOrder")){
+
+      $("deleteDetailOrder").onclick=
+        ()=>{
+          deleteUserOrder(id);
+        };
+    }
+
+  }catch(error){
+
+    console.error(
+      "Détails commande:",
+      error
+    );
+
+    toast(
+      "Impossible d'afficher la commande."
+    );
+  }
+}
+
+async function deleteUserOrder(id){
+
+  if(!currentUser)
+    return;
+
+  try{
+
+    const orders=
+      await getUserOrders();
+
+    const order=
+      orders.find(
+        item=>item.id===id
+      );
+
+    if(
+      !order||
+      !canDelete(order)
+    ){
+
+      toast(
+        "Cette commande ne peut pas encore être supprimée."
+      );
+
+      return;
+    }
+
+    if(
+      !confirm(
+        "Supprimer définitivement cette commande ?"
+      )
+    ){
+      return;
+    }
+
+    await deleteDoc(
+      doc(
+        db,
+        "orders",
+        id
+      )
+    );
+
+    toast(
+      "Commande supprimée."
+    );
+
+    openOrders();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Impossible de supprimer la commande."
+    );
+  }
+}
+
+function isAdmin(){
+
+  return(
+    !!currentUser&&
+    String(
+      currentUser.email||""
+    )
+      .trim()
+      .toLowerCase()===
+    ADMIN_EMAIL
+      .trim()
+      .toLowerCase()
+  );
+}
+
+function openAdmin(){
+
+  if(!isAdmin()){
+
+    toast(
+      "Accès administrateur refusé."
+    );
+
+    return;
+  }
+
+  if(
+    localStorage.getItem(
+      ADMIN_KEY
+    )!=="true"
+  ){
+
+    openModal(
+      `
+      <div class="panel">
+
+        <h2>
+          🔐 Administration
+        </h2>
+
+        <p>
+          Entre le code administrateur.
+        </p>
+
+        <input
+          id="adminCode"
+          type="password"
+        >
+
+        <div
+          id="adminError"
+          class="form-error"
+        ></div>
+
+        <button
+          class="btn btn-primary btn-wide"
+          id="adminEnter"
+        >
+          Accéder
+        </button>
+
+      </div>
+      `
+    );
+
+    $("adminEnter").onclick=()=>{
+
+      if(
+        $("adminCode").value===
+        ADMIN_CODE
+      ){
+
+        localStorage.setItem(
+          ADMIN_KEY,
+          "true"
+        );
+
+        closeModal();
+
+        renderAdmin();
+
+      }else{
+
+        $("adminError")
+          .textContent=
+          "Code incorrect.";
+
+      }
+    };
+
+    return;
+  }
+
+  renderAdmin();
+}
+
+async function renderAdmin(){
+
+  openModal(
+    `
+    <div class="panel">
+
+      <h2>
+        🛠️ Dashboard administrateur
+      </h2>
+
+      <div
+        class="admin-top-actions"
+      >
+
+        <button
+          class="btn btn-secondary"
+          id="adminRefresh"
+        >
+          🔄 Actualiser
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          id="adminLock"
+        >
+          🔒 Verrouiller
+        </button>
+
+      </div>
+
+      <div id="adminOrders">
+        Chargement...
+      </div>
+
+    </div>
+    `
+  );
+
+  $("adminRefresh").onclick=
+    renderAdmin;
+
+  $("adminLock").onclick=()=>{
+
+    localStorage.removeItem(
+      ADMIN_KEY
+    );
+
+    closeModal();
+
+    toast(
+      "Administration verrouillée."
+    );
+  };
+
+  try{
+
+    const snapshot=
+      await getDocs(
+        collection(
+          db,
+          "orders"
+        )
+      );
+
+    const orders=
+      snapshot.docs
+        .map(
+          d=>({
+            id:d.id,
+            ...d.data()
+          })
+        )
+        .sort(
+          (a,b)=>
+            (b.createdAt?.seconds||0)-
+            (a.createdAt?.seconds||0)
+        );
+
+    $("adminOrders").innerHTML=
+      orders.length
+        ?orders.map(
+          order=>{
+
+            const status=
+              order.status||
+              "Enregistrée";
+
+            const address=
+              order.address||
+              {};
+
+            return `
+              <div
+                class="admin-order"
+              >
+
+                <div
+                  class="nova-order-head"
+                >
+
+                  <div>
+
+                    <strong>
+                      #${escapeHTML(order.id)}
+                    </strong>
+
+                    <div>
+                      ${escapeHTML(
+                        order.email||
+                        ""
+                      )}
+                    </div>
+
+                    <div>
+                      ${escapeHTML(
+                        formatDate(
+                          order.createdAt
+                        )
+                      )}
+                    </div>
+
+                  </div>
+
+                  <span
+                    class="nova-status ${
+                      statusClass(status)
+                    }"
+                  >
+                    ${statusIcon(status)}
+                    ${escapeHTML(status)}
+                  </span>
+
+                </div>
+
+                <div
+                  class="admin-order-grid"
+                >
+
+                  <div>
+
+                    <label>
+                      Statut
+                    </label>
+
+                    <select
+                      data-status="${escapeHTML(order.id)}"
+                    >
+
+                      ${
+                        STATUS.map(
+                          option=>
+                            `
+                            <option
+                              value="${escapeHTML(option)}"
+                              ${
+                                option===status
+                                  ?"selected"
+                                  :""
+                              }
+                            >
+                              ${escapeHTML(option)}
+                            </option>
+                            `
+                        ).join("")
+                      }
+
+                    </select>
+
+                  </div>
+
+                  <div>
+
+                    <label>
+                      Ville
+                    </label>
+
+                    <input
+                      data-city="${escapeHTML(order.id)}"
+                      value="${escapeHTML(
+                        order.packageCity||
+                        address.city||
+                        ""
+                      )}"
+                    >
+
+                  </div>
+
+                  <div>
+
+                    <label>
+                      Numéro de suivi
+                    </label>
+
+                    <input
+                      data-tracking="${escapeHTML(order.id)}"
+                      value="${escapeHTML(
+                        order.trackingNumber||
+                        ""
+                      )}"
+                    >
+
+                  </div>
+
+                  <div>
+
+                    <label>
+                      Durée
+                    </label>
+
+                    <input
+                      data-duration="${escapeHTML(order.id)}"
+                      value="${escapeHTML(
+                        order.deliveryDuration||
+                        ""
+                      )}"
+                    >
+
+                  </div>
+
+                  <div>
+
+                    <label>
+                      Livraison estimée
+                    </label>
+
+                    <input
+                      type="text"
+                      data-date="${escapeHTML(order.id)}"
+                      value="${escapeHTML(
+                        order.estimatedDelivery||
+                        ""
+                      )}"
+                      placeholder="25 septembre"
+                    >
+
+                  </div>
+
+                </div>
+
+                <div
+                  class="admin-actions"
+                >
+
+                  <button
+                    class="btn btn-primary"
+                    data-save-order="${escapeHTML(order.id)}"
+                  >
+                    💾 Enregistrer
+                  </button>
+
+                  ${
+                    order.paymentMethod==="PayPal.Me"&&
+                    order.paymentStatus!=="accepted"
+                      ?`
+                        <button
+                          class="btn btn-primary"
+                          data-accept="${escapeHTML(order.id)}"
+                        >
+                          ✅ Accepter PayPal
+                        </button>
+                      `
+                      :""
+                  }
+
+                  <button
+                    class="btn btn-secondary"
+                    data-print-order="${escapeHTML(order.id)}"
+                  >
+                    🧾 Facture
+                  </button>
+
+                  <button
+                    class="btn btn-danger"
+                    data-admin-delete="${escapeHTML(order.id)}"
+                  >
+                    🗑️ Supprimer
+                  </button>
+
+                </div>
+
+              </div>
+            `;
+          }
+        ).join("")
+        :
+        `
+        <div class="empty">
+          <h3>
+            Aucune commande
+          </h3>
+        </div>
+        `;
+
+    $("adminOrders")
+      .querySelectorAll(
+        "[data-save-order]"
+      )
+      .forEach(
+        button=>{
+          button.onclick=
+            ()=>saveAdminOrder(
+              button.dataset.saveOrder
+            );
+        }
+      );
+
+    $("adminOrders")
+      .querySelectorAll(
+        "[data-accept]"
+      )
+      .forEach(
+        button=>{
+          button.onclick=
+            ()=>acceptPaypalOrder(
+              button.dataset.accept
+            );
+        }
+      );
+
+    $("adminOrders")
+      .querySelectorAll(
+        "[data-print-order]"
+      )
+      .forEach(
+        button=>{
+          button.onclick=
+            ()=>printInvoice(
+              button.dataset.printOrder
+            );
+        }
+      );
+
+    $("adminOrders")
+      .querySelectorAll(
+        "[data-admin-delete]"
+      )
+      .forEach(
+        button=>{
+          button.onclick=
+            ()=>adminDeleteOrder(
+              button.dataset.adminDelete
+            );
+        }
+      );
+
+  }catch(error){
+
+    console.error(
+      "Admin:",
+      error
+    );
+
+    $("adminOrders").innerHTML=
+      `
+      <div class="empty">
+        <h3>
+          Erreur de chargement
+        </h3>
+      </div>
+      `;
+  }
+}
+
+async function saveAdminOrder(id){
+
+  if(
+    !isAdmin()||
+    localStorage.getItem(
+      ADMIN_KEY
+    )!=="true"
+  ){
+    return;
+  }
+
+  try{
+
+    await updateDoc(
+      doc(
+        db,
+        "orders",
+        id
+      ),
+      {
+
+        status:
+          document.querySelector(
+            `[data-status="${CSS.escape(id)}"]`
+          )?.value||
+          "Enregistrée",
+
+        packageCity:
+          document.querySelector(
+            `[data-city="${CSS.escape(id)}"]`
+          )?.value
+            .trim()||
+          "",
+
+        trackingNumber:
+          document.querySelector(
+            `[data-tracking="${CSS.escape(id)}"]`
+          )?.value
+            .trim()||
+          "",
+
+        deliveryDuration:
+          document.querySelector(
+            `[data-duration="${CSS.escape(id)}"]`
+          )?.value
+            .trim()||
+          "",
+
+        estimatedDelivery:
+          document.querySelector(
+            `[data-date="${CSS.escape(id)}"]`
+          )?.value
+            .trim()||
+          "",
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+    toast(
+      "Commande mise à jour ✅"
+    );
+
+    renderAdmin();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Impossible de mettre à jour la commande."
+    );
+  }
+}
+
+async function acceptPaypalOrder(id){
+
+  if(!isAdmin())
+    return;
+
+  try{
+
+    await updateDoc(
+      doc(
+        db,
+        "orders",
+        id
+      ),
+      {
+
+        paymentStatus:
+          "accepted",
+
+        status:
+          "Acceptée",
+
+        paymentAcceptedAt:
+          serverTimestamp()
+
+      }
+    );
+
+    toast(
+      "Paiement accepté ✅"
+    );
+
+    renderAdmin();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Erreur de paiement."
+    );
+  }
+}
+
+async function adminDeleteOrder(id){
+
+  if(
+    !isAdmin()||
+    !confirm(
+      "Supprimer définitivement cette commande ?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "orders",
+        id
+      )
+    );
+
+    toast(
+      "Commande supprimée."
+    );
+
+    renderAdmin();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Erreur de suppression."
+    );
+  }
+}
+
+async function printInvoice(id){
+
+  try{
+
+    const snapshot=
+      await getDocs(
+        collection(
+          db,
+          "orders"
+        )
+      );
+
+    const docOrder=
+      snapshot.docs.find(
+        d=>d.id===id
+      );
+
+    if(!docOrder){
+      toast(
+        "Commande introuvable."
+      );
+      return;
+    }
+
+    const order={
+      id:docOrder.id,
+      ...docOrder.data()
+    };
+
+    const win=
+      window.open(
+        "",
+        "_blank",
+        "width=900,height=700"
+      );
+
+    if(!win){
+      toast(
+        "Fenêtre bloquée par le navigateur."
+      );
+      return;
+    }
+
+    win.document.write(
+      `
+      <!DOCTYPE html>
+
+      <html lang="fr">
+
+      <head>
+
+        <meta charset="utf-8">
+
+        <title>
+          Facture NovaShop
+        </title>
+
+        <style>
+
+          body{
+            font-family:Arial,sans-serif;
+            padding:40px;
+            color:#111;
+          }
+
+          table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+          }
+
+          th,
+          td{
+            padding:10px;
+            border-bottom:1px solid #ddd;
+            text-align:left;
+          }
+
+          .box{
+            padding:15px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            margin-top:20px;
+          }
+
+          .total{
+            text-align:right;
+            font-size:22px;
+            font-weight:bold;
+            margin-top:20px;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
+        <h1>
+          NovaShop
+        </h1>
+
+        <div class="box">
+
+          <strong>
+            Commande :
+          </strong>
+
+          #${escapeHTML(order.id)}
+
+          <br>
+
+          Client :
+          ${escapeHTML(
+            order.email||""
+          )}
+
+          <br>
+
+          Date :
+          ${escapeHTML(
+            formatDate(
+              order.createdAt
+            )
+          )}
+
+          <br>
+
+          Statut :
+          ${escapeHTML(
+            order.status||
+            "Enregistrée"
+          )}
+
+        </div>
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Produit
+              </th>
+
+              <th>
+                Qté
+              </th>
+
+              <th>
+                Prix
+              </th>
+
+              <th>
+                Total
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${
+              (
+                order.items||
+                []
+              ).map(
+                item=>
+                  `
+                  <tr>
+
+                    <td>
+                      ${escapeHTML(
+                        item.name||
+                        ""
+                      )}
+                    </td>
+
+                    <td>
+                      ${Number(
+                        item.qty||
+                        0
+                      )}
+                    </td>
+
+                    <td>
+                      ${money(
+                        item.price
+                      )}
+                    </td>
+
+                    <td>
+                      ${money(
+                        Number(
+                          item.price||
+                          0
+                        )*
+                        Number(
+                          item.qty||
+                          0
+                        )
+                      )}
+                    </td>
+
+                  </tr>
+                  `
+              ).join("")
+            }
+
+          </tbody>
+
+        </table>
+
+        <div class="total">
+
+          Total :
+          ${
+            Number(
+              order.total||
+              0
+            )===0
+              ?"Gratuit"
+              :money(
+                order.total
+              )
+          }
+
+        </div>
+
+        <script>
+          window.onload=()=>{
+            window.print();
+          };
+        <\/script>
+
+      </body>
+
+      </html>
+      `
+    );
+
+    win.document.close();
+
+  }catch(error){
+
+    console.error(
+      "Facture:",
+      error
+    );
+
+    toast(
+      "Impossible de générer la facture."
+    );
+  }
+}
+
+checkoutBtn?.addEventListener(
+  "click",
+  ()=>{
+    if(!currentUser){
+
+      toast(
+        "Connecte-toi pour passer commande."
+      );
+
+      openAccount();
+
+      return;
+    }
+
+    if(!cartDetailed().length){
+
+      toast(
+        "Ton panier est vide."
+      );
+
+      return;
+    }
+
+    promoApplied=false;
+
+    renderCheckout();
+  }
+);
+
+accountBtn?.addEventListener(
+  "click",
+  openAccount
+);
+
+ordersBtn?.addEventListener(
+  "click",
+  openOrders
+);
+
+settingsBtn?.addEventListener(
+  "click",
+  openSettings
+);
+
+adminBtn?.addEventListener(
+  "click",
+  openAdmin
+);
+
+onAuthStateChanged(
+  auth,
+  user=>{
+
+    currentUser=user;
+
+    if(adminBtn){
+
+      adminBtn.style.display=
+        isAdmin()
+          ?"grid"
+          :"none";
+
+    }
+
+    if(!isAdmin()){
+
+      localStorage.removeItem(
+        ADMIN_KEY
+      );
+
+    }
+
+  }
+);
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key==="Escape"){
+
+      closeModal();
+      closeCart();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   NOVASHOP STYLE
+========================================================= */
+
+const style=
+  document.createElement(
+    "style"
+  );
+
+style.textContent=`
+
+/* PRODUITS PC */
+
+#productGrid{
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(190px,1fr)
+    )!important;
+
+  gap:14px!important;
+
+  align-items:start!important;
+}
+
+#productGrid .product-card{
+  width:100%!important;
+  max-width:245px!important;
+  margin:0 auto!important;
+  min-width:0!important;
+}
+
+#productGrid .product-image{
+  height:140px!important;
+  min-height:140px!important;
+  max-height:140px!important;
+  overflow:hidden!important;
+}
+
+#productGrid .product-image img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block!important;
+}
+
+#productGrid .product-body{
+  padding:10px!important;
+}
+
+#productGrid .product-name{
+  font-size:13px!important;
+  line-height:1.3!important;
+  min-height:34px!important;
+}
+
+#productGrid .rating{
+  font-size:10px!important;
+  gap:3px!important;
+}
+
+#productGrid .price{
+  font-size:16px!important;
+}
+
+
+/* BOUTONS PC */
+
+#productGrid .product-actions{
+  display:flex!important;
+  gap:8px!important;
+}
+
+#productGrid .product-actions button{
+  flex:1!important;
+  min-height:38px!important;
+  padding:8px 12px!important;
+  border-radius:10px!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  cursor:pointer!important;
+  transition:
+    transform .15s ease,
+    filter .15s ease,
+    box-shadow .15s ease!important;
+}
+
+#productGrid .product-actions button:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+}
+
+#productGrid .product-actions button:active{
+  transform:translateY(0);
+}
+
+
+/* COMMANDES */
+
+.nova-order-actions{
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  gap:10px!important;
+  margin-top:12px!important;
+}
+
+.nova-view-order{
+  display:flex!important;
+  width:100%!important;
+  min-height:52px!important;
+  visibility:visible!important;
+  opacity:1!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  z-index:10!important;
+}
+
+.nova-order-card{
+  overflow:hidden;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.nova-order-preview,
+.nova-detail-total{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+}
+
+.nova-order-items{
+  display:grid;
+  gap:6px;
+  margin-top:10px;
+}
+
+.nova-order-item{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+}
+
+.nova-package-box{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.035);
+  line-height:1.7;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.nova-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  font-weight:800;
+  font-size:12px;
+}
+
+.nova-status.delivered{
+  background:rgba(34,197,94,.15);
+  color:#4ade80;
+}
+
+.nova-status.cancelled{
+  background:rgba(239,68,68,.15);
+  color:#f87171;
+}
+
+.nova-status.refund{
+  background:rgba(245,158,11,.15);
+  color:#fbbf24;
+}
+
+.nova-status.transit{
+  background:rgba(59,130,246,.15);
+  color:#60a5fa;
+}
+
+.nova-status.nearby{
+  background:rgba(168,85,247,.15);
+  color:#c084fc;
+}
+
+
+/* TIMELINE */
+
+.order-timeline{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-top:10px;
+}
+
+.timeline-step{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  opacity:.45;
+}
+
+.timeline-step.done{
+  opacity:1;
+}
+
+.timeline-dot{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.08);
+  font-size:12px;
+}
+
+.timeline-step.done .timeline-dot{
+  background:rgba(34,197,94,.18);
+}
+
+
+/* ADMIN */
+
+.admin-order-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px,1fr)
+    );
+  gap:10px;
+  margin-top:14px;
+}
+
+.admin-order-grid label{
+  display:block;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.admin-order-grid input,
+.admin-order-grid select{
+  width:100%;
+}
+
+.admin-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.admin-actions button{
+  flex:1;
+  min-width:170px;
+}
+
+.admin-top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  #productGrid{
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0,1fr)
+      )!important;
+
+    gap:10px!important;
+  }
+
+  #productGrid .product-card{
+    max-width:none!important;
+  }
+
+  #productGrid .product-image{
+    height:115px!important;
+    min-height:115px!important;
+    max-height:115px!important;
+  }
+
+  #productGrid .product-body{
+    padding:8px!important;
+  }
+
+  #productGrid .product-name{
+    font-size:12px!important;
+    min-height:31px!important;
+  }
+
+  #productGrid .rating-count{
+    display:none!important;
+  }
+
+  #productGrid .price{
+    font-size:15px!important;
+  }
+
+  #productGrid .product-actions{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+  }
+
+  #productGrid .product-actions button{
+    width:100%!important;
+    min-height:38px!important;
+  }
+
+  .nova-view-order{
+    width:100%!important;
+    min-height:52px!important;
+  }
+
+  .admin-order-grid{
+    grid-template-columns:1fr;
+  }
+
+  .admin-actions{
+    flex-direction:column;
+  }
+
+  .admin-actions button{
+    width:100%;
+    min-width:0;
+  }
+
+  .admin-top-actions{
+    flex-direction:column;
+  }
+
+  .admin-top-actions button{
+    width:100%;
+  }
+
+  .nova-order-head{
+    display:flex;
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+
+  .nova-order-head .nova-status{
+    width:100%;
+  }
+
+}
+
+`;
+
+document.head.appendChild(
+  style
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+applyTheme();
+
+renderCategories();
+
+renderProducts();
+
+renderCart();
+
+window.NovaShop={
+
+  products,
+
+  get cart(){
+    return cartDetailed();
+  },
+
+  openCart,
+
+  closeCart,
+
+  openProduct,
+
+  renderProducts,
+
+  renderCart,
+
+  openOrders,
+
+  openAdmin
+
+};
+
+console.log(
+  "NovaShop chargé :",
+  products.length,
+  "produits"
+);
+
+console.log(
+  "NovaShop : bouton Voir la commande actif"
+);

@@ -24,9 +24,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* ============================================================
+/* =========================================================
    FIREBASE
-============================================================ */
+========================================================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZ5vAkAEfIBpfLyhxgO7uvNdJ67KYKWD0",
@@ -43,18 +43,18 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
 
-/* ============================================================
+/* =========================================================
    ADMIN
-============================================================ */
+========================================================= */
 
 const ADMIN_EMAIL = "pc2alex.les@gmail.com";
 const ADMIN_CODE = "NOVA-ADMIN-2026";
 const ADMIN_ACCESS_KEY = "novaAdminAuthorized";
 
 
-/* ============================================================
+/* =========================================================
    DOM
-============================================================ */
+========================================================= */
 
 const $ = id => document.getElementById(id);
 
@@ -79,28 +79,23 @@ const adminBtn = $("adminBtn");
 const modal = $("modalLayer");
 const modalContent = $("modalContent");
 const modalClose = $("modalClose");
+const modalTitle = $("modalTitle");
 
 const toastContainer = $("toast");
 const heroCartBtn = $("heroCartBtn");
 
 
-/* ============================================================
+/* =========================================================
    FALLBACK IMAGE
-============================================================ */
+========================================================= */
 
 const FALLBACK_IMAGE =
   "https://placehold.co/800x800/111827/ffffff?text=NovaShop";
 
 
-/* ============================================================
-   IMAGE SYSTEM
-============================================================ */
-
 function imageUrl(url) {
 
-  if (!url) {
-    return FALLBACK_IMAGE;
-  }
+  if (!url) return FALLBACK_IMAGE;
 
   if (
     url.startsWith("./") ||
@@ -111,16 +106,15 @@ function imageUrl(url) {
     return url;
   }
 
-  return "https://wsrv.nl/?url=" +
-    encodeURIComponent(url);
+  return "https://wsrv.nl/?url=" + encodeURIComponent(url);
 }
+
 
 window.imageError = function(img, original) {
 
   if (!img) return;
 
-  const stage =
-    img.dataset.imageStage || "proxy";
+  const stage = img.dataset.imageStage || "proxy";
 
   if (stage === "proxy") {
 
@@ -136,14 +130,15 @@ window.imageError = function(img, original) {
   img.src = FALLBACK_IMAGE;
 };
 
+
 function imageSrc(url) {
   return escapeAttribute(imageUrl(url));
 }
 
 
-/* ============================================================
+/* =========================================================
    PRODUCTS
-============================================================ */
+========================================================= */
 
 const products = [
 
@@ -328,7 +323,7 @@ const products = [
     name:"Chaise GTPLAYER Ergonomique Gaming Soutien Lombaire Repose-pieds",
     category:"Chaises gaming",
     price:109.99,
-    image:"https://thumb.pccomponentes.com/w-530-530/articles/1118/11186247/167-silla-gaming-gtplayer-ergonomica-con-reposapies-y-soporte-lumbar-4d.jpg"
+    image:"https://thumb.pccomponentes.com/w-530-530/articles/1118/11186247/167-silla-gaming-ergonomica-con-reposapies-y-soporte-lumbar-4d.jpg"
   },
 
   {
@@ -495,9 +490,9 @@ const products = [
 ];
 
 
-/* ============================================================
+/* =========================================================
    STATE
-============================================================ */
+========================================================= */
 
 let currentUser = null;
 let selectedCategory = "Toutes";
@@ -505,18 +500,16 @@ let searchValue = "";
 let cart = [];
 
 
-/* ============================================================
+/* =========================================================
    STORAGE
-============================================================ */
+========================================================= */
 
 function loadCart(){
 
   try{
 
     const saved =
-      JSON.parse(
-        localStorage.getItem("novaCart") || "[]"
-      );
+      JSON.parse(localStorage.getItem("novaCart") || "[]");
 
     if(Array.isArray(saved)){
       cart = saved;
@@ -527,20 +520,21 @@ function loadCart(){
   }
 }
 
-function saveCart(){
 
+function saveCart(){
   localStorage.setItem(
     "novaCart",
     JSON.stringify(cart)
   );
 }
 
+
 loadCart();
 
 
-/* ============================================================
+/* =========================================================
    THEME
-============================================================ */
+========================================================= */
 
 function applyTheme(){
 
@@ -557,21 +551,20 @@ function applyTheme(){
 
     if(
       window.matchMedia &&
-      window.matchMedia(
-        "(prefers-color-scheme: light)"
-      ).matches
+      window.matchMedia("(prefers-color-scheme: light)").matches
     ){
       document.body.classList.add("light");
     }
   }
 }
 
+
 applyTheme();
 
 
-/* ============================================================
+/* =========================================================
    MONEY
-============================================================ */
+========================================================= */
 
 function money(value){
 
@@ -581,24 +574,20 @@ function money(value){
     return "Gratuit";
   }
 
-  return new Intl.NumberFormat(
-    "fr-FR",
-    {
-      style:"currency",
-      currency:"EUR"
-    }
-  ).format(value);
+  return new Intl.NumberFormat("fr-FR",{
+    style:"currency",
+    currency:"EUR"
+  }).format(value);
 }
 
 
-/* ============================================================
+/* =========================================================
    TOAST
-============================================================ */
+========================================================= */
 
 function showToast(message){
 
   if(!toastContainer){
-    console.log(message);
     return;
   }
 
@@ -607,24 +596,20 @@ function showToast(message){
 
   clearTimeout(showToast.timer);
 
-  showToast.timer =
-    setTimeout(() => {
-      toastContainer.classList.remove("show");
-    },2300);
+  showToast.timer = setTimeout(()=>{
+    toastContainer.classList.remove("show");
+  },2300);
 }
 
 
-/* ============================================================
+/* =========================================================
    REVIEWS
-============================================================ */
+========================================================= */
 
 function reviewData(product){
 
   const number =
-    parseInt(
-      product.id.replace("p",""),
-      10
-    );
+    parseInt(product.id.replace("p",""),10);
 
   const count =
     132 + ((number * 173) % 1604);
@@ -634,16 +619,14 @@ function reviewData(product){
 
   return {
     count,
-    rating:Number(
-      rating.toFixed(1)
-    )
+    rating:Number(rating.toFixed(1))
   };
 }
 
+
 function starsHTML(rating){
 
-  const rounded =
-    Math.round(rating);
+  const rounded = Math.round(rating);
 
   let html = "";
 
@@ -659,35 +642,32 @@ function starsHTML(rating){
 }
 
 
-/* ============================================================
+/* =========================================================
    CATEGORIES
-============================================================ */
+========================================================= */
 
 function getCategories(){
 
   return [
     "Toutes",
     ...new Set(
-      products.map(
-        product => product.category
-      )
+      products.map(product => product.category)
     )
   ];
 }
 
+
 function renderCategories(){
 
-  if(!categoriesEl) return;
+  if(!categoriesEl){
+    return;
+  }
 
   categoriesEl.innerHTML =
     getCategories()
       .map(category => `
         <button
-          class="category ${
-            category === selectedCategory
-              ? "active"
-              : ""
-          }"
+          class="category ${category === selectedCategory ? "active" : ""}"
           data-category="${escapeAttribute(category)}"
         >
           ${escapeHTML(category)}
@@ -697,16 +677,14 @@ function renderCategories(){
 }
 
 
-/* ============================================================
+/* =========================================================
    FILTER
-============================================================ */
+========================================================= */
 
 function filteredProducts(){
 
   const search =
-    searchValue
-      .trim()
-      .toLowerCase();
+    searchValue.trim().toLowerCase();
 
   let list =
     products.filter(product => {
@@ -717,12 +695,8 @@ function filteredProducts(){
 
       const searchOK =
         !search ||
-        product.name
-          .toLowerCase()
-          .includes(search) ||
-        product.category
-          .toLowerCase()
-          .includes(search);
+        product.name.toLowerCase().includes(search) ||
+        product.category.toLowerCase().includes(search);
 
       return categoryOK && searchOK;
     });
@@ -731,20 +705,16 @@ function filteredProducts(){
     $("sortSelect")?.value || "default";
 
   if(sort === "priceAsc"){
-    list.sort(
-      (a,b) => a.price - b.price
-    );
+    list.sort((a,b)=>a.price-b.price);
   }
 
   if(sort === "priceDesc"){
-    list.sort(
-      (a,b) => b.price - a.price
-    );
+    list.sort((a,b)=>b.price-a.price);
   }
 
   if(sort === "rating"){
     list.sort(
-      (a,b) =>
+      (a,b)=>
         reviewData(b).rating -
         reviewData(a).rating
     );
@@ -754,9 +724,9 @@ function filteredProducts(){
 }
 
 
-/* ============================================================
+/* =========================================================
    PRODUCT CARD
-============================================================ */
+========================================================= */
 
 function productCardHTML(product){
 
@@ -770,25 +740,25 @@ function productCardHTML(product){
 
         ${
           product.new
-            ? `
-              <span
-                style="
-                  position:absolute;
-                  top:12px;
-                  left:12px;
-                  z-index:2;
-                  background:#25d695;
-                  color:#03150e;
-                  padding:5px 9px;
-                  border-radius:999px;
-                  font-size:11px;
-                  font-weight:900;
-                "
-              >
-                Nouveau
-              </span>
-            `
-            : ""
+          ? `
+            <span
+              style="
+                position:absolute;
+                top:12px;
+                left:12px;
+                z-index:2;
+                background:#25d695;
+                color:#03150e;
+                padding:5px 9px;
+                border-radius:999px;
+                font-size:11px;
+                font-weight:900;
+              "
+            >
+              Nouveau
+            </span>
+          `
+          : ""
         }
 
         <img
@@ -814,26 +784,25 @@ function productCardHTML(product){
         </h3>
 
         <div class="rating">
-
           <span class="stars">
             ${starsHTML(reviews.rating)}
           </span>
 
           <span>
-            ${reviews.rating
-              .toFixed(1)
-              .replace(".",",")}
+            ${reviews.rating.toFixed(1).replace(".",",")}
           </span>
 
           <span>
             · ${reviews.count.toLocaleString("fr-FR")} avis
           </span>
-
         </div>
 
         <div class="product-bottom">
 
-          <div class="price">
+          <div
+            class="price"
+            style="font-size:19px"
+          >
             ${money(product.price)}
           </div>
 
@@ -864,20 +833,24 @@ function productCardHTML(product){
 }
 
 
-/* ============================================================
+/* =========================================================
    RENDER PRODUCTS
-============================================================ */
+========================================================= */
 
 function renderProducts(){
 
-  if(!productsGrid) return;
+  if(!productsGrid){
+    return;
+  }
 
   const list =
     filteredProducts();
 
   productsGrid.innerHTML =
     list.length
+
       ? list.map(productCardHTML).join("")
+
       : `
         <div
           style="
@@ -916,85 +889,93 @@ function renderProducts(){
 }
 
 
-/* ============================================================
+/* =========================================================
    PRODUCT CLICK
-============================================================ */
+========================================================= */
 
 if(productsGrid){
 
-  productsGrid.addEventListener(
-    "click",
-    event => {
+  productsGrid.addEventListener("click",event=>{
 
-      const viewButton =
-        event.target.closest("[data-view]");
+    const viewButton =
+      event.target.closest("[data-view]");
 
-      const addButton =
-        event.target.closest("[data-add]");
+    const addButton =
+      event.target.closest("[data-add]");
 
-      const resetButton =
-        event.target.closest("#resetFilters");
+    const resetButton =
+      event.target.closest("#resetFilters");
 
-      if(viewButton){
 
-        openProduct(
-          viewButton.dataset.view
+    if(viewButton){
+
+      openProduct(
+        viewButton.dataset.view
+      );
+
+      return;
+    }
+
+
+    if(addButton){
+
+      const product =
+        products.find(
+          p =>
+            p.id ===
+            addButton.dataset.add
         );
 
-        return;
+      if(product){
+
+        addToCart(
+          product,
+          addButton
+        );
       }
 
-      if(addButton){
-
-        const product =
-          products.find(
-            p => p.id === addButton.dataset.add
-          );
-
-        if(product){
-          addToCart(
-            product,
-            addButton
-          );
-        }
-
-        return;
-      }
-
-      if(resetButton){
-
-        searchValue = "";
-
-        if(searchInput){
-          searchInput.value = "";
-        }
-
-        selectedCategory = "Toutes";
-
-        renderCategories();
-        renderProducts();
-      }
-
+      return;
     }
-  );
+
+
+    if(resetButton){
+
+      searchValue = "";
+
+      if(searchInput){
+        searchInput.value = "";
+      }
+
+      selectedCategory = "Toutes";
+
+      renderCategories();
+      renderProducts();
+    }
+
+  });
 }
 
 
-/* ============================================================
+/* =========================================================
    PRODUCT MODAL
-============================================================ */
+========================================================= */
 
 function openProduct(id){
 
   const product =
-    products.find(
-      p => p.id === id
-    );
+    products.find(p=>p.id===id);
 
-  if(!product || !modalContent) return;
+  if(!product || !modalContent){
+    return;
+  }
 
   const reviews =
     reviewData(product);
+
+  if(modalTitle){
+    modalTitle.textContent =
+      product.name;
+  }
 
   modalContent.innerHTML = `
 
@@ -1055,9 +1036,7 @@ function openProduct(id){
           </span>
 
           <strong>
-            ${reviews.rating
-              .toFixed(1)
-              .replace(".",",")}
+            ${reviews.rating.toFixed(1).replace(".",",")}
           </strong>
 
           <span>
@@ -1084,146 +1063,93 @@ function openProduct(id){
           🛒 Ajouter au panier
         </button>
 
-        <div
-          style="
-            margin-top:25px;
-            border-top:1px solid var(--line);
-            padding-top:20px;
-          "
-        >
-
-          <strong>
-            Avis clients
-          </strong>
-
-          <div
-            style="
-              margin-top:12px;
-              padding:13px;
-              border:1px solid var(--line);
-              border-radius:12px;
-            "
-          >
-            <strong>
-              Client NovaShop
-            </strong>
-
-            <div class="stars">
-              ★★★★★
-            </div>
-
-            <p
-              style="
-                color:var(--muted);
-                margin-top:6px;
-              "
-            >
-              Produit conforme à la présentation.
-              Bonne expérience générale.
-            </p>
-          </div>
-
-          <div
-            style="
-              margin-top:10px;
-              padding:13px;
-              border:1px solid var(--line);
-              border-radius:12px;
-            "
-          >
-            <strong>
-              Client vérifié
-            </strong>
-
-            <div class="stars">
-              ★★★★★
-            </div>
-
-            <p
-              style="
-                color:var(--muted);
-                margin-top:6px;
-              "
-            >
-              Fiche claire et produit intéressant
-              pour un setup gaming.
-            </p>
-          </div>
-
-        </div>
-
       </div>
 
     </div>
   `;
 
-  $("modalAdd").onclick =
-    event => {
+  const addButton =
+    $("modalAdd");
 
-      addToCart(
-        product,
-        event.currentTarget
-      );
+  if(addButton){
 
-    };
+    addButton.onclick =
+      event =>
+        addToCart(
+          product,
+          event.currentTarget
+        );
+  }
 
   openModal();
 }
 
 
-/* ============================================================
+/* =========================================================
    MODAL
-============================================================ */
+========================================================= */
 
 function openModal(){
 
-  if(!modal) return;
+  if(!modal){
+    return;
+  }
 
   modal.classList.add("open");
-  document.body.style.overflow = "hidden";
+
+  document.body.style.overflow =
+    "hidden";
 }
+
 
 function closeModal(){
 
-  if(!modal) return;
+  if(!modal){
+    return;
+  }
 
   modal.classList.remove("open");
+
   document.body.style.overflow = "";
 }
 
+
 if(modalClose){
-  modalClose.onclick = closeModal;
+  modalClose.onclick =
+    closeModal;
 }
+
 
 if(modal){
 
-  modal.addEventListener(
-    "click",
-    event => {
+  modal.addEventListener("click",event=>{
 
-      if(event.target === modal){
-        closeModal();
-      }
-
+    if(event.target === modal){
+      closeModal();
     }
-  );
+
+  });
 }
 
 
-/* ============================================================
+/* =========================================================
    CART
-============================================================ */
+========================================================= */
 
-function addToCart(product, sourceButton){
+function addToCart(product,sourceButton){
 
   const existing =
     cart.find(
-      item => item.id === product.id
+      item =>
+        item.id === product.id
     );
 
   if(existing){
+
     existing.qty += 1;
+
   }else{
+
     cart.push({
       id:product.id,
       qty:1
@@ -1233,39 +1159,43 @@ function addToCart(product, sourceButton){
   saveCart();
   renderCart();
 
-  animateToCart(
-    sourceButton,
-    product.image
-  );
-
   showToast(
     "Produit ajouté au panier"
   );
+
+  closeModal();
 }
+
 
 function removeFromCart(id){
 
   cart =
     cart.filter(
-      item => item.id !== id
+      item =>
+        item.id !== id
     );
 
   saveCart();
   renderCart();
 }
 
+
 function changeQuantity(id,delta){
 
   const item =
     cart.find(
-      item => item.id === id
+      item =>
+        item.id === id
     );
 
-  if(!item) return;
+  if(!item){
+    return;
+  }
 
   item.qty += delta;
 
   if(item.qty <= 0){
+
     removeFromCart(id);
     return;
   }
@@ -1274,17 +1204,21 @@ function changeQuantity(id,delta){
   renderCart();
 }
 
+
 function cartDetailed(){
 
   return cart
-    .map(item => {
+    .map(item=>{
 
       const product =
         products.find(
-          p => p.id === item.id
+          p =>
+            p.id === item.id
         );
 
-      if(!product) return null;
+      if(!product){
+        return null;
+      }
 
       return {
         ...product,
@@ -1295,33 +1229,32 @@ function cartDetailed(){
     .filter(Boolean);
 }
 
+
 function getCartTotal(){
 
   return cartDetailed()
     .reduce(
-      (sum,item) =>
+      (sum,item)=>
         sum +
-        (Number(item.price) || 0) *
-        Number(item.qty || 0),
+        (Number(item.price)||0) *
+        Number(item.qty||0),
       0
     );
 }
 
 
-/* ============================================================
-   CART RENDER
-============================================================ */
-
 function renderCart(){
 
-  if(!cartItems) return;
+  if(!cartItems){
+    return;
+  }
 
   const items =
     cartDetailed();
 
   const count =
     items.reduce(
-      (sum,item) =>
+      (sum,item)=>
         sum + item.qty,
       0
     );
@@ -1342,16 +1275,12 @@ function renderCart(){
       money(total);
   }
 
+
   if(!items.length){
 
     cartItems.innerHTML = `
 
-      <div
-        style="
-          text-align:center;
-          padding:50px 15px;
-        "
-      >
+      <div class="empty">
 
         <div style="font-size:45px">
           🛒
@@ -1361,20 +1290,16 @@ function renderCart(){
           Ton panier est vide
         </h3>
 
-        <p
-          style="
-            color:var(--muted);
-            margin:8px 0 20px;
-          "
-        >
-          Ajoute un produit pour commencer.
+        <p style="margin-top:8px">
+          Ajoute des produits pour commencer.
         </p>
 
         <button
           class="primary"
           id="emptyShop"
+          style="margin-top:18px"
         >
-          Voir les produits
+          Explorer la boutique
         </button>
 
       </div>
@@ -1383,29 +1308,28 @@ function renderCart(){
     return;
   }
 
+
   cartItems.innerHTML =
-    items.map(item => `
+    items.map(item=>`
 
       <div class="cart-item">
 
         <img
           src="${imageSrc(item.image)}"
           data-original="${escapeAttribute(item.image)}"
-          alt=""
-          loading="lazy"
-          referrerpolicy="no-referrer"
+          alt="${escapeAttribute(item.name)}"
           onerror="imageError(this,this.dataset.original)"
         >
 
         <div>
 
-          <h4>
+          <div class="cart-name">
             ${escapeHTML(item.name)}
-          </h4>
+          </div>
 
-          <p>
+          <div class="cart-price">
             ${money(item.price)}
-          </p>
+          </div>
 
           <div class="qty">
 
@@ -1427,21 +1351,18 @@ function renderCart(){
 
           </div>
 
+          <button
+            class="remove"
+            data-remove="${item.id}"
+          >
+            Supprimer
+          </button>
+
         </div>
 
-        <button
-          data-remove="${item.id}"
-          style="
-            align-self:start;
-            border:1px solid var(--line);
-            background:transparent;
-            color:var(--danger);
-            border-radius:8px;
-            padding:6px;
-          "
-        >
-          ×
-        </button>
+        <strong>
+          ${money(item.price * item.qty)}
+        </strong>
 
       </div>
 
@@ -1449,15 +1370,11 @@ function renderCart(){
 }
 
 
-/* ============================================================
-   CART EVENTS
-============================================================ */
-
 if(cartItems){
 
   cartItems.addEventListener(
     "click",
-    event => {
+    event=>{
 
       const minus =
         event.target.closest("[data-minus]");
@@ -1471,6 +1388,7 @@ if(cartItems){
       const emptyShop =
         event.target.closest("#emptyShop");
 
+
       if(minus){
 
         changeQuantity(
@@ -1480,6 +1398,7 @@ if(cartItems){
 
         return;
       }
+
 
       if(plus){
 
@@ -1491,6 +1410,7 @@ if(cartItems){
         return;
       }
 
+
       if(remove){
 
         removeFromCart(
@@ -1499,6 +1419,7 @@ if(cartItems){
 
         return;
       }
+
 
       if(emptyShop){
 
@@ -1514,148 +1435,70 @@ if(cartItems){
 }
 
 
-/* ============================================================
+/* =========================================================
    CART OPEN / CLOSE
-============================================================ */
+========================================================= */
 
 function openCart(){
 
   if(cartOverlay){
     cartOverlay.classList.add("open");
   }
-
-  if(cartDrawer){
-    cartDrawer.classList.add("open");
-  }
-
-  document.body.style.overflow = "hidden";
 }
+
 
 function closeCart(){
 
   if(cartOverlay){
     cartOverlay.classList.remove("open");
   }
-
-  if(cartDrawer){
-    cartDrawer.classList.remove("open");
-  }
-
-  document.body.style.overflow = "";
 }
+
 
 if(cartBtn){
-  cartBtn.onclick = openCart;
+  cartBtn.onclick =
+    openCart;
 }
 
-if(cartClose){
-  cartClose.onclick = closeCart;
-}
-
-if(cartOverlay){
-  cartOverlay.onclick = closeCart;
-}
 
 if(heroCartBtn){
-  heroCartBtn.onclick = openCart;
+  heroCartBtn.onclick =
+    openCart;
 }
 
 
-/* ============================================================
-   CART ANIMATION
-============================================================ */
+if(cartClose){
+  cartClose.onclick =
+    closeCart;
+}
 
-function animateToCart(button,image){
 
-  const animations =
-    localStorage.getItem("novaAnimations") !== "false";
+if(cartOverlay){
 
-  if(!animations) return;
-  if(!button || !cartBtn) return;
+  cartOverlay.addEventListener(
+    "click",
+    event=>{
 
-  const rect =
-    button.getBoundingClientRect();
+      if(event.target === cartOverlay){
+        closeCart();
+      }
 
-  const target =
-    cartBtn.getBoundingClientRect();
-
-  const img =
-    document.createElement("img");
-
-  img.src =
-    imageUrl(image);
-
-  img.onerror =
-    () => {
-      img.src = FALLBACK_IMAGE;
-    };
-
-  img.style.position = "fixed";
-  img.style.zIndex = "9999";
-  img.style.width = "46px";
-  img.style.height = "46px";
-  img.style.objectFit = "contain";
-  img.style.background = "#fff";
-  img.style.borderRadius = "10px";
-  img.style.pointerEvents = "none";
-  img.style.transition =
-    "all .55s cubic-bezier(.2,.8,.2,1)";
-
-  img.style.left =
-    `${rect.left + rect.width / 2 - 23}px`;
-
-  img.style.top =
-    `${rect.top + rect.height / 2 - 23}px`;
-
-  document.body.appendChild(img);
-
-  requestAnimationFrame(() => {
-
-    img.style.left =
-      `${target.left + target.width / 2 - 13}px`;
-
-    img.style.top =
-      `${target.top + target.height / 2 - 13}px`;
-
-    img.style.width = "26px";
-    img.style.height = "26px";
-    img.style.opacity = "0";
-  });
-
-  setTimeout(() => {
-
-    img.remove();
-
-    if(cartBtn.animate){
-
-      cartBtn.animate(
-        [
-          {transform:"scale(1)"},
-          {transform:"scale(1.12)"},
-          {transform:"scale(1)"}
-        ],
-        {
-          duration:300
-        }
-      );
     }
-
-  },600);
+  );
 }
 
 
-/* ============================================================
+/* =========================================================
    SEARCH
-============================================================ */
+========================================================= */
 
 if(searchInput){
 
   searchInput.addEventListener(
     "input",
-    event => {
-
+    ()=>{
       searchValue =
-        event.target.value;
+        searchInput.value;
 
       renderProducts();
     }
@@ -1663,9 +1506,9 @@ if(searchInput){
 }
 
 
-/* ============================================================
+/* =========================================================
    SORT
-============================================================ */
+========================================================= */
 
 const sortSelect =
   $("sortSelect");
@@ -1679,20 +1522,22 @@ if(sortSelect){
 }
 
 
-/* ============================================================
-   CATEGORY
-============================================================ */
+/* =========================================================
+   CATEGORIES
+========================================================= */
 
 if(categoriesEl){
 
   categoriesEl.addEventListener(
     "click",
-    event => {
+    event=>{
 
       const button =
         event.target.closest("[data-category]");
 
-      if(!button) return;
+      if(!button){
+        return;
+      }
 
       selectedCategory =
         button.dataset.category;
@@ -1704,320 +1549,35 @@ if(categoriesEl){
 }
 
 
-/* ============================================================
-   SETTINGS
-============================================================ */
-
-function openSettings(){
-
-  const theme =
-    localStorage.getItem(
-      "novaThemeChoice"
-    ) || "dark";
-
-  const language =
-    localStorage.getItem(
-      "novaLanguage"
-    ) || "fr";
-
-  const animations =
-    localStorage.getItem(
-      "novaAnimations"
-    ) !== "false";
-
-  modalContent.innerHTML = `
-
-    <div>
-
-      <h2>
-        Paramètres
-      </h2>
-
-      <div
-        style="
-          margin-top:22px;
-          display:grid;
-          gap:20px;
-        "
-      >
-
-        <div>
-
-          <strong>
-            Apparence
-          </strong>
-
-          <p
-            style="
-              color:var(--muted);
-              font-size:13px;
-              margin:5px 0 8px;
-            "
-          >
-            Choisis l'apparence de NovaShop.
-          </p>
-
-          <select
-            id="themeSelect"
-            style="width:100%"
-          >
-
-            <option
-              value="dark"
-              ${theme === "dark" ? "selected" : ""}
-            >
-              Sombre
-            </option>
-
-            <option
-              value="light"
-              ${theme === "light" ? "selected" : ""}
-            >
-              Claire
-            </option>
-
-            <option
-              value="auto"
-              ${theme === "auto" ? "selected" : ""}
-            >
-              Automatique
-            </option>
-
-          </select>
-
-        </div>
-
-        <div>
-
-          <strong>
-            Langue
-          </strong>
-
-          <select
-            id="languageSelect"
-            style="width:100%;margin-top:8px"
-          >
-
-            <option
-              value="fr"
-              ${language === "fr" ? "selected" : ""}
-            >
-              🇫🇷 Français
-            </option>
-
-            <option
-              value="en"
-              ${language === "en" ? "selected" : ""}
-            >
-              🇬🇧 English
-            </option>
-
-          </select>
-
-        </div>
-
-        <div>
-
-          <strong>
-            Animations
-          </strong>
-
-          <p
-            style="
-              color:var(--muted);
-              font-size:13px;
-              margin:5px 0 10px;
-            "
-          >
-            Animations du panier et de l'interface.
-          </p>
-
-          <button
-            id="animationSwitch"
-            style="
-              width:60px;
-              height:32px;
-              border:0;
-              border-radius:20px;
-              background:${
-                animations
-                  ? "var(--blue)"
-                  : "var(--line)"
-              };
-              position:relative;
-            "
-          >
-
-            <span
-              style="
-                position:absolute;
-                top:4px;
-                left:${
-                  animations
-                    ? "32px"
-                    : "4px"
-                };
-                width:24px;
-                height:24px;
-                border-radius:50%;
-                background:white;
-                transition:.2s;
-              "
-            ></span>
-
-          </button>
-
-        </div>
-
-        <div
-          style="
-            padding:15px;
-            border:1px solid var(--line);
-            border-radius:13px;
-            background:var(--card);
-          "
-        >
-
-          <strong>
-            Informations
-          </strong>
-
-          <p
-            style="
-              color:var(--muted);
-              font-size:13px;
-              margin-top:6px;
-            "
-          >
-            NovaShop contient actuellement
-            ${products.length} produits.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  $("themeSelect").onchange =
-    event => {
-
-      localStorage.setItem(
-        "novaThemeChoice",
-        event.target.value
-      );
-
-      applyTheme();
-    };
-
-  $("languageSelect").onchange =
-    event => {
-
-      localStorage.setItem(
-        "novaLanguage",
-        event.target.value
-      );
-
-      applyLanguage(
-        event.target.value
-      );
-    };
-
-  $("animationSwitch").onclick =
-    () => {
-
-      const current =
-        localStorage.getItem(
-          "novaAnimations"
-        ) !== "false";
-
-      localStorage.setItem(
-        "novaAnimations",
-        String(!current)
-      );
-
-      openSettings();
-    };
-
-  openModal();
-}
-
-
-/* ============================================================
-   LANGUAGE
-============================================================ */
-
-function applyLanguage(language){
-
-  if(searchInput){
-
-    searchInput.placeholder =
-      language === "en"
-        ? "Search for a product..."
-        : "Rechercher un produit...";
-  }
-
-  if(heroCartBtn){
-
-    heroCartBtn.textContent =
-      language === "en"
-        ? "View my cart"
-        : "Voir mon panier";
-  }
-}
-
-
-/* ============================================================
+/* =========================================================
    ACCOUNT
-============================================================ */
+========================================================= */
 
 function openAccount(){
 
   if(currentUser){
 
+    modalTitle.textContent =
+      "Mon compte";
+
     modalContent.innerHTML = `
 
-      <div>
+      <div class="checkout-section">
 
-        <h2>
-          Mon compte
-        </h2>
+        <h3>👤 Compte connecté</h3>
 
-        <div
+        <p
           style="
-            margin:20px 0;
-            padding:15px;
-            border:1px solid var(--line);
-            border-radius:13px;
-            background:var(--card);
+            color:var(--muted);
+            margin-bottom:16px;
           "
         >
-
-          <strong>
-            Compte connecté
-          </strong>
-
-          <p
-            style="
-              color:var(--muted);
-              margin-top:7px;
-            "
-          >
-            ${escapeHTML(
-              currentUser.email || ""
-            )}
-          </p>
-
-        </div>
+          ${escapeHTML(currentUser.email || "")}
+        </p>
 
         <button
-          class="secondary"
+          class="danger-btn"
           id="logoutBtn"
-          style="
-            width:100%;
-            color:var(--danger);
-          "
         >
           Se déconnecter
         </button>
@@ -2026,27 +1586,13 @@ function openAccount(){
     `;
 
     $("logoutBtn").onclick =
-      async () => {
-
+      async ()=>{
         try{
-
           await signOut(auth);
-
-          localStorage.removeItem(
-            ADMIN_ACCESS_KEY
-          );
-
           closeModal();
-
-          showToast(
-            "Déconnexion effectuée"
-          );
-
-        }catch(error){
-
-          showToast(
-            authError(error.code)
-          );
+          showToast("Déconnexion réussie");
+        }catch{
+          showToast("Impossible de se déconnecter");
         }
       };
 
@@ -2054,170 +1600,257 @@ function openAccount(){
     return;
   }
 
-  let mode = "login";
 
-  function draw(){
+  modalTitle.textContent =
+    "Connexion";
 
-    modalContent.innerHTML = `
+  modalContent.innerHTML = `
 
-      <div>
+    <div class="checkout-section">
 
-        <h2>
-          ${
-            mode === "login"
-              ? "Connexion"
-              : "Créer un compte"
-          }
-        </h2>
+      <h3>🔐 Se connecter</h3>
 
-        <div
-          style="
-            display:grid;
-            gap:12px;
-            margin-top:20px;
-          "
+      <div class="field">
+        <label>E-mail</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="ton@email.com"
         >
-
-          <input
-            id="authEmail"
-            type="email"
-            autocomplete="email"
-            placeholder="Adresse e-mail"
-            style="width:100%"
-          >
-
-          <input
-            id="authPassword"
-            type="password"
-            autocomplete="${
-              mode === "login"
-                ? "current-password"
-                : "new-password"
-            }"
-            placeholder="Mot de passe"
-            style="width:100%"
-          >
-
-          <button
-            class="primary"
-            id="authSubmit"
-          >
-            ${
-              mode === "login"
-                ? "Se connecter"
-                : "Créer mon compte"
-            }
-          </button>
-
-          <button
-            class="secondary"
-            id="authSwitch"
-          >
-            ${
-              mode === "login"
-                ? "Créer un compte"
-                : "J'ai déjà un compte"
-            }
-          </button>
-
-        </div>
-
       </div>
-    `;
 
-    $("authSubmit").onclick =
-      async () => {
+      <div class="field">
+        <label>Mot de passe</label>
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Mot de passe"
+        >
+      </div>
 
-        const email =
-          $("authEmail")
-            ?.value
-            ?.trim();
+      <div
+        id="authMessage"
+        class="error-message"
+      ></div>
 
-        const password =
-          $("authPassword")
-            ?.value || "";
+      <button
+        class="primary"
+        id="loginBtn"
+        style="width:100%"
+      >
+        Se connecter
+      </button>
 
-        if(!email || !password){
+    </div>
 
-          showToast(
-            "Remplis tous les champs"
-          );
+    <div class="checkout-section">
 
-          return;
+      <h3>Créer un compte</h3>
+
+      <div class="field">
+        <label>E-mail</label>
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="ton@email.com"
+        >
+      </div>
+
+      <div class="field">
+        <label>Mot de passe</label>
+        <input
+          id="registerPassword"
+          type="password"
+          placeholder="6 caractères minimum"
+        >
+      </div>
+
+      <button
+        class="secondary"
+        id="registerBtn"
+        style="width:100%"
+      >
+        Créer mon compte
+      </button>
+
+    </div>
+  `;
+
+
+  $("loginBtn").onclick =
+    async ()=>{
+
+      const email =
+        $("loginEmail")?.value.trim();
+
+      const password =
+        $("loginPassword")?.value;
+
+      const message =
+        $("authMessage");
+
+
+      try{
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        showToast(
+          "Connexion réussie ✓"
+        );
+
+        closeModal();
+
+      }catch(error){
+
+        if(message){
+          message.textContent =
+            authError(error.code);
         }
+      }
+    };
 
-        if(
-          mode === "register" &&
-          password.length < 6
-        ){
 
-          showToast(
-            "Mot de passe : 6 caractères minimum"
-          );
+  $("registerBtn").onclick =
+    async ()=>{
 
-          return;
+      const email =
+        $("registerEmail")?.value.trim();
+
+      const password =
+        $("registerPassword")?.value;
+
+      const message =
+        $("authMessage");
+
+
+      try{
+
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        showToast(
+          "Compte créé ✓"
+        );
+
+        closeModal();
+
+      }catch(error){
+
+        if(message){
+          message.textContent =
+            authError(error.code);
         }
+      }
+    };
 
-        try{
 
-          if(mode === "login"){
-
-            await signInWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-
-          }else{
-
-            await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-          }
-
-          closeModal();
-
-          showToast(
-            "Connexion réussie ✓"
-          );
-
-        }catch(error){
-
-          console.error(
-            "Firebase Auth:",
-            error
-          );
-
-          showToast(
-            authError(error.code)
-          );
-        }
-      };
-
-    $("authSwitch").onclick =
-      () => {
-
-        mode =
-          mode === "login"
-            ? "register"
-            : "login";
-
-        draw();
-      };
-  }
-
-  draw();
   openModal();
 }
 
 
-/* ============================================================
-   CHECKOUT HELPERS
-============================================================ */
+/* =========================================================
+   SETTINGS
+========================================================= */
 
-function calculateDiscountedTotal(total,promo){
+function openSettings(){
+
+  modalTitle.textContent =
+    "Paramètres";
+
+  const current =
+    localStorage.getItem("novaThemeChoice") ||
+    "dark";
+
+  modalContent.innerHTML = `
+
+    <div class="checkout-section">
+
+      <h3>🎨 Apparence</h3>
+
+      <div class="field">
+
+        <label>Thème</label>
+
+        <select id="themeChoice">
+
+          <option
+            value="dark"
+            ${current==="dark" ? "selected" : ""}
+          >
+            Sombre
+          </option>
+
+          <option
+            value="light"
+            ${current==="light" ? "selected" : ""}
+          >
+            Clair
+          </option>
+
+          <option
+            value="auto"
+            ${current==="auto" ? "selected" : ""}
+          >
+            Automatique
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  $("themeChoice").onchange =
+    event=>{
+
+      localStorage.setItem(
+        "novaThemeChoice",
+        event.target.value
+      );
+
+      applyTheme();
+
+      showToast(
+        "Thème modifié ✓"
+      );
+    };
+
+
+  openModal();
+}
+
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function validateAddress(address){
+
+  return Boolean(
+    address.firstName &&
+    address.lastName &&
+    address.street &&
+    address.postalCode &&
+    address.city &&
+    address.country
+  );
+}
+
+
+function calculateDiscountedTotal(
+  subtotal,
+  promo
+){
 
   if(
     String(promo || "")
@@ -2227,74 +1860,9 @@ function calculateDiscountedTotal(total,promo){
     return 0;
   }
 
-  return Number(
-    total.toFixed(2)
-  );
+  return subtotal;
 }
 
-function validateAddress(address){
-
-  if(!address){
-    return false;
-  }
-
-  const firstName =
-    String(
-      address.firstName || ""
-    ).trim();
-
-  const lastName =
-    String(
-      address.lastName || ""
-    ).trim();
-
-  const street =
-    String(
-      address.street || ""
-    ).trim();
-
-  const postal =
-    String(
-      address.postalCode || ""
-    ).trim();
-
-  const city =
-    String(
-      address.city || ""
-    ).trim();
-
-  const country =
-    String(
-      address.country || ""
-    ).trim();
-
-  if(
-    firstName.length < 2 ||
-    lastName.length < 2 ||
-    street.length < 5 ||
-    postal.length < 4 ||
-    city.length < 2 ||
-    country.length < 2
-  ){
-    return false;
-  }
-
-  if(
-    country
-      .toLowerCase()
-      .includes("france") &&
-    !/^\d{5}$/.test(postal)
-  ){
-    return false;
-  }
-
-  return true;
-}
-
-
-/* ============================================================
-   CHECKOUT
-============================================================ */
 
 function openCheckout(){
 
@@ -2310,6 +1878,7 @@ function openCheckout(){
     return;
   }
 
+
   if(!currentUser){
 
     showToast(
@@ -2321,115 +1890,106 @@ function openCheckout(){
     return;
   }
 
-  const subtotal =
-    getCartTotal();
 
-  modalContent.innerHTML = `
+  let paymentMode = "choice";
 
-    <div>
 
-      <h2>
-        Finaliser ma commande
-      </h2>
+  function drawCheckout(){
 
-      <p
-        style="
-          color:var(--muted);
-          margin-top:6px;
-        "
-      >
-        Livraison et paiement
-      </p>
+    const subtotal =
+      getCartTotal();
 
-      <div
-        style="
-          margin-top:20px;
-          display:grid;
-          gap:12px;
-        "
-      >
 
-        <h3>
-          📍 Adresse de livraison
-        </h3>
+    if(modalTitle){
+      modalTitle.textContent =
+        "Finaliser ma commande";
+    }
 
-        <input
-          id="checkoutFirstName"
-          type="text"
-          autocomplete="given-name"
-          placeholder="Prénom *"
-          style="width:100%"
-        >
 
-        <input
-          id="checkoutLastName"
-          type="text"
-          autocomplete="family-name"
-          placeholder="Nom *"
-          style="width:100%"
-        >
+    modalContent.innerHTML = `
 
-        <input
-          id="checkoutStreet"
-          type="text"
-          autocomplete="street-address"
-          placeholder="Adresse *"
-          style="width:100%"
-        >
+      <div class="checkout-section">
 
-        <div
-          style="
-            display:grid;
-            grid-template-columns:130px 1fr;
-            gap:10px;
-          "
-        >
+        <h3>📍 Adresse de livraison</h3>
 
-          <input
-            id="checkoutPostal"
-            type="text"
-            inputmode="numeric"
-            autocomplete="postal-code"
-            placeholder="Code postal *"
-            style="width:100%"
-          >
+        <div class="form-grid">
 
-          <input
-            id="checkoutCity"
-            type="text"
-            autocomplete="address-level2"
-            placeholder="Ville *"
-            style="width:100%"
-          >
+          <div class="field">
+            <label>Prénom</label>
+            <input
+              id="checkoutFirstName"
+              placeholder="Prénom"
+            >
+          </div>
+
+          <div class="field">
+            <label>Nom</label>
+            <input
+              id="checkoutLastName"
+              placeholder="Nom"
+            >
+          </div>
+
+          <div class="field full">
+            <label>Adresse</label>
+            <input
+              id="checkoutStreet"
+              placeholder="Adresse"
+            >
+          </div>
+
+          <div class="field">
+            <label>Code postal</label>
+            <input
+              id="checkoutPostal"
+              placeholder="59000"
+            >
+          </div>
+
+          <div class="field">
+            <label>Ville</label>
+            <input
+              id="checkoutCity"
+              placeholder="Ville"
+            >
+          </div>
+
+          <div class="field full">
+            <label>Pays</label>
+            <input
+              id="checkoutCountry"
+              value="France"
+            >
+          </div>
 
         </div>
 
-        <input
-          id="checkoutCountry"
-          type="text"
-          autocomplete="country-name"
-          value="France"
-          placeholder="Pays *"
-          style="width:100%"
-        >
+      </div>
 
-        <h3 style="margin-top:10px">
-          🎟️ Code promo
-        </h3>
+
+      <div class="checkout-section">
+
+        <h3>🎟️ Code promo</h3>
 
         <div
           style="
-            display:grid;
-            grid-template-columns:1fr auto;
+            display:flex;
             gap:8px;
           "
         >
 
           <input
             id="promoCode"
-            type="text"
             placeholder="Code promo"
-            style="width:100%"
+            style="
+              flex:1;
+              background:var(--card2);
+              border:1px solid var(--line);
+              color:var(--text);
+              border-radius:12px;
+              padding:13px;
+              outline:none;
+            "
           >
 
           <button
@@ -2446,494 +2006,557 @@ function openCheckout(){
           style="
             min-height:20px;
             font-size:13px;
+            margin-top:8px;
           "
         ></div>
 
-        <div
-          style="
-            margin-top:5px;
-            padding:16px;
-            border:1px solid var(--line);
-            border-radius:14px;
-            background:var(--card);
-          "
-        >
+      </div>
 
-          <div
-            style="
-              display:flex;
-              justify-content:space-between;
-            "
-          >
 
-            <span>
-              Sous-total
-            </span>
+      <div class="checkout-section">
 
-            <strong>
-              ${money(subtotal)}
-            </strong>
+        <h3>💳 Paiement</h3>
 
-          </div>
+        ${
+          paymentMode === "choice"
 
-          <div
-            style="
-              display:flex;
-              justify-content:space-between;
-              margin-top:10px;
-            "
-          >
+          ? `
 
-            <span>
-              Réduction
-            </span>
+            <div class="payment-choice">
 
-            <strong id="discountValue">
-              0,00 €
-            </strong>
+              <button
+                class="payment-button paypal-button"
+                id="paypalChoice"
+              >
+                PayPal
+              </button>
 
-          </div>
+              <button
+                class="payment-button"
+                id="cardChoice"
+              >
+                💳 Payer par CB
+              </button>
 
-          <div
-            style="
-              display:flex;
-              justify-content:space-between;
-              margin-top:14px;
-              padding-top:14px;
-              border-top:1px solid var(--line);
-              font-size:20px;
-            "
-          >
+            </div>
 
-            <strong>
-              Total
-            </strong>
+          `
 
-            <strong id="checkoutFinalTotal">
-              ${money(subtotal)}
-            </strong>
-
-          </div>
-
-        </div>
-
-        <h3 style="margin-top:7px">
-          💳 Moyen de paiement
-        </h3>
-
-        <div class="payment-buttons">
-
-          <button
-            class="primary paypal-button"
-            id="paypalPaymentButton"
-          >
-            🅿️ Payer avec PayPal
-          </button>
-
-          <button
-            class="primary card-button"
-            id="cardPaymentButton"
-          >
-            💳 Payer par CB
-          </button>
-
-        </div>
-
-        <button
-          class="primary"
-          id="confirmCheckout"
-          style="width:100%;margin-top:3px"
-        >
-          Continuer avec PayPal
-        </button>
+          : ""
+        }
 
       </div>
 
-    </div>
-  `;
 
-  let promoApplied = false;
-  let paymentMode = "paypal";
+      <div
+        style="
+          padding:16px;
+          border:1px solid var(--line);
+          border-radius:14px;
+          background:var(--card);
+        "
+      >
 
-  $("applyPromo").onclick =
-    () => {
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+          "
+        >
+          <span>Sous-total</span>
+          <strong id="checkoutSubtotal">
+            ${money(subtotal)}
+          </strong>
+        </div>
 
-      const code =
-        $("promoCode")
-          ?.value
-          ?.trim()
-          .toUpperCase();
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            margin-top:10px;
+          "
+        >
+          <span>Réduction</span>
+          <strong id="discountValue">
+            0,00 €
+          </strong>
+        </div>
 
-      const message =
-        $("promoMessage");
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            margin-top:14px;
+            padding-top:14px;
+            border-top:1px solid var(--line);
+            font-size:20px;
+          "
+        >
+          <strong>Total</strong>
 
-      const discount =
-        $("discountValue");
+          <strong id="checkoutFinalTotal">
+            ${money(subtotal)}
+          </strong>
 
-      const finalTotal =
-        $("checkoutFinalTotal");
+        </div>
 
-      if(code === "NOVA100"){
+      </div>
 
-        promoApplied = true;
 
-        if(message){
+      <button
+        class="primary"
+        id="confirmCheckout"
+        style="
+          width:100%;
+          margin-top:14px;
+        "
+      >
+        Continuer avec PayPal
+      </button>
+    `;
 
-          message.textContent =
-            "✓ Code NOVA100 appliqué : commande gratuite";
 
-          message.style.color =
-            "#25d695";
+    const promoInput =
+      $("promoCode");
+
+    const applyPromo =
+      $("applyPromo");
+
+
+    if(applyPromo){
+
+      applyPromo.onclick =
+        ()=>{
+
+          const code =
+            promoInput?.value
+              ?.trim()
+              .toUpperCase();
+
+          const message =
+            $("promoMessage");
+
+          const discount =
+            $("discountValue");
+
+          const finalTotal =
+            $("checkoutFinalTotal");
+
+
+          if(code === "NOVA100"){
+
+            if(message){
+
+              message.textContent =
+                "✓ Code NOVA100 appliqué : commande gratuite";
+
+              message.style.color =
+                "#25d695";
+            }
+
+            if(discount){
+              discount.textContent =
+                money(subtotal);
+            }
+
+            if(finalTotal){
+              finalTotal.textContent =
+                money(0);
+            }
+
+            showToast(
+              "NOVA100 activé ✓"
+            );
+
+            return;
+          }
+
+
+          if(message){
+
+            message.textContent =
+              code
+                ? "Code promo invalide."
+                : "Entre un code promo.";
+
+            message.style.color =
+              "var(--danger)";
+          }
+
+
+          if(discount){
+            discount.textContent =
+              "0,00 €";
+          }
+
+
+          if(finalTotal){
+            finalTotal.textContent =
+              money(subtotal);
+          }
+        };
+    }
+
+
+    const cardChoice =
+      $("cardChoice");
+
+    if(cardChoice){
+
+      cardChoice.onclick =
+        ()=>{
+
+          openCardPayment();
+
+        };
+    }
+
+
+    const paypalChoice =
+      $("paypalChoice");
+
+    if(paypalChoice){
+
+      paypalChoice.onclick =
+        ()=>{
+
+          const button =
+            $("confirmCheckout");
+
+          if(button){
+            button.click();
+          }
+
+        };
+    }
+
+
+    const confirm =
+      $("confirmCheckout");
+
+    if(confirm){
+
+      confirm.onclick =
+        async ()=>{
+
+          const address = {
+
+            firstName:
+              $("checkoutFirstName")
+                ?.value?.trim() || "",
+
+            lastName:
+              $("checkoutLastName")
+                ?.value?.trim() || "",
+
+            street:
+              $("checkoutStreet")
+                ?.value?.trim() || "",
+
+            postalCode:
+              $("checkoutPostal")
+                ?.value?.trim() || "",
+
+            city:
+              $("checkoutCity")
+                ?.value?.trim() || "",
+
+            country:
+              $("checkoutCountry")
+                ?.value?.trim() || ""
+          };
+
+
+          if(!validateAddress(address)){
+
+            showToast(
+              "Adresse de livraison invalide ou incomplète"
+            );
+
+            return;
+          }
+
+
+          const enteredCode =
+            $("promoCode")
+              ?.value
+              ?.trim()
+              .toUpperCase() || "";
+
+
+          const promoApplied =
+            enteredCode === "NOVA100";
+
+
+          const finalTotal =
+            calculateDiscountedTotal(
+              subtotal,
+              promoApplied
+                ? "NOVA100"
+                : ""
+            );
+
+
+          await createCheckoutOrder(
+            items,
+            subtotal,
+            finalTotal,
+            address,
+            promoApplied
+          );
+        };
+    }
+  }
+
+
+  function openCardPayment(){
+
+    modalTitle.textContent =
+      "Paiement par CB";
+
+
+    modalContent.innerHTML = `
+
+      <div class="card-box">
+
+        <div class="card-logo">
+
+          <div class="card-chip"></div>
+
+          <div class="card-number">
+            •••• •••• •••• ••••
+          </div>
+
+        </div>
+
+
+        <div class="checkout-section">
+
+          <div class="field">
+
+            <label>
+              Nom complet
+            </label>
+
+            <input
+              id="cardDemoName"
+              type="text"
+              autocomplete="off"
+              placeholder="Nom complet"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Numéro de carte
+            </label>
+
+            <input
+              id="cardDemoNumber"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="19"
+              placeholder="XXXX XXXX XXXX XXXX"
+            >
+
+          </div>
+
+
+          <div class="form-grid">
+
+            <div class="field">
+
+              <label>
+                Expiration
+              </label>
+
+              <input
+                id="cardDemoExpiry"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="5"
+                placeholder="MM/AA"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                CVV
+              </label>
+
+              <input
+                id="cardDemoCvv"
+                type="password"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="4"
+                placeholder="CVV"
+              >
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="cardError"
+            class="error-message"
+          ></div>
+
+
+          <button
+            class="primary"
+            id="demoCardPayButton"
+            style="width:100%"
+          >
+            💳 Valider le paiement
+          </button>
+
+
+          <button
+            class="secondary"
+            id="backToPaymentMethods"
+            style="
+              width:100%;
+              margin-top:9px;
+            "
+          >
+            ← Retour
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+
+    const cardNumber =
+      $("cardDemoNumber");
+
+    if(cardNumber){
+
+      cardNumber.addEventListener(
+        "input",
+        ()=>{
+
+          let value =
+            cardNumber.value
+              .replace(/\D/g,"")
+              .slice(0,16);
+
+          value =
+            value.match(/.{1,4}/g)?.join(" ")
+            || "";
+
+          cardNumber.value =
+            value;
         }
+      );
+    }
 
-        if(discount){
-          discount.textContent =
-            money(subtotal);
+
+    const expiry =
+      $("cardDemoExpiry");
+
+    if(expiry){
+
+      expiry.addEventListener(
+        "input",
+        ()=>{
+
+          let value =
+            expiry.value
+              .replace(/\D/g,"")
+              .slice(0,4);
+
+          if(value.length > 2){
+
+            value =
+              value.slice(0,2) +
+              "/" +
+              value.slice(2);
+          }
+
+          expiry.value =
+            value;
         }
+      );
+    }
 
-        if(finalTotal){
-          finalTotal.textContent =
-            money(0);
+
+    const cvv =
+      $("cardDemoCvv");
+
+    if(cvv){
+
+      cvv.addEventListener(
+        "input",
+        ()=>{
+
+          cvv.value =
+            cvv.value
+              .replace(/\D/g,"")
+              .slice(0,4);
+        }
+      );
+    }
+
+
+    $("demoCardPayButton").onclick =
+      ()=>{
+
+        const error =
+          $("cardError");
+
+        if(error){
+
+          error.textContent =
+            "Carte incorrecte";
         }
 
         showToast(
-          "NOVA100 activé ✓"
+          "Carte incorrecte"
         );
 
-        return;
-      }
 
-      promoApplied = false;
+        /*
+          Les valeurs du formulaire ne sont :
+          - ni enregistrées
+          - ni envoyées à Firebase
+          - ni envoyées à un serveur
+          - ni ajoutées à une commande
+        */
 
-      if(message){
-
-        message.textContent =
-          code
-            ? "Code promo invalide."
-            : "Entre un code promo.";
-
-        message.style.color =
-          "var(--danger)";
-      }
-
-      if(discount){
-        discount.textContent =
-          "0,00 €";
-      }
-
-      if(finalTotal){
-        finalTotal.textContent =
-          money(subtotal);
-      }
-    };
-
-
-  $("paypalPaymentButton").onclick =
-    () => {
-
-      paymentMode = "paypal";
-
-      $("confirmCheckout").textContent =
-        "Continuer avec PayPal";
-
-      showToast(
-        "PayPal sélectionné"
-      );
-    };
-
-
-  $("cardPaymentButton").onclick =
-    () => {
-
-      paymentMode = "card-demo";
-
-      openDemoCardPayment(
-        items,
-        subtotal,
-        promoApplied
-      );
-    };
-
-
-  $("confirmCheckout").onclick =
-    async () => {
-
-      if(paymentMode !== "paypal"){
-        return;
-      }
-
-      const address = {
-
-        firstName:
-          $("checkoutFirstName")
-            ?.value
-            ?.trim() || "",
-
-        lastName:
-          $("checkoutLastName")
-            ?.value
-            ?.trim() || "",
-
-        street:
-          $("checkoutStreet")
-            ?.value
-            ?.trim() || "",
-
-        postalCode:
-          $("checkoutPostal")
-            ?.value
-            ?.trim() || "",
-
-        city:
-          $("checkoutCity")
-            ?.value
-            ?.trim() || "",
-
-        country:
-          $("checkoutCountry")
-            ?.value
-            ?.trim() || ""
+        $("cardDemoName").value = "";
+        $("cardDemoNumber").value = "";
+        $("cardDemoExpiry").value = "";
+        $("cardDemoCvv").value = "";
       };
 
-      if(!validateAddress(address)){
 
-        showToast(
-          "Adresse de livraison invalide ou incomplète"
-        );
+    $("backToPaymentMethods").onclick =
+      ()=>{
+        drawCheckout();
+      };
+  }
 
-        return;
-      }
 
-      const enteredCode =
-        $("promoCode")
-          ?.value
-          ?.trim()
-          .toUpperCase() || "";
-
-      if(enteredCode === "NOVA100"){
-        promoApplied = true;
-      }
-
-      const finalTotal =
-        calculateDiscountedTotal(
-          subtotal,
-          promoApplied
-            ? "NOVA100"
-            : ""
-        );
-
-      await createCheckoutOrder(
-        items,
-        subtotal,
-        finalTotal,
-        address,
-        promoApplied
-      );
-    };
-
+  drawCheckout();
   openModal();
 }
 
 
-/* ============================================================
-   DEMO CB
-============================================================ */
-
-function openDemoCardPayment(
-  items,
-  subtotal,
-  promoApplied
-){
-
-  modalContent.innerHTML = `
-
-    <div>
-
-      <button
-        class="secondary"
-        id="backToPayment"
-        style="margin-bottom:15px"
-      >
-        ← Retour
-      </button>
-
-      <h2>
-        💳 Paiement par CB
-      </h2>
-
-      <p
-        style="
-          color:var(--muted);
-          margin-top:6px;
-        "
-      >
-        Interface de démonstration
-      </p>
-
-      <div class="demo-warning">
-        ⚠️ <strong>Démo uniquement.</strong><br>
-        N'entre aucune vraie donnée bancaire.
-        Ces champs ne sont pas connectés à un service bancaire
-        et les données saisies ne sont ni envoyées ni enregistrées.
-      </div>
-
-      <div
-        style="
-          margin-top:20px;
-          display:grid;
-          gap:12px;
-        "
-      >
-
-        <input
-          id="demoCardName"
-          type="text"
-          autocomplete="off"
-          placeholder="Nom complet (démo)"
-        >
-
-        <input
-          id="demoCardNumber"
-          type="text"
-          inputmode="numeric"
-          autocomplete="off"
-          placeholder="XXXX XXXX XXXX XXXX"
-          maxlength="19"
-        >
-
-        <div
-          style="
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:10px;
-          "
-        >
-
-          <input
-            id="demoCardExpiry"
-            type="text"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="MM/AA"
-            maxlength="5"
-          >
-
-          <input
-            id="demoCardCvv"
-            type="text"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="CVV"
-            maxlength="4"
-          >
-
-        </div>
-
-        <div
-          id="demoCardError"
-          class="card-error"
-        >
-          ❌ Carte incorrecte
-        </div>
-
-        <button
-          class="primary"
-          id="demoCardPayButton"
-          style="
-            width:100%;
-            margin-top:5px;
-          "
-        >
-          💳 Valider le paiement
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-
-  $("backToPayment").onclick =
-    () => {
-
-      closeModal();
-
-      setTimeout(() => {
-
-        openCheckout();
-
-      },50);
-    };
-
-
-  /*
-    IMPORTANT :
-    Les valeurs saisies ne sont jamais stockées,
-    jamais envoyées à Firebase et jamais ajoutées à la commande.
-  */
-
-  $("demoCardPayButton").onclick =
-    () => {
-
-      const name =
-        $("demoCardName")?.value || "";
-
-      const number =
-        $("demoCardNumber")?.value || "";
-
-      const expiry =
-        $("demoCardExpiry")?.value || "";
-
-      const cvv =
-        $("demoCardCvv")?.value || "";
-
-      /*
-        On vérifie seulement que les champs
-        ne sont pas complètement vides.
-        Les valeurs sont immédiatement abandonnées.
-      */
-
-      const filled =
-        Boolean(
-          name.trim() &&
-          number.trim() &&
-          expiry.trim() &&
-          cvv.trim()
-        );
-
-      const error =
-        $("demoCardError");
-
-      if(error){
-
-        error.textContent =
-          filled
-            ? "❌ Carte incorrecte"
-            : "❌ Carte incorrecte";
-
-        error.classList.add("show");
-      }
-
-      showToast(
-        "Carte incorrecte"
-      );
-
-      /*
-        Suppression des références locales.
-        Aucune donnée n'est enregistrée.
-      */
-
-      void name;
-      void number;
-      void expiry;
-      void cvv;
-    };
-}
-
-
-/* ============================================================
+/* =========================================================
    CREATE ORDER
-============================================================ */
+========================================================= */
 
 async function createCheckoutOrder(
   items,
@@ -2952,14 +2575,18 @@ async function createCheckoutOrder(
     return;
   }
 
+
   const button =
     $("confirmCheckout");
 
+
   if(button){
+
     button.disabled = true;
     button.textContent =
-      "Création de la commande...";
+      "Enregistrement...";
   }
+
 
   try{
 
@@ -2972,18 +2599,18 @@ async function createCheckoutOrder(
         currentUser.email || "",
 
       items:
-        items.map(item => ({
+        items.map(item=>({
           id:item.id,
           name:item.name,
-          price:Number(item.price) || 0,
-          qty:Number(item.qty) || 1
+          price:item.price,
+          qty:item.qty
         })),
 
       subtotal:
-        Number(subtotal.toFixed(2)),
+        Number(subtotal),
 
       total:
-        Number(total.toFixed(2)),
+        Number(total),
 
       promoCode:
         promoApplied
@@ -2991,9 +2618,8 @@ async function createCheckoutOrder(
           : "",
 
       discount:
-        Number(
-          (subtotal - total).toFixed(2)
-        ),
+        Number(subtotal) -
+        Number(total),
 
       address,
 
@@ -3036,17 +2662,21 @@ async function createCheckoutOrder(
         "Commande gratuite enregistrée ✓"
       );
 
-      printInvoiceHTML({
-        ...orderData,
-        id:ref.id
-      });
+      setTimeout(
+        ()=>printInvoiceHTML({
+          ...orderData,
+          id:ref.id
+        }),
+        300
+      );
 
       return;
     }
 
 
     const paypalAmount =
-      Number(total.toFixed(2));
+      Number(total);
+
 
     const paypalURL =
       "https://paypal.me/SH0PNOVA/" +
@@ -3068,24 +2698,24 @@ async function createCheckoutOrder(
       "Redirection vers PayPal..."
     );
 
-    setTimeout(() => {
 
-      window.location.href =
-        paypalURL;
-
-    },700);
+    setTimeout(
+      ()=>{
+        window.location.href =
+          paypalURL;
+      },
+      700
+    );
 
 
   }catch(error){
 
-    console.error(
-      "Create order:",
-      error
-    );
+    console.error(error);
 
     showToast(
-      "Impossible de créer la commande."
+      "Impossible d'enregistrer la commande"
     );
+
 
     if(button){
 
@@ -3098,9 +2728,9 @@ async function createCheckoutOrder(
 }
 
 
-/* ============================================================
+/* =========================================================
    CHECKOUT BUTTON
-============================================================ */
+========================================================= */
 
 if(checkoutBtn){
 
@@ -3109,9 +2739,9 @@ if(checkoutBtn){
 }
 
 
-/* ============================================================
+/* =========================================================
    ORDERS
-============================================================ */
+========================================================= */
 
 async function openOrders(){
 
@@ -3126,32 +2756,26 @@ async function openOrders(){
     return;
   }
 
+
+  modalTitle.textContent =
+    "Mes commandes";
+
+
   modalContent.innerHTML = `
 
-    <div>
-
-      <h2>
-        📦 Mes commandes
-      </h2>
-
-      <p
-        style="
-          color:var(--muted);
-          margin-top:6px;
-        "
-      >
-        Chargement...
-      </p>
-
-      <div id="ordersList"></div>
-
+    <div
+      style="
+        text-align:center;
+        padding:30px;
+      "
+    >
+      Chargement...
     </div>
   `;
 
+
   openModal();
 
-  const ordersList =
-    $("ordersList");
 
   try{
 
@@ -3165,160 +2789,166 @@ async function openOrders(){
         )
       );
 
+
     const snapshot =
       await getDocs(q);
 
+
     if(snapshot.empty){
 
-      ordersList.innerHTML = `
+      modalContent.innerHTML = `
 
-        <div
-          style="
-            text-align:center;
-            padding:40px 10px;
-            color:var(--muted);
-          "
-        >
-          Aucune commande pour le moment.
+        <div class="empty">
+
+          <div style="font-size:45px">
+            📦
+          </div>
+
+          <h3>
+            Aucune commande
+          </h3>
+
+          <p style="margin-top:8px">
+            Tes commandes apparaîtront ici.
+          </p>
+
         </div>
-
       `;
 
       return;
     }
 
+
     const orders =
       snapshot.docs
-        .map(docSnap => ({
-          id:docSnap.id,
-          ...docSnap.data()
+        .map(d=>({
+          id:d.id,
+          ...d.data()
         }))
         .sort(
-          (a,b) =>
+          (a,b)=>
             getTimestampValue(b.createdAt) -
             getTimestampValue(a.createdAt)
         );
 
-    ordersList.innerHTML =
-      orders.map(order => {
 
-        const estimated =
-          order.estimatedDelivery
-            ? new Date(
-                order.estimatedDelivery
-              ).toLocaleDateString("fr-FR")
-            : "Non définie";
+    modalContent.innerHTML =
+      orders.map(order=>`
 
-        return `
+        <div class="order">
 
-          <div class="admin-order">
+          <div class="order-top">
 
-            <strong>
-              Commande #${escapeHTML(
-                order.id.slice(0,8)
-              )}
-            </strong>
+            <div>
 
-            <p
-              style="
-                color:var(--muted);
-                margin-top:6px;
-              "
-            >
-              ${formatTimestamp(order.createdAt)}
-            </p>
+              <strong>
+                Commande #${escapeHTML(order.id.slice(0,8))}
+              </strong>
 
-            <div
-              style="
-                display:grid;
-                grid-template-columns:1fr 1fr;
-                gap:8px;
-                margin-top:12px;
-              "
-            >
+              <br>
 
-              <div>
-                <small style="color:var(--muted)">
-                  Total
-                </small>
-                <strong style="display:block">
-                  ${money(order.total)}
-                </strong>
-              </div>
-
-              <div>
-                <small style="color:var(--muted)">
-                  Statut
-                </small>
-                <strong style="display:block">
-                  ${escapeHTML(
-                    order.status || "Enregistrée"
-                  )}
-                </strong>
-              </div>
-
-              <div>
-                <small style="color:var(--muted)">
-                  Ville
-                </small>
-                <strong style="display:block">
-                  ${escapeHTML(
-                    order.address?.city || ""
-                  )}
-                </strong>
-              </div>
-
-              <div>
-                <small style="color:var(--muted)">
-                  Livraison estimée
-                </small>
-                <strong style="display:block">
-                  ${estimated}
-                </strong>
-              </div>
+              <small>
+                ${formatTimestamp(order.createdAt)}
+              </small>
 
             </div>
 
+            <strong>
+              ${money(order.total)}
+            </strong>
+
           </div>
 
-        `;
-      }).join("");
+          <div
+            style="
+              margin-top:12px;
+              color:var(--muted);
+              line-height:1.6;
+            "
+          >
+
+            <div>
+              Statut :
+              <strong style="color:var(--text)">
+                ${escapeHTML(order.status || "Enregistrée")}
+              </strong>
+            </div>
+
+            <div>
+              Paiement :
+              ${escapeHTML(order.paymentMethod || "")}
+            </div>
+
+            <div>
+              Ville :
+              ${escapeHTML(order.address?.city || "")}
+            </div>
+
+            ${
+              order.trackingNumber
+              ? `
+                <div>
+                  Suivi :
+                  ${escapeHTML(order.trackingNumber)}
+                </div>
+              `
+              : ""
+            }
+
+            ${
+              order.estimatedDelivery
+              ? `
+                <div>
+                  Livraison estimée :
+                  ${escapeHTML(order.estimatedDelivery)}
+                </div>
+              `
+              : ""
+            }
+
+          </div>
+
+        </div>
+
+      `).join("");
+
 
   }catch(error){
 
-    console.error(
-      "Orders:",
-      error
-    );
+    console.error(error);
 
-    ordersList.innerHTML = `
+    modalContent.innerHTML = `
 
-      <p style="color:var(--danger)">
+      <div class="error-message">
         Impossible de charger les commandes.
-      </p>
-
+      </div>
     `;
   }
 }
 
 
-/* ============================================================
+/* =========================================================
    ADMIN
-============================================================ */
+========================================================= */
 
 function isAdmin(){
 
   return Boolean(
+
     currentUser &&
     currentUser.email &&
+
     currentUser.email
       .trim()
       .toLowerCase() ===
+
     ADMIN_EMAIL
       .trim()
       .toLowerCase()
+
   );
 }
+
 
 function adminAuthorized(){
 
@@ -3329,18 +2959,18 @@ function adminAuthorized(){
   );
 }
 
+
 async function openAdmin(){
 
   if(!currentUser){
 
     showToast(
-      "Connecte-toi avec le compte admin"
+      "Connecte-toi avec le compte administrateur"
     );
-
-    openAccount();
 
     return;
   }
+
 
   if(!isAdmin()){
 
@@ -3351,6 +2981,7 @@ async function openAdmin(){
     return;
   }
 
+
   if(!adminAuthorized()){
 
     const code =
@@ -3358,14 +2989,16 @@ async function openAdmin(){
         "Code administrateur :"
       );
 
+
     if(code !== ADMIN_CODE){
 
       showToast(
-        "Code administrateur incorrect"
+        "Code incorrect"
       );
 
       return;
     }
+
 
     localStorage.setItem(
       ADMIN_ACCESS_KEY,
@@ -3373,41 +3006,44 @@ async function openAdmin(){
     );
   }
 
-  renderAdmin();
+
+  await renderAdmin();
 }
 
 
-/* ============================================================
-   ORDER STATUSES
-============================================================ */
-
 const ORDER_STATUSES = [
+
   "Enregistrée",
   "Acceptée",
   "Préparation",
   "En transit",
   "Livraison proche",
   "Livrée"
+
 ];
 
 
-/* ============================================================
-   ADMIN RENDER
-============================================================ */
-
 async function renderAdmin(){
 
-  if(!isAdmin() || !adminAuthorized()){
-    return;
-  }
+  modalTitle.textContent =
+    "Administration";
+
 
   modalContent.innerHTML = `
 
-    <div>
+    <div
+      style="
+        padding:15px;
+        border:1px solid var(--line);
+        background:var(--card);
+        border-radius:15px;
+        margin-bottom:15px;
+      "
+    >
 
-      <h2>
-        🛡️ Administration NovaShop
-      </h2>
+      <strong>
+        🛠️ NovaShop Admin
+      </strong>
 
       <p
         style="
@@ -3415,72 +3051,15 @@ async function renderAdmin(){
           margin-top:6px;
         "
       >
-        ${escapeHTML(
-          currentUser.email
-        )}
+        ${escapeHTML(ADMIN_EMAIL)}
       </p>
-
-      <div
-        style="
-          display:grid;
-          grid-template-columns:repeat(2,1fr);
-          gap:10px;
-          margin-top:20px;
-        "
-      >
-
-        <div
-          style="
-            padding:15px;
-            border:1px solid var(--line);
-            border-radius:13px;
-            background:var(--card);
-          "
-        >
-          <small style="color:var(--muted)">
-            Produits
-          </small>
-          <strong
-            style="
-              display:block;
-              font-size:25px;
-              margin-top:5px;
-            "
-          >
-            ${products.length}
-          </strong>
-        </div>
-
-        <div
-          style="
-            padding:15px;
-            border:1px solid var(--line);
-            border-radius:13px;
-            background:var(--card);
-          "
-        >
-          <small style="color:var(--muted)">
-            Admin
-          </small>
-          <strong
-            style="
-              display:block;
-              font-size:14px;
-              margin-top:8px;
-            "
-          >
-            Autorisé ✓
-          </strong>
-        </div>
-
-      </div>
 
       <div
         style="
           display:flex;
           gap:8px;
           flex-wrap:wrap;
-          margin-top:15px;
+          margin-top:12px;
         "
       >
 
@@ -3488,35 +3067,31 @@ async function renderAdmin(){
           class="secondary"
           id="removeAdminAuth"
         >
-          Retirer accès admin
+          Déconnecter admin
         </button>
 
         <button
-          class="secondary"
+          class="danger-btn"
           id="deleteAllOrders"
-          style="color:var(--danger)"
         >
           Supprimer toutes les commandes
         </button>
 
       </div>
 
-      <h3 style="margin-top:25px">
-        Commandes
-      </h3>
+    </div>
 
-      <div id="adminOrders">
-        Chargement...
-      </div>
-
+    <div id="adminOrders">
+      Chargement...
     </div>
   `;
 
+
   openModal();
 
-  $("removeAdminAuth").onclick =
-    () => {
 
+  $("removeAdminAuth").onclick =
+    ()=>{
       localStorage.removeItem(
         ADMIN_ACCESS_KEY
       );
@@ -3524,20 +3099,23 @@ async function renderAdmin(){
       closeModal();
 
       showToast(
-        "Accès admin retiré"
+        "Session admin fermée"
       );
     };
 
-  $("deleteAllOrders").onclick =
-    async () => {
 
-      if(
-        !confirm(
+  $("deleteAllOrders").onclick =
+    async ()=>{
+
+      const ok =
+        confirm(
           "Supprimer toutes les commandes ?"
-        )
-      ){
+        );
+
+      if(!ok){
         return;
       }
+
 
       try{
 
@@ -3546,29 +3124,31 @@ async function renderAdmin(){
             collection(db,"orders")
           );
 
-        for(const item of snapshot.docs){
+
+        for(const order of snapshot.docs){
 
           await deleteDoc(
             doc(
               db,
               "orders",
-              item.id
+              order.id
             )
           );
         }
 
+
         showToast(
-          "Toutes les commandes ont été supprimées"
+          "Commandes supprimées"
         );
 
-        renderAdmin();
+        await renderAdmin();
 
       }catch(error){
 
         console.error(error);
 
         showToast(
-          "Erreur pendant la suppression"
+          "Erreur lors de la suppression"
         );
       }
     };
@@ -3581,111 +3161,120 @@ async function renderAdmin(){
         collection(db,"orders")
       );
 
-    const container =
+
+    const orders =
+      snapshot.docs
+        .map(d=>({
+          id:d.id,
+          ...d.data()
+        }))
+        .sort(
+          (a,b)=>
+            getTimestampValue(b.createdAt) -
+            getTimestampValue(a.createdAt)
+        );
+
+
+    const adminOrders =
       $("adminOrders");
 
-    if(snapshot.empty){
 
-      container.innerHTML = `
-        <p
-          style="
-            color:var(--muted);
-            margin-top:15px;
-          "
-        >
+    if(!orders.length){
+
+      adminOrders.innerHTML = `
+
+        <div class="empty">
           Aucune commande.
-        </p>
+        </div>
       `;
 
       return;
     }
 
-    const orders =
-      snapshot.docs
-        .map(docSnap => ({
-          id:docSnap.id,
-          ...docSnap.data()
-        }))
-        .sort(
-          (a,b) =>
-            getTimestampValue(b.createdAt) -
-            getTimestampValue(a.createdAt)
-        );
 
-    container.innerHTML =
-      orders.map(order => {
+    adminOrders.innerHTML =
+      orders.map(order=>{
 
         const accepted =
           order.paymentStatus === "accepted" ||
           order.paymentStatus === "free";
 
+
         return `
 
-          <div class="admin-order">
-
-            <strong>
-              #${escapeHTML(order.id.slice(0,8))}
-            </strong>
-
-            <p
-              style="
-                color:var(--muted);
-                margin-top:5px;
-              "
-            >
-              ${escapeHTML(
-                order.email || ""
-              )}
-            </p>
+          <div
+            class="admin-card"
+            data-order="${order.id}"
+          >
 
             <div
               style="
-                margin-top:10px;
-                display:grid;
-                gap:5px;
-                font-size:13px;
+                display:flex;
+                justify-content:space-between;
+                gap:15px;
               "
             >
 
               <div>
-                Total :
+
                 <strong>
-                  ${money(order.total)}
+                  #${escapeHTML(order.id.slice(0,10))}
                 </strong>
+
+                <div
+                  style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:5px;
+                  "
+                >
+                  ${escapeHTML(order.email || "")}
+                </div>
+
+              </div>
+
+              <strong>
+                ${money(order.total)}
+              </strong>
+
+            </div>
+
+
+            <div
+              style="
+                color:var(--muted);
+                font-size:13px;
+                margin-top:10px;
+                line-height:1.6;
+              "
+            >
+
+              <div>
+                Date :
+                ${formatTimestamp(order.createdAt)}
               </div>
 
               <div>
                 Paiement :
-                <strong>
-                  ${escapeHTML(
-                    order.paymentMethod || ""
-                  )}
-                </strong>
+                ${escapeHTML(order.paymentMethod || "")}
               </div>
 
               <div>
                 État paiement :
-                <strong>
-                  ${escapeHTML(
-                    order.paymentStatus || ""
-                  )}
-                </strong>
+                ${escapeHTML(order.paymentStatus || "")}
               </div>
 
               <div>
                 Promo :
-                <strong>
-                  ${escapeHTML(
-                    order.promoCode || "Aucune"
-                  )}
-                </strong>
+                ${escapeHTML(order.promoCode || "Aucune")}
               </div>
 
               <div>
                 Adresse :
                 ${escapeHTML(
                   order.address?.street || ""
-                )},
+                )}
+                ,
                 ${escapeHTML(
                   order.address?.postalCode || ""
                 )}
@@ -3696,84 +3285,135 @@ async function renderAdmin(){
 
             </div>
 
+
             ${
               order.paymentMethod === "PayPal.Me" &&
               !accepted
-                ? `
-                  <button
-                    class="primary"
-                    style="
-                      width:100%;
-                      margin-top:12px;
-                    "
-                    data-accept-paypal="${order.id}"
-                  >
-                    ✓ Accepter le paiement PayPal
-                  </button>
-                `
-                : ""
+
+              ? `
+
+                <button
+                  class="primary"
+                  style="
+                    width:100%;
+                    margin-top:12px;
+                  "
+                  data-accept-paypal="${order.id}"
+                >
+                  ✓ Accepter le paiement PayPal
+                </button>
+
+              `
+
+              : ""
             }
+
 
             <div class="admin-grid">
 
-              <select
-                data-status="${order.id}"
-              >
+              <div class="field">
 
-                ${ORDER_STATUSES.map(status => `
-                  <option
-                    value="${escapeAttribute(status)}"
-                    ${
-                      order.status === status
-                        ? "selected"
-                        : ""
-                    }
-                  >
-                    ${escapeHTML(status)}
-                  </option>
-                `).join("")}
+                <label>
+                  Statut
+                </label>
 
-              </select>
+                <select data-status="${order.id}">
 
-              <input
-                data-package-city="${order.id}"
-                placeholder="Ville du colis"
-                value="${escapeAttribute(
-                  order.packageCity || ""
-                )}"
-              >
+                  ${ORDER_STATUSES.map(status=>`
 
-              <input
-                data-tracking="${order.id}"
-                placeholder="Numéro de suivi"
-                value="${escapeAttribute(
-                  order.trackingNumber || ""
-                )}"
-              >
+                    <option
+                      value="${escapeAttribute(status)}"
+                      ${
+                        order.status === status
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      ${escapeHTML(status)}
+                    </option>
 
-              <input
-                data-duration="${order.id}"
-                placeholder="Délai livraison"
-                value="${escapeAttribute(
-                  order.deliveryDuration || ""
-                )}"
-              >
+                  `).join("")}
 
-              <input
-                data-estimated="${order.id}"
-                type="date"
-                value="${
-                  order.estimatedDelivery || ""
-                }"
-              >
+                </select>
+
+              </div>
+
+
+              <div class="field">
+
+                <label>
+                  Ville du colis
+                </label>
+
+                <input
+                  data-package-city="${order.id}"
+                  value="${escapeAttribute(
+                    order.packageCity || ""
+                  )}"
+                  placeholder="Paris"
+                >
+
+              </div>
+
+
+              <div class="field">
+
+                <label>
+                  Numéro de suivi
+                </label>
+
+                <input
+                  data-tracking="${order.id}"
+                  value="${escapeAttribute(
+                    order.trackingNumber || ""
+                  )}"
+                  placeholder="FR123456789"
+                >
+
+              </div>
+
+
+              <div class="field">
+
+                <label>
+                  Durée livraison
+                </label>
+
+                <input
+                  data-duration="${order.id}"
+                  value="${escapeAttribute(
+                    order.deliveryDuration || ""
+                  )}"
+                  placeholder="2-4 jours"
+                >
+
+              </div>
+
+
+              <div class="field">
+
+                <label>
+                  Livraison estimée
+                </label>
+
+                <input
+                  type="date"
+                  data-estimated="${order.id}"
+                  value="${escapeAttribute(
+                    order.estimatedDelivery || ""
+                  )}"
+                >
+
+              </div>
 
             </div>
 
+
             <div
               style="
-                display:grid;
-                grid-template-columns:1fr 1fr;
+                display:flex;
                 gap:8px;
+                flex-wrap:wrap;
                 margin-top:10px;
               "
             >
@@ -3797,79 +3437,82 @@ async function renderAdmin(){
           </div>
 
         `;
+
       }).join("");
 
 
-    container.onclick =
-      async event => {
+    if(adminOrders){
 
-        const accept =
-          event.target.closest(
-            "[data-accept-paypal]"
-          );
+      adminOrders.onclick =
+        async event=>{
 
-        const save =
-          event.target.closest(
-            "[data-save-order]"
-          );
+          const accept =
+            event.target.closest(
+              "[data-accept-paypal]"
+            );
 
-        const print =
-          event.target.closest(
-            "[data-print-order]"
-          );
+          const save =
+            event.target.closest(
+              "[data-save-order]"
+            );
 
-        if(accept){
+          const print =
+            event.target.closest(
+              "[data-print-order]"
+            );
 
-          await acceptPaypalOrder(
-            accept.dataset.acceptPaypal
-          );
 
-          return;
-        }
+          if(accept){
 
-        if(save){
+            await acceptPaypalOrder(
+              accept.dataset.acceptPaypal
+            );
 
-          await saveAdminOrder(
-            save.dataset.saveOrder
-          );
+            return;
+          }
 
-          return;
-        }
 
-        if(print){
+          if(save){
 
-          await printAdminInvoice(
-            print.dataset.printOrder
-          );
+            await saveAdminOrder(
+              save.dataset.saveOrder
+            );
 
-        }
-      };
+            return;
+          }
+
+
+          if(print){
+
+            await printAdminInvoice(
+              print.dataset.printOrder
+            );
+
+            return;
+          }
+        };
+    }
+
 
   }catch(error){
 
-    console.error(
-      "Admin:",
-      error
-    );
+    console.error(error);
 
     $("adminOrders").innerHTML = `
-      <p style="color:var(--danger)">
+
+      <div class="error-message">
         Impossible de charger les commandes.
-      </p>
+      </div>
     `;
   }
 }
 
 
-/* ============================================================
+/* =========================================================
    ACCEPT PAYPAL
-============================================================ */
+========================================================= */
 
 async function acceptPaypalOrder(orderId){
-
-  if(!isAdmin()){
-    return;
-  }
 
   try{
 
@@ -3887,11 +3530,12 @@ async function acceptPaypalOrder(orderId){
       }
     );
 
+
     showToast(
-      "Paiement PayPal accepté ✓"
+      "Paiement accepté ✓"
     );
 
-    renderAdmin();
+    await renderAdmin();
 
   }catch(error){
 
@@ -3904,40 +3548,41 @@ async function acceptPaypalOrder(orderId){
 }
 
 
-/* ============================================================
+/* =========================================================
    SAVE ADMIN ORDER
-============================================================ */
+========================================================= */
 
 async function saveAdminOrder(orderId){
-
-  if(!isAdmin()){
-    return;
-  }
 
   const status =
     document.querySelector(
       `[data-status="${CSS.escape(orderId)}"]`
     )?.value || "Enregistrée";
 
+
   const packageCity =
     document.querySelector(
       `[data-package-city="${CSS.escape(orderId)}"]`
-    )?.value || "";
+    )?.value?.trim() || "";
+
 
   const trackingNumber =
     document.querySelector(
       `[data-tracking="${CSS.escape(orderId)}"]`
-    )?.value || "";
+    )?.value?.trim() || "";
+
 
   const deliveryDuration =
     document.querySelector(
       `[data-duration="${CSS.escape(orderId)}"]`
-    )?.value || "";
+    )?.value?.trim() || "";
+
 
   const estimatedDelivery =
     document.querySelector(
       `[data-estimated="${CSS.escape(orderId)}"]`
     )?.value || "";
+
 
   try{
 
@@ -3958,11 +3603,10 @@ async function saveAdminOrder(orderId){
       }
     );
 
+
     showToast(
       "Commande mise à jour ✓"
     );
-
-    renderAdmin();
 
   }catch(error){
 
@@ -3975,9 +3619,9 @@ async function saveAdminOrder(orderId){
 }
 
 
-/* ============================================================
-   PRINT ADMIN INVOICE
-============================================================ */
+/* =========================================================
+   ADMIN INVOICE
+========================================================= */
 
 async function printAdminInvoice(orderId){
 
@@ -3988,10 +3632,13 @@ async function printAdminInvoice(orderId){
         collection(db,"orders")
       );
 
+
     const found =
       snapshot.docs.find(
-        item => item.id === orderId
+        d =>
+          d.id === orderId
       );
+
 
     if(!found){
 
@@ -4002,10 +3649,14 @@ async function printAdminInvoice(orderId){
       return;
     }
 
-    printInvoiceHTML({
+
+    const order = {
       id:found.id,
       ...found.data()
-    });
+    };
+
+
+    printInvoiceHTML(order);
 
   }catch(error){
 
@@ -4018,52 +3669,35 @@ async function printAdminInvoice(orderId){
 }
 
 
-/* ============================================================
+/* =========================================================
    PRINT INVOICE
-============================================================ */
+========================================================= */
 
 function printInvoiceHTML(order){
 
-  const popup =
+  const win =
     window.open(
       "",
       "_blank",
       "width=900,height=700"
     );
 
-  if(!popup){
 
+  if(!win){
     showToast(
-      "Autorise les fenêtres popup pour imprimer"
+      "Autorise les fenêtres pop-up"
     );
-
     return;
   }
 
-  const productsHTML =
-    (order.items || [])
-      .map(item => `
 
-        <tr>
+  const items =
+    Array.isArray(order.items)
+      ? order.items
+      : [];
 
-          <td>
-            ${escapeHTML(item.name)}
-          </td>
 
-          <td>
-            ${item.qty}
-          </td>
-
-          <td>
-            ${money(item.price)}
-          </td>
-
-        </tr>
-
-      `)
-      .join("");
-
-  popup.document.write(`
+  win.document.write(`
 
     <!DOCTYPE html>
 
@@ -4089,6 +3723,10 @@ function printInvoiceHTML(order){
           margin-bottom:5px;
         }
 
+        .muted{
+          color:#666;
+        }
+
         table{
           width:100%;
           border-collapse:collapse;
@@ -4102,17 +3740,16 @@ function printInvoiceHTML(order){
         }
 
         .total{
-          margin-top:25px;
+          text-align:right;
           font-size:24px;
           font-weight:bold;
-          text-align:right;
+          margin-top:25px;
         }
 
         .box{
-          margin-top:25px;
           padding:15px;
           background:#f5f5f5;
-          border-radius:10px;
+          margin-top:20px;
         }
 
       </style>
@@ -4125,9 +3762,9 @@ function printInvoiceHTML(order){
         NovaShop
       </h1>
 
-      <p>
+      <div class="muted">
         Facture / commande
-      </p>
+      </div>
 
       <div class="box">
 
@@ -4135,7 +3772,17 @@ function printInvoiceHTML(order){
           Commande :
         </strong>
 
-        ${escapeHTML(order.id)}
+        #${escapeHTML(order.id)}
+
+        <br>
+
+        <strong>
+          Date :
+        </strong>
+
+        ${escapeHTML(
+          formatTimestamp(order.createdAt)
+        )}
 
         <br>
 
@@ -4145,45 +3792,8 @@ function printInvoiceHTML(order){
 
         ${escapeHTML(order.email || "")}
 
-        <br>
-
-        <strong>
-          Statut :
-        </strong>
-
-        ${escapeHTML(order.status || "")}
-
       </div>
 
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>
-              Produit
-            </th>
-
-            <th>
-              Quantité
-            </th>
-
-            <th>
-              Prix
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${productsHTML}
-
-        </tbody>
-
-      </table>
 
       <div class="box">
 
@@ -4196,6 +3806,7 @@ function printInvoiceHTML(order){
         ${escapeHTML(
           order.address?.firstName || ""
         )}
+
         ${escapeHTML(
           order.address?.lastName || ""
         )}
@@ -4211,6 +3822,7 @@ function printInvoiceHTML(order){
         ${escapeHTML(
           order.address?.postalCode || ""
         )}
+
         ${escapeHTML(
           order.address?.city || ""
         )}
@@ -4223,34 +3835,88 @@ function printInvoiceHTML(order){
 
       </div>
 
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Produit</th>
+            <th>Prix</th>
+            <th>Qté</th>
+            <th>Total</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${
+            items.map(item=>`
+
+              <tr>
+
+                <td>
+                  ${escapeHTML(item.name || "")}
+                </td>
+
+                <td>
+                  ${money(item.price)}
+                </td>
+
+                <td>
+                  ${Number(item.qty || 0)}
+                </td>
+
+                <td>
+                  ${money(
+                    Number(item.price || 0) *
+                    Number(item.qty || 0)
+                  )}
+                </td>
+
+              </tr>
+
+            `).join("")
+          }
+
+        </tbody>
+
+      </table>
+
+
       <div class="box">
 
-        Moyen de paiement :
         <strong>
-          ${escapeHTML(
-            order.paymentMethod || ""
-          )}
+          Paiement :
         </strong>
+
+        ${escapeHTML(
+          order.paymentMethod || ""
+        )}
 
         <br>
 
-        Statut paiement :
         <strong>
-          ${escapeHTML(
-            order.paymentStatus || ""
-          )}
+          Statut :
         </strong>
+
+        ${escapeHTML(
+          order.status || ""
+        )}
 
         <br>
 
-        Code promo :
         <strong>
-          ${escapeHTML(
-            order.promoCode || "Aucun"
-          )}
+          Promo :
         </strong>
+
+        ${escapeHTML(
+          order.promoCode || "Aucune"
+        )}
 
       </div>
+
 
       <div class="total">
 
@@ -4259,10 +3925,20 @@ function printInvoiceHTML(order){
 
       </div>
 
+
       <script>
-        window.onload = () => {
-          window.print();
+
+        window.onload = function(){
+
+          setTimeout(
+            function(){
+              window.print();
+            },
+            300
+          );
+
         };
+
       <\/script>
 
     </body>
@@ -4271,13 +3947,14 @@ function printInvoiceHTML(order){
 
   `);
 
-  popup.document.close();
+
+  win.document.close();
 }
 
 
-/* ============================================================
+/* =========================================================
    AUTH STATE
-============================================================ */
+========================================================= */
 
 onAuthStateChanged(
   auth,
@@ -4286,6 +3963,7 @@ onAuthStateChanged(
     currentUser =
       user || null;
 
+
     if(adminBtn){
 
       const connectedEmail =
@@ -4293,13 +3971,16 @@ onAuthStateChanged(
           ?.trim()
           .toLowerCase() || "";
 
+
       const adminEmail =
         ADMIN_EMAIL
           .trim()
           .toLowerCase();
 
+
       if(
-        connectedEmail === adminEmail
+        connectedEmail ===
+        adminEmail
       ){
 
         adminBtn.style.display =
@@ -4315,28 +3996,32 @@ onAuthStateChanged(
         );
       }
     }
+
   }
 );
 
 
-/* ============================================================
+/* =========================================================
    BUTTONS
-============================================================ */
+========================================================= */
 
 if(settingsBtn){
   settingsBtn.onclick =
     openSettings;
 }
 
+
 if(accountBtn){
   accountBtn.onclick =
     openAccount;
 }
 
+
 if(ordersBtn){
   ordersBtn.onclick =
     openOrders;
 }
+
 
 if(adminBtn){
   adminBtn.onclick =
@@ -4344,13 +4029,13 @@ if(adminBtn){
 }
 
 
-/* ============================================================
+/* =========================================================
    ESCAPE
-============================================================ */
+========================================================= */
 
 document.addEventListener(
   "keydown",
-  event => {
+  event=>{
 
     if(event.key === "Escape"){
 
@@ -4363,9 +4048,9 @@ document.addEventListener(
 );
 
 
-/* ============================================================
+/* =========================================================
    HELPERS
-============================================================ */
+========================================================= */
 
 function escapeHTML(value){
 
@@ -4377,9 +4062,12 @@ function escapeHTML(value){
     .replaceAll("'","&#039;");
 }
 
+
 function escapeAttribute(value){
+
   return escapeHTML(value);
 }
+
 
 function authError(code){
 
@@ -4419,6 +4107,7 @@ function authError(code){
       "La clé API Firebase est invalide."
   };
 
+
   return (
     errors[code] ||
     "Une erreur est survenue."
@@ -4426,9 +4115,9 @@ function authError(code){
 }
 
 
-/* ============================================================
+/* =========================================================
    TIMESTAMP
-============================================================ */
+========================================================= */
 
 function getTimestampValue(timestamp){
 
@@ -4436,42 +4125,56 @@ function getTimestampValue(timestamp){
     return 0;
   }
 
-  if(
-    typeof timestamp.toMillis ===
-    "function"
-  ){
-    return timestamp.toMillis();
-  }
 
   if(
-    typeof timestamp.toDate ===
-    "function"
+    typeof timestamp.seconds === "number"
   ){
-    return timestamp.toDate().getTime();
+
+    return (
+      timestamp.seconds * 1000 +
+      Math.floor(
+        (timestamp.nanoseconds || 0) /
+        1000000
+      )
+    );
   }
 
-  if(timestamp instanceof Date){
+
+  if(
+    timestamp instanceof Date
+  ){
+
     return timestamp.getTime();
   }
 
-  const date =
-    new Date(timestamp);
 
-  return isNaN(
-    date.getTime()
-  )
-    ? 0
-    : date.getTime();
+  if(
+    typeof timestamp === "string"
+  ){
+
+    const value =
+      Date.parse(timestamp);
+
+    return Number.isNaN(value)
+      ? 0
+      : value;
+  }
+
+
+  return 0;
 }
+
 
 function formatTimestamp(timestamp){
 
   const value =
     getTimestampValue(timestamp);
 
+
   if(!value){
     return "Date inconnue";
   }
+
 
   return new Intl.DateTimeFormat(
     "fr-FR",
@@ -4485,24 +4188,20 @@ function formatTimestamp(timestamp){
 }
 
 
-/* ============================================================
-   INIT
-============================================================ */
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
 renderCategories();
 renderProducts();
 renderCart();
 
-applyLanguage(
-  localStorage.getItem(
-    "novaLanguage"
-  ) || "fr"
-);
+applyTheme();
 
 
-/* ============================================================
+/* =========================================================
    PUBLIC API
-============================================================ */
+========================================================= */
 
 window.NovaShop = {
 
@@ -4550,13 +4249,8 @@ window.NovaShop = {
 
       user:
         currentUser?.email || null
+
     };
   }
+
 };
-
-
-console.log(
-  "NovaShop chargé ✓",
-  products.length,
-  "produits"
-);

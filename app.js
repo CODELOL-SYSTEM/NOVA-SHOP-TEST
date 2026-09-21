@@ -444,9 +444,130 @@ const products = [
     price: 650,
     image: "https://m.media-amazon.com/images/I/81M3iU5S4QL._AC_SL1500_.jpg",
     new: true
+  },
+
+  // ==========================================================
+  // SMARTPHONES
+  // ==========================================================
+
+  {
+    id: "p44",
+    name: "Apple iPhone 14 Pro 6,1\" 5G Double SIM 128 Go Argent",
+    category: "Smartphones",
+    price: 400,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/07/3b/32/20069127/1540-1/tsp20260630131025/Apple-iPhone-14-Pro-6-1-5G-Double-SIM-128-Go-Argent.jpg"
+  },
+
+  {
+    id: "p45",
+    name: "Apple iPhone 15 6,1\" 5G Double SIM 128 Go Noir",
+    category: "Smartphones",
+    price: 750,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/cd/f0/52/22212813/1540-1/tsp20260914144304/Apple-iPhone-15-6-1-5G-Double-SIM-128-Go-Noir.jpg"
+  },
+
+  {
+    id: "p46",
+    name: "Apple iPhone 16 6,1\" 5G 128 Go Double SIM Noir",
+    category: "Smartphones",
+    price: 949.99,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/fe/47/66/23480318/3756-1/tsp20260920085557/Apple-iPhone-16-6-1-5G-128-Go-Double-SIM-Noir.jpg"
+  },
+
+  {
+    id: "p47",
+    name: "Apple iPhone 17 6,3\" 5G Double SIM 256 Go Noir",
+    category: "Smartphones",
+    price: 1000,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/19/86/b6/28739097/3756-1/tsp20260909180923/Apple-iPhone-17-6-3-5G-Double-SIM-256-Go-Noir.jpg"
+  },
+
+  {
+    id: "p48",
+    name: "Apple iPhone 18 Pro 6,3\" 5G Double SIM 256 Go Noir",
+    category: "Smartphones",
+    price: 1199.99,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/62/73/c7/29848418/1540-1/tsp20260920091102/Apple-iPhone-18-Pro-6-3-5G-Double-SIM-256-Go-Noir.jpg"
+  },
+
+  {
+    id: "p49",
+    name: "Samsung Galaxy S23 6,1\" 5G 8 Go RAM 256 Go Noir",
+    category: "Smartphones",
+    price: 230,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/0d/c0/44/21282829/1540-1/tsp20260829031739/Smartphone-Samsung-Galaxy-S23-6-1-Nano-SIM-5G-8-Go-RAM-256-Go-Noir.jpg"
+  },
+
+  {
+    id: "p50",
+    name: "Samsung Galaxy S24 6,2\" 5G 256 Go Noir",
+    category: "Smartphones",
+    price: 449.90,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/f6/5a/22738598/1540-1/tsp20260319135101/Smartphone-Samsung-Galaxy-S24-6-2-5G-Nano-SIM-256-Go-Noir.jpg"
+  },
+
+  {
+    id: "p51",
+    name: "Samsung Galaxy S25 Edge 6,7\" 5G 256 Go Noir absolu Titane",
+    category: "Smartphones",
+    price: 469.99,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/42/7b/ab/28015426/1540-1/tsp20260909180103/Smartphone-Samsung-Galaxy-S25-Edge-6-7-5G-Nano-SIM-256-Go-Noir-absolu-Titane.jpg"
+  },
+
+  {
+    id: "p52",
+    name: "Samsung Galaxy S26 6,3\" 5G 256 Go Noir + Buds4 Noir",
+    category: "Smartphones",
+    price: 650.99,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/e8/a2/c7/29860584/1540-1/tsp20260903144909/Pack-Smartphone-Samsung-Galaxy-S26-6-3-5G-Nano-SIM-256-Go-Noir-Buds4-Noir.jpg"
+  },
+
+  {
+    id: "p53",
+    name: "Google Pixel 8 6,2\" 5G Double SIM 128 Go Vert Sauge",
+    category: "Smartphones",
+    price: 200,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/37/bc/52/22199351/1540-1/tsp20260722081937/Smartphone-Google-Pixel-8-6-2-5G-Double-SIM-128-Go-Vert-Sauge.jpg"
+  },
+
+  {
+    id: "p54",
+    name: "Google Pixel 9 6,3\" 5G Double nano-SIM 128 Go Noir Obsidienne",
+    category: "Smartphones",
+    price: 400,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/f6/00/6d/23920886/1540-1/tsp20260914084700/Smartphone-Google-Pixel-9-6-3-5G-Double-nano-SIM-128-Go-Noir-Obsidienne.jpg"
+  },
+
+  {
+    id: "p55",
+    name: "Google Pixel 10 6,3\" 5G Double SIM 256 Go Noir Volcanique",
+    category: "Smartphones",
+    price: 600,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/4a/5f/b3/28532554/1540-1/tsp20260717111851/Smartphone-Google-Pixel-10-6-3-5G-Double-SIM-256-Go-Noir-Volcanique.jpg"
   }
 
 ];
+
+
+// ============================================================
+// NOTES AUTOMATIQUES POUR TOUS LES PRODUITS
+// ============================================================
+
+products.forEach((product, index) => {
+
+  product.rating =
+    Number(
+      (
+        4.2 +
+        ((index * 17) % 81) / 100
+      ).toFixed(1)
+    );
+
+  product.reviewCount =
+    1248 +
+    ((index * 137) % 2028);
+
+});
 
 
 // ============================================================
@@ -462,6 +583,7 @@ let favorites = [];
 let reviewsCache = {};
 
 try {
+
   cart = JSON.parse(
     localStorage.getItem("novaCart") || "[]"
   );
@@ -469,11 +591,16 @@ try {
   if (!Array.isArray(cart)) {
     cart = [];
   }
+
 } catch {
+
   cart = [];
+
 }
 
+
 try {
+
   favorites = JSON.parse(
     localStorage.getItem("novaFavorites") || "[]"
   );
@@ -481,8 +608,11 @@ try {
   if (!Array.isArray(favorites)) {
     favorites = [];
   }
+
 } catch {
+
   favorites = [];
+
 }
 
 
@@ -491,6 +621,7 @@ try {
 // ============================================================
 
 function money(value) {
+
   return Number(value || 0).toLocaleString(
     "fr-FR",
     {
@@ -498,57 +629,71 @@ function money(value) {
       currency: "EUR"
     }
   );
+
 }
 
 
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
 
 function escapeAttr(value) {
+
   return escapeHTML(value);
+
 }
 
 
 function getProduct(id) {
+
   return products.find(
     product => product.id === id
   );
+
 }
 
 
 function saveCart() {
+
   localStorage.setItem(
     "novaCart",
     JSON.stringify(cart)
   );
+
 }
 
 
 function saveFavorites() {
+
   localStorage.setItem(
     "novaFavorites",
     JSON.stringify(favorites)
   );
+
 }
 
 
 function getCartCount() {
+
   return cart.reduce(
     (total, item) =>
       total + Number(item.quantity || 0),
     0
   );
+
 }
 
 
 function getCartSubtotal() {
+
   return cart.reduce(
     (total, item) => {
 
@@ -568,6 +713,33 @@ function getCartSubtotal() {
     },
     0
   );
+
+}
+
+
+// ============================================================
+// AFFICHAGE DES ÉTOILES
+// ============================================================
+
+function getRatingStars(rating) {
+
+  const value =
+    Math.max(
+      1,
+      Math.min(
+        5,
+        Number(rating || 4.2)
+      )
+    );
+
+  const full =
+    Math.round(value);
+
+  return (
+    "★".repeat(full) +
+    "☆".repeat(5 - full)
+  );
+
 }
 
 
@@ -611,6 +783,7 @@ function toast(message, type = "info") {
     }, 250);
 
   }, 2800);
+
 }
 
 
@@ -635,6 +808,7 @@ function showModal(title, content) {
   modal.style.display = "flex";
 
   document.body.style.overflow = "hidden";
+
 }
 
 
@@ -647,6 +821,7 @@ function closeModal() {
   modal.style.display = "none";
 
   document.body.style.overflow = "";
+
 }
 
 
@@ -673,6 +848,7 @@ function openCart() {
   if (cartOverlay) {
     cartOverlay.classList.add("open");
   }
+
 }
 
 
@@ -680,6 +856,7 @@ function closeCart() {
 
   cartDrawer?.classList.remove("open");
   cartOverlay?.classList.remove("open");
+
 }
 
 
@@ -740,6 +917,7 @@ function addToCart(id) {
     `${product.name} ajouté au panier 🛒`,
     "success"
   );
+
 }
 
 
@@ -752,6 +930,7 @@ function removeFromCart(id) {
 
   saveCart();
   renderCart();
+
 }
 
 
@@ -774,6 +953,7 @@ function changeCartQuantity(id, quantity) {
 
   saveCart();
   renderCart();
+
 }
 
 
@@ -796,6 +976,7 @@ function renderCart() {
         padding:30px 15px;
         opacity:.75;
       ">
+
         <div style="font-size:45px;">
           🛒
         </div>
@@ -807,6 +988,7 @@ function renderCart() {
         <p>
           Ajoute des produits pour commencer.
         </p>
+
       </div>
     `;
 
@@ -1022,6 +1204,7 @@ function renderCart() {
       );
 
     });
+
 }
 
 
@@ -1077,6 +1260,7 @@ function renderCategories() {
       );
 
     });
+
 }
 
 
@@ -1191,6 +1375,12 @@ function renderProducts() {
       const isFavorite =
         favorites.includes(product.id);
 
+      const rating =
+        Number(product.rating || 4.2);
+
+      const reviewCount =
+        Number(product.reviewCount || 1248);
+
       return `
         <article
           class="product-card"
@@ -1286,9 +1476,40 @@ function renderProducts() {
             <div style="
               display:flex;
               align-items:center;
+              gap:6px;
+              margin-top:7px;
+              white-space:nowrap;
+            ">
+
+              <span style="
+                color:#ffd45a;
+                font-size:13px;
+                letter-spacing:1px;
+              ">
+                ${getRatingStars(rating)}
+              </span>
+
+              <strong style="
+                font-size:12px;
+              ">
+                ${rating.toFixed(1)}
+              </strong>
+
+              <span style="
+                opacity:.58;
+                font-size:11px;
+              ">
+                (${reviewCount.toLocaleString("fr-FR")})
+              </span>
+
+            </div>
+
+            <div style="
+              display:flex;
+              align-items:center;
               justify-content:space-between;
               gap:8px;
-              margin-top:9px;
+              margin-top:8px;
             ">
 
               <strong style="
@@ -1414,6 +1635,7 @@ function renderProducts() {
       );
 
     });
+
 }
 
 
@@ -1464,6 +1686,12 @@ function openProduct(id) {
     return;
   }
 
+  const rating =
+    Number(product.rating || 4.2);
+
+  const reviewCount =
+    Number(product.reviewCount || 1248);
+
   showModal(
     product.name,
     `
@@ -1509,6 +1737,33 @@ function openProduct(id) {
         <h2>
           ${escapeHTML(product.name)}
         </h2>
+
+        <div style="
+          display:flex;
+          align-items:center;
+          gap:7px;
+          margin-top:10px;
+        ">
+
+          <span style="
+            color:#ffd45a;
+            font-size:19px;
+            letter-spacing:1px;
+          ">
+            ${getRatingStars(rating)}
+          </span>
+
+          <strong>
+            ${rating.toFixed(1)}/5
+          </strong>
+
+          <span style="
+            opacity:.6;
+          ">
+            ${reviewCount.toLocaleString("fr-FR")} avis
+          </span>
+
+        </div>
 
         <div style="
           font-size:24px;
@@ -1559,6 +1814,7 @@ function openProduct(id) {
         openProductReviews(product.id);
       }
     );
+
 }
 
 
@@ -1578,6 +1834,34 @@ async function openProductReviews(productId) {
   showModal(
     `Avis - ${product.name}`,
     `
+      <div style="
+        padding:15px;
+        border-radius:14px;
+        background:rgba(255,255,255,.04);
+        margin-bottom:15px;
+      ">
+
+        <div style="
+          color:#ffd45a;
+          font-size:20px;
+          letter-spacing:1px;
+        ">
+          ${getRatingStars(product.rating)}
+        </div>
+
+        <strong>
+          ${Number(product.rating).toFixed(1)}/5
+        </strong>
+
+        <span style="
+          opacity:.6;
+          margin-left:6px;
+        ">
+          ${Number(product.reviewCount).toLocaleString("fr-FR")} avis
+        </span>
+
+      </div>
+
       <div
         id="reviewsLoading"
         style="
@@ -1638,7 +1922,7 @@ async function openProductReviews(productId) {
           padding:25px;
           opacity:.7;
         ">
-          ⭐ Aucun avis pour le moment.
+          ⭐ Aucun avis détaillé pour le moment.
         </div>
       `;
 
@@ -1658,8 +1942,10 @@ async function openProductReviews(productId) {
           );
 
         const stars =
-          "★".repeat(rating) +
-          "☆".repeat(5 - rating);
+          "★".repeat(Math.round(rating)) +
+          "☆".repeat(
+            5 - Math.round(rating)
+          );
 
         return `
           <div style="
@@ -1716,7 +2002,9 @@ async function openProductReviews(productId) {
       `;
 
     }
+
   }
+
 }
 
 
@@ -1762,6 +2050,7 @@ function authError(error) {
     error?.message ||
     "Une erreur est survenue."
   );
+
 }
 
 
@@ -1910,6 +2199,7 @@ function showLoginForm() {
       "click",
       showRegisterForm
     );
+
 }
 
 
@@ -2092,6 +2382,7 @@ function showRegisterForm() {
       "click",
       showLoginForm
     );
+
 }
 
 
@@ -2252,6 +2543,7 @@ function openAccount() {
 
       }
     );
+
 }
 
 
@@ -2495,7 +2787,9 @@ async function openOrders() {
       `;
 
     }
+
   }
+
 }
 
 
@@ -2776,6 +3070,7 @@ function openOrderDetails(order) {
       "click",
       () => printInvoice(order)
     );
+
 }
 
 
@@ -2815,6 +3110,7 @@ function getTestCard() {
 
     return null;
   }
+
 }
 
 
@@ -2868,6 +3164,7 @@ function generateTestCard() {
   );
 
   return card;
+
 }
 
 
@@ -3581,6 +3878,7 @@ function openCheckout() {
 
             paymentStatus =
               "Payé";
+
           }
 
           const orderItems =
@@ -3723,6 +4021,7 @@ function openCheckout() {
 
       }
     );
+
 }
 
 
@@ -3982,10 +4281,8 @@ function printInvoice(order) {
   `);
 
   invoiceWindow.document.close();
-}
 
-
-// ============================================================
+}// ============================================================
 // ADMIN
 // ============================================================
 
@@ -4004,6 +4301,7 @@ function isAdminUser() {
     ).toLowerCase() ===
     ADMIN_EMAIL.toLowerCase()
   );
+
 }
 
 
@@ -4047,6 +4345,7 @@ function openAdmin() {
   }
 
   loadAdmin();
+
 }
 
 
@@ -4125,7 +4424,9 @@ async function loadAdmin() {
       `;
 
     }
+
   }
+
 }
 
 
@@ -4614,6 +4915,7 @@ function renderAdmin(orders) {
       );
 
     });
+
 }
 
 
@@ -4646,6 +4948,7 @@ function attachTestCardButton() {
 
     }
   );
+
 }
 
 
@@ -4714,6 +5017,7 @@ async function saveAdminOrder(id) {
     );
 
   }
+
 }
 
 
@@ -4749,6 +5053,7 @@ async function markOrderPaid(id) {
     );
 
   }
+
 }
 
 
@@ -4789,6 +5094,7 @@ async function deleteAdminOrder(id) {
     );
 
   }
+
 }
 
 
@@ -4809,6 +5115,7 @@ function getTheme() {
       "novaThemeChoice"
     ) || "dark"
   );
+
 }
 
 
@@ -4841,6 +5148,7 @@ function applyTheme() {
         : "light";
 
   }
+
 }
 
 
@@ -4928,6 +5236,7 @@ function openSettings() {
       );
 
     });
+
 }
 
 

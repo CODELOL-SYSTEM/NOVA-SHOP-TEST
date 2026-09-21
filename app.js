@@ -223,10 +223,20 @@ const products = [
 
   {
     id: "p16",
-    name: "Sony DualSense Cosmic Red PS5/PC",
+    name: "Sony DualSense PS5/PC",
     category: "Manettes",
     price: 74.90,
-    image: "https://media.carrefour.fr/media/referential/media/cc07d7de4b9e4bea8c063e8f9bb46d94/p_200x200/0711719023005_0.jpg"
+    image: "https://media.carrefour.fr/media/referential/media/cc07d7de4b9e4bea8c063e8f9bb46d94/p_200x200/0711719023005_0.jpg",
+    options: {
+      label: "Couleur",
+      required: true,
+      values: [
+        "Rouge",
+        "Blanc",
+        "Noir",
+        "Bleu"
+      ]
+    }
   },
 
   {
@@ -446,10 +456,6 @@ const products = [
     new: true
   },
 
-  // ==========================================================
-  // SMARTPHONES
-  // ==========================================================
-
   {
     id: "p44",
     name: "Apple iPhone 14 Pro 6,1\" 5G Double SIM 128 Go Argent",
@@ -544,13 +550,269 @@ const products = [
     category: "Smartphones",
     price: 600,
     image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/4a/5f/b3/28532554/1540-1/tsp20260717111851/Smartphone-Google-Pixel-10-6-3-5G-Double-SIM-256-Go-Noir-Volcanique.jpg"
+  },
+
+  // ==========================================================
+  // NOUVEAUX PRODUITS
+  // ==========================================================
+
+  {
+    id: "p56",
+    name: "Flashforge Adventurer 5M Pro",
+    category: "Imprimantes 3D",
+    price: 115,
+    image: "https://www.makershop.fr/cdn/shop/files/13458.jpg?v=1760745366&width=150"
+  },
+
+  {
+    id: "p57",
+    name: "Elegoo Centauri 2",
+    category: "Imprimantes 3D",
+    price: 200,
+    image: "https://fr.elegoo.com/cdn/shop/files/C2-_-260811.jpg?crop=center&v=1786696280&width=345"
+  },
+
+  {
+    id: "p58",
+    name: "Anycubic Photon P1 Max",
+    category: "Imprimantes 3D",
+    price: 600,
+    image: "https://fr.anycubic.com/cdn/shop/files/P1M_8bd4d344-b751-4497-a535-4e647ecef572.jpg?v=1784100048&width=150"
+  },
+
+  {
+    id: "p59",
+    name: "GTA VI Key PlayStation",
+    category: "Logiciels & licences",
+    image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ9VsG_IxAanmrCSqCyACtuyCqCD5rwiQ3P3Iylexch3XnCT4sevDBCz-vnqlVCBvZroOpYIX9T0Flc8EzGSZuyPMibCcQm",
+    price: 0
+  },
+
+  {
+    id: "p60",
+    name: "Microsoft Windows 11 Pro Key",
+    category: "Logiciels & licences",
+    image: "https://imgproxy.eneba.games/0A9PW8DP7_YSTA-WUru4IVJnFXsKikaoYM5RHNb3nHQ/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0/cy5lbmViYS5nYW1l/cy9wcm9kdWN0cy93/YUFhcnZicFhzSm8y/NjZSZ3hKSVpuYjVX/ZzRkVWY3a3YyUDQx/bm1nakJjLnBuZw",
+    price: 0
+  },
+
+  {
+    id: "p61",
+    name: "AsiaHorse Aurora-CO Gaines de Câble ARGB",
+    category: "Accessoires composants PC",
+    price: 15.99,
+    image: "https://m.media-amazon.com/images/I/71NF0H-6FXL._SL1500_.jpg"
+  },
+
+  {
+    id: "p62",
+    name: "Câble vidéo Accsup HDMI 2.0 4K UHD avec Ethernet 5 m Noir",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 12.99,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/db/90/4a/21663963/1540-1/tsp20260909104107/Cable-video-Accsup-HDMI-2-0-4K-UHD-avec-Ethernet-5-m-Noir.jpg"
+  },
+
+  {
+    id: "p63",
+    name: "Cable Relier ecran pour pc Certifié Câble DP vers DP 10K 240Hz",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 0,
+    image: "https://m.media-amazon.com/images/I/71BeNtX7nuL._SL1500_.jpg"
+  },
+
+  {
+    id: "p64",
+    name: "Câble USB-C ESSENTIELB vers USB-C 1M Noir",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 1,
+    image: "https://boulanger.scene7.com/is/image/Boulanger/3497674179939_h_f_l_2?wid=2140&hei=2140&resMode=sharp2&op_usm=1.75,0.3,2,0&fmt=png-alpha"
+  },
+
+  {
+    id: "p65",
+    name: "Cables USB Accsup CABLE USB-C VERS USB-A 1M NOIR",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 1,
+    image: ""
+  },
+
+  {
+    id: "p66",
+    name: "Câble USB-C vers Lightning pour Apple iPhone/iPad/iPod 1m Blanc",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 1,
+    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/b8/07/17283238/1540-1/tsp20260617130730/Cable-USB-C-vers-Lightning-pour-Apple-iPhone-iPad-iPod-1m-Blanc.jpg"
+  },
+
+  {
+    id: "p67",
+    name: "BSTOEM pour Apple Watch Chargeur, Station de Charge USB C Magnétique 1M",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 2.99,
+    image: "https://m.media-amazon.com/images/I/61rGkIZqqCL._SL1500_.jpg"
+  },
+
+  {
+    id: "p68",
+    name: "StarTech Cordon d'alimentation PC de 1m - CEE 7/7 à C13",
+    category: "Adaptateurs / câbles / chargeurs",
+    price: 4.50,
+    image: "https://m.media-amazon.com/images/I/81b1fyIWcOL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p69",
+    name: "Unicavu Webcam PC 2K 30 FPS Full HD 1080P",
+    category: "Caméras & webcams",
+    price: 10,
+    image: "https://m.media-amazon.com/images/I/61CJsbKfonL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p70",
+    name: "eMeet Nova 4K Webcam 4K Ultra HD avec 2 Microphones",
+    category: "Caméras & webcams",
+    price: 23.99,
+    image: "https://m.media-amazon.com/images/I/61bCeQBjUwL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p71",
+    name: "Quntis Lampe Écran Pc RGB, Monitor Light Bar IM 40 cm Noir",
+    category: "Barres lumineuses pour écran",
+    price: 8.99,
+    image: "https://m.media-amazon.com/images/I/71ESgk4ETPL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p72",
+    name: "TONOR Micro Cardioïde Dynamique USB/XLR TD510+",
+    category: "Microphones",
+    price: 20.99,
+    image: "https://m.media-amazon.com/images/I/61EZnm+ijZL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p73",
+    name: "BONTEC Bras Ecran PC à Ressort à Gaz, 13-32 Pouces",
+    category: "Supports écrans / écrans / TV",
+    price: 16,
+    image: "https://m.media-amazon.com/images/I/61gjjZxKbeL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p74",
+    name: "BONTEC Support Ecran PC 2 Ecran Articulé à Ressort à Gaz, 13-32 Pouces",
+    category: "Supports écrans / écrans / TV",
+    price: 0,
+    image: "https://m.media-amazon.com/images/I/71kZjwcU4SL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p75",
+    name: "BONTEC Bras Ecran PC Mural à Ressort à Gaz, 13-42 Pouces, Charge 38kg",
+    category: "Supports écrans / écrans / TV",
+    price: 0,
+    image: "https://m.media-amazon.com/images/I/71-oseIdQXL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p76",
+    name: "KTC Écran PC Gamer Incurvé 24 Pouces FHD 240 Hz (VESA 100×100 mm)",
+    category: "Supports écrans / écrans / TV",
+    price: 80,
+    image: "https://m.media-amazon.com/images/I/71wUlFXcaZL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p77",
+    name: "KTC Écran PC Gamer Incurvé 27 Pouces QHD 180Hz (OC 185Hz) H27S5 (VESA 100×100 mm)",
+    category: "Supports écrans / écrans / TV",
+    price: 110,
+    image: "https://m.media-amazon.com/images/I/61Rehn5YTWL._AC_SL1000_.jpg"
+  },
+
+  {
+    id: "p78",
+    name: "HKC Écran PC Gaming 34 Pouces Incurvé UWQHD 120 Hz HDR400 (VESA 100×100 mm)",
+    category: "Supports écrans / écrans / TV",
+    price: 170,
+    image: "https://m.media-amazon.com/images/I/71useoNrGEL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p79",
+    name: "HKC 27 Pouces Ecran Gaming 4K Dual Mode UHD 160Hz / FHD 320Hz G27H7P (VESA 100×100 mm)",
+    category: "Supports écrans / écrans / TV",
+    price: 140,
+    image: "https://m.media-amazon.com/images/I/81MjOWRE0SL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p80",
+    name: "XIAOMI TV F 65 Pouces 2025 4K UHD Smart TV",
+    category: "Supports écrans / écrans / TV",
+    price: 249.99,
+    image: "https://m.media-amazon.com/images/I/61Jk8xxkLZL._AC_SL1000_.jpg"
+  },
+
+  {
+    id: "p81",
+    name: "Xbox Manette sans fil",
+    category: "Manettes & consoles",
+    price: 59.99,
+    image: "https://m.media-amazon.com/images/I/71fQ5g9X8PL._AC_SL1500_.jpg",
+    options: {
+      label: "Couleur",
+      required: true,
+      values: [
+        "Rose",
+        "Bleu",
+        "Noir",
+        "Rouge",
+        "Blanc",
+        "Vert"
+      ]
+    }
+  },
+
+  {
+    id: "p82",
+    name: "PlayStation 5 avec 1 Manette Sans Fil DualSense",
+    category: "Manettes & consoles",
+    price: 320,
+    image: "https://m.media-amazon.com/images/I/61h7VjYt-fL._AC_SL1500_.jpg",
+    options: {
+      label: "Console",
+      required: true,
+      values: [
+        "PS5 avec lecteur",
+        "PS5 Pro"
+      ]
+    }
+  },
+
+  {
+    id: "p83",
+    name: "Xbox Series X - 1TB Digital Edition avec 1 manette sans fil",
+    category: "Manettes & consoles",
+    price: 599.99,
+    image: "https://m.media-amazon.com/images/I/51OVjV4-GqL._AC_SL1500_.jpg"
+  },
+
+  {
+    id: "p84",
+    name: "Xbox Series S - All Digital Gaming Console - 512GB SSD",
+    category: "Manettes & consoles",
+    price: 500,
+    image: "https://m.media-amazon.com/images/I/61PI59RfWvL._AC_SX425_.jpg"
   }
 
 ];
 
 
 // ============================================================
-// NOTES AUTOMATIQUES POUR TOUS LES PRODUITS
+// NOTES AUTOMATIQUES
 // ============================================================
 
 products.forEach((product, index) => {
@@ -584,9 +846,10 @@ let reviewsCache = {};
 
 try {
 
-  cart = JSON.parse(
-    localStorage.getItem("novaCart") || "[]"
-  );
+  cart =
+    JSON.parse(
+      localStorage.getItem("novaCart") || "[]"
+    );
 
   if (!Array.isArray(cart)) {
     cart = [];
@@ -598,12 +861,12 @@ try {
 
 }
 
-
 try {
 
-  favorites = JSON.parse(
-    localStorage.getItem("novaFavorites") || "[]"
-  );
+  favorites =
+    JSON.parse(
+      localStorage.getItem("novaFavorites") || "[]"
+    );
 
   if (!Array.isArray(favorites)) {
     favorites = [];
@@ -718,7 +981,197 @@ function getCartSubtotal() {
 
 
 // ============================================================
-// AFFICHAGE DES ÉTOILES
+// VARIANTES / OPTIONS
+// ============================================================
+
+function hasRequiredOption(product) {
+
+  return !!(
+    product?.options?.required &&
+    Array.isArray(product.options.values) &&
+    product.options.values.length
+  );
+
+}
+
+
+function getCartProductName(item) {
+
+  const product =
+    getProduct(item.id);
+
+  const name =
+    product?.name ||
+    item.name ||
+    "Produit";
+
+  if (item.option) {
+    return `${name} (${item.option})`;
+  }
+
+  return name;
+
+}
+
+
+function findCartItem(id, option = "") {
+
+  return cart.find(
+    item =>
+      item.id === id &&
+      (item.option || "") === option
+  );
+
+}
+
+
+function showProductOptions(product, containerId = "productOptions") {
+
+  if (!hasRequiredOption(product)) {
+    return "";
+  }
+
+  return `
+    <div
+      id="${escapeAttr(containerId)}"
+      style="
+        margin:15px 0;
+        padding:14px;
+        border-radius:14px;
+        background:rgba(255,255,255,.045);
+      "
+    >
+
+      <strong style="
+        display:block;
+        margin-bottom:10px;
+      ">
+        ${escapeHTML(product.options.label)}
+      </strong>
+
+      <div style="
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+      ">
+
+        ${
+          product.options.values.map(
+            value => `
+              <button
+                type="button"
+                class="view-btn product-option"
+                data-option="${escapeAttr(value)}"
+                style="
+                  flex:1 1 110px;
+                  min-width:100px;
+                "
+              >
+                ${escapeHTML(value)}
+              </button>
+            `
+          ).join("")
+        }
+
+      </div>
+
+      <div
+        id="${escapeAttr(containerId)}Error"
+        style="
+          display:none;
+          color:#ff7777;
+          margin-top:10px;
+          font-size:13px;
+        "
+      >
+        Choisis une option avant d'ajouter au panier.
+      </div>
+
+      <input
+        type="hidden"
+        id="${escapeAttr(containerId)}Value"
+        value=""
+      >
+
+    </div>
+  `;
+
+}
+
+
+function setupProductOptions(containerId = "productOptions") {
+
+  const container =
+    $(containerId);
+
+  if (!container) {
+    return;
+  }
+
+  const input =
+    $(`${containerId}Value`);
+
+  const error =
+    $(`${containerId}Error`);
+
+  container
+    .querySelectorAll(".product-option")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          container
+            .querySelectorAll(".product-option")
+            .forEach(item => {
+
+              item.classList.remove(
+                "selected"
+              );
+
+              item.style.border =
+                "";
+
+            });
+
+          button.classList.add(
+            "selected"
+          );
+
+          button.style.border =
+            "2px solid var(--accent,#2d8cff)";
+
+          if (input) {
+            input.value =
+              button.dataset.option || "";
+          }
+
+          if (error) {
+            error.style.display =
+              "none";
+          }
+
+        }
+      );
+
+    });
+
+}
+
+
+function getSelectedProductOption(containerId = "productOptions") {
+
+  return (
+    $(`${containerId}Value`)?.value.trim() ||
+    ""
+  );
+
+}
+
+
+// ============================================================
+// ÉTOILES
 // ============================================================
 
 function getRatingStars(rating) {
@@ -759,7 +1212,8 @@ function toast(message, type = "info") {
   item.className =
     `toast-item toast-${type}`;
 
-  item.textContent = message;
+  item.textContent =
+    message;
 
   item.style.cssText = `
     padding:12px 16px;
@@ -798,16 +1252,20 @@ function showModal(title, content) {
   }
 
   if (modalTitle) {
-    modalTitle.textContent = title;
+    modalTitle.textContent =
+      title;
   }
 
   if (modalContent) {
-    modalContent.innerHTML = content;
+    modalContent.innerHTML =
+      content;
   }
 
-  modal.style.display = "flex";
+  modal.style.display =
+    "flex";
 
-  document.body.style.overflow = "hidden";
+  document.body.style.overflow =
+    "hidden";
 
 }
 
@@ -818,9 +1276,11 @@ function closeModal() {
     return;
   }
 
-  modal.style.display = "none";
+  modal.style.display =
+    "none";
 
-  document.body.style.overflow = "";
+  document.body.style.overflow =
+    "";
 
 }
 
@@ -845,9 +1305,7 @@ function openCart() {
 
   cartDrawer.classList.add("open");
 
-  if (cartOverlay) {
-    cartOverlay.classList.add("open");
-  }
+  cartOverlay?.classList.add("open");
 
 }
 
@@ -865,18 +1323,15 @@ cartBtn?.addEventListener(
   openCart
 );
 
-
 heroCartBtn?.addEventListener(
   "click",
   openCart
 );
 
-
 cartClose?.addEventListener(
   "click",
   closeCart
 );
-
 
 cartOverlay?.addEventListener(
   "click",
@@ -884,17 +1339,39 @@ cartOverlay?.addEventListener(
 );
 
 
-function addToCart(id) {
+// ============================================================
+// AJOUT PANIER
+// ============================================================
+
+function addToCart(id, option = null) {
 
   const product =
     getProduct(id);
 
   if (!product) {
-    return;
+    return false;
   }
 
+  if (hasRequiredOption(product) && !option) {
+
+    openProduct(id);
+
+    toast(
+      `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
+      "error"
+    );
+
+    return false;
+  }
+
+  const safeOption =
+    option || "";
+
   const existing =
-    cart.find(item => item.id === id);
+    findCartItem(
+      id,
+      safeOption
+    );
 
   if (existing) {
 
@@ -905,6 +1382,7 @@ function addToCart(id) {
 
     cart.push({
       id,
+      option: safeOption,
       quantity: 1
     });
 
@@ -914,18 +1392,27 @@ function addToCart(id) {
   renderCart();
 
   toast(
-    `${product.name} ajouté au panier 🛒`,
+    `${getCartProductName({
+      id,
+      option: safeOption
+    })} ajouté au panier 🛒`,
     "success"
   );
+
+  return true;
 
 }
 
 
-function removeFromCart(id) {
+function removeFromCart(id, option = "") {
 
   cart =
     cart.filter(
-      item => item.id !== id
+      item =>
+        !(
+          item.id === id &&
+          (item.option || "") === option
+        )
     );
 
   saveCart();
@@ -934,11 +1421,16 @@ function removeFromCart(id) {
 }
 
 
-function changeCartQuantity(id, quantity) {
+function changeCartQuantity(
+  id,
+  quantity,
+  option = ""
+) {
 
   const item =
-    cart.find(
-      item => item.id === id
+    findCartItem(
+      id,
+      option
     );
 
   if (!item) {
@@ -956,6 +1448,10 @@ function changeCartQuantity(id, quantity) {
 
 }
 
+
+// ============================================================
+// AFFICHAGE PANIER
+// ============================================================
 
 function renderCart() {
 
@@ -992,14 +1488,12 @@ function renderCart() {
       </div>
     `;
 
-    if (cartTotal) {
-      cartTotal.textContent =
-        money(0);
-    }
+    cartTotal &&
+      (cartTotal.textContent =
+        money(0));
 
-    if (checkoutBtn) {
-      checkoutBtn.disabled = true;
-    }
+    checkoutBtn &&
+      (checkoutBtn.disabled = true);
 
     return;
   }
@@ -1016,6 +1510,11 @@ function renderCart() {
 
       const quantity =
         Number(item.quantity || 1);
+
+      const optionText =
+        item.option
+          ? ` (${escapeHTML(item.option)})`
+          : "";
 
       return `
         <div style="
@@ -1038,7 +1537,7 @@ function renderCart() {
           ">
 
             <img
-              src="${escapeAttr(product.image)}"
+              src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
               alt="${escapeHTML(product.name)}"
               style="
                 width:100%;
@@ -1062,6 +1561,7 @@ function renderCart() {
               line-height:1.3;
             ">
               ${escapeHTML(product.name)}
+              ${optionText}
             </strong>
 
             <div style="
@@ -1083,6 +1583,7 @@ function renderCart() {
                 type="button"
                 class="view-btn cart-minus"
                 data-id="${escapeAttr(item.id)}"
+                data-option="${escapeAttr(item.option || "")}"
               >
                 −
               </button>
@@ -1095,6 +1596,7 @@ function renderCart() {
                 type="button"
                 class="view-btn cart-plus"
                 data-id="${escapeAttr(item.id)}"
+                data-option="${escapeAttr(item.option || "")}"
               >
                 +
               </button>
@@ -1103,6 +1605,7 @@ function renderCart() {
                 type="button"
                 class="view-btn cart-remove"
                 data-id="${escapeAttr(item.id)}"
+                data-option="${escapeAttr(item.option || "")}"
                 style="margin-left:auto;"
               >
                 Supprimer
@@ -1123,7 +1626,8 @@ function renderCart() {
   }
 
   if (checkoutBtn) {
-    checkoutBtn.disabled = false;
+    checkoutBtn.disabled =
+      false;
   }
 
   cartItems
@@ -1134,24 +1638,37 @@ function renderCart() {
         "click",
         () => {
 
+          const id =
+            button.dataset.id;
+
+          const option =
+            button.dataset.option || "";
+
           const item =
-            cart.find(
-              x => x.id === button.dataset.id
+            findCartItem(
+              id,
+              option
             );
 
           if (!item) {
             return;
           }
 
-          if (Number(item.quantity) <= 1) {
+          if (
+            Number(item.quantity) <= 1
+          ) {
 
-            removeFromCart(item.id);
+            removeFromCart(
+              id,
+              option
+            );
 
           } else {
 
             changeCartQuantity(
-              item.id,
-              Number(item.quantity) - 1
+              id,
+              Number(item.quantity) - 1,
+              option
             );
 
           }
@@ -1169,16 +1686,24 @@ function renderCart() {
         "click",
         () => {
 
+          const id =
+            button.dataset.id;
+
+          const option =
+            button.dataset.option || "";
+
           const item =
-            cart.find(
-              x => x.id === button.dataset.id
+            findCartItem(
+              id,
+              option
             );
 
           if (item) {
 
             changeCartQuantity(
-              item.id,
-              Number(item.quantity) + 1
+              id,
+              Number(item.quantity) + 1,
+              option
             );
 
           }
@@ -1197,7 +1722,8 @@ function renderCart() {
         () => {
 
           removeFromCart(
-            button.dataset.id
+            button.dataset.id,
+            button.dataset.option || ""
           );
 
         }
@@ -1228,19 +1754,21 @@ function renderCategories() {
   ];
 
   categoriesEl.innerHTML =
-    categories.map(category => `
-      <button
-        type="button"
-        class="category-btn ${
-          category === selectedCategory
-            ? "active"
-            : ""
-        }"
-        data-category="${escapeAttr(category)}"
-      >
-        ${escapeHTML(category)}
-      </button>
-    `).join("");
+    categories.map(
+      category => `
+        <button
+          type="button"
+          class="category-btn ${
+            category === selectedCategory
+              ? "active"
+              : ""
+          }"
+          data-category="${escapeAttr(category)}"
+        >
+          ${escapeHTML(category)}
+        </button>
+      `
+    ).join("");
 
   categoriesEl
     .querySelectorAll(".category-btn")
@@ -1265,7 +1793,7 @@ function renderCategories() {
 
 
 // ============================================================
-// PRODUITS
+// FILTRES
 // ============================================================
 
 function getFilteredProducts() {
@@ -1275,7 +1803,8 @@ function getFilteredProducts() {
 
       const categoryMatch =
         selectedCategory === "Tous" ||
-        product.category === selectedCategory;
+        product.category ===
+          selectedCategory;
 
       const searchMatch =
         !searchValue ||
@@ -1285,22 +1814,34 @@ function getFilteredProducts() {
             searchValue.toLowerCase()
           );
 
-      return categoryMatch && searchMatch;
+      return (
+        categoryMatch &&
+        searchMatch
+      );
+
     });
 
   if (sortValue === "priceAsc") {
 
     result.sort(
-      (a, b) => a.price - b.price
+      (a, b) =>
+        Number(a.price || 0) -
+        Number(b.price || 0)
     );
 
-  } else if (sortValue === "priceDesc") {
+  } else if (
+    sortValue === "priceDesc"
+  ) {
 
     result.sort(
-      (a, b) => b.price - a.price
+      (a, b) =>
+        Number(b.price || 0) -
+        Number(a.price || 0)
     );
 
-  } else if (sortValue === "name") {
+  } else if (
+    sortValue === "name"
+  ) {
 
     result.sort(
       (a, b) =>
@@ -1310,7 +1851,9 @@ function getFilteredProducts() {
         )
     );
 
-  } else if (sortValue === "new") {
+  } else if (
+    sortValue === "new"
+  ) {
 
     result.sort(
       (a, b) =>
@@ -1321,8 +1864,13 @@ function getFilteredProducts() {
   }
 
   return result;
+
 }
 
+
+// ============================================================
+// AFFICHAGE PRODUITS
+// ============================================================
 
 function renderProducts() {
 
@@ -1337,7 +1885,9 @@ function renderProducts() {
 
     productCount.textContent =
       `${filtered.length} produit${
-        filtered.length > 1 ? "s" : ""
+        filtered.length > 1
+          ? "s"
+          : ""
       }`;
 
   }
@@ -1367,27 +1917,33 @@ function renderProducts() {
     `;
 
     return;
+
   }
 
   productsGrid.innerHTML =
     filtered.map(product => {
 
       const isFavorite =
-        favorites.includes(product.id);
+        favorites.includes(
+          product.id
+        );
 
       const rating =
-        Number(product.rating || 4.2);
+        Number(
+          product.rating || 4.2
+        );
 
       const reviewCount =
-        Number(product.reviewCount || 1248);
+        Number(
+          product.reviewCount ||
+          1248
+        );
 
       return `
         <article
           class="product-card"
           data-product-id="${escapeAttr(product.id)}"
-          style="
-            overflow:hidden;
-          "
+          style="overflow:hidden;"
         >
 
           <div
@@ -1409,7 +1965,7 @@ function renderProducts() {
 
             <img
               class="product-image"
-              src="${escapeAttr(product.image)}"
+              src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
               alt="${escapeHTML(product.name)}"
               loading="lazy"
               style="
@@ -1432,9 +1988,7 @@ function renderProducts() {
 
           <div
             class="product-info"
-            style="
-              min-width:0;
-            "
+            style="min-width:0;"
           >
 
             ${
@@ -1516,7 +2070,11 @@ function renderProducts() {
                 font-size:17px;
                 color:var(--accent,#2d8cff);
               ">
-                ${money(product.price)}
+                ${
+                  Number(product.price || 0) > 0
+                    ? money(product.price)
+                    : "Prix à définir"
+                }
               </strong>
 
               <button
@@ -1585,7 +2143,37 @@ function renderProducts() {
       button.addEventListener(
         "click",
         () => {
-          addToCart(button.dataset.add);
+
+          const product =
+            getProduct(
+              button.dataset.add
+            );
+
+          if (!product) {
+            return;
+          }
+
+          if (
+            hasRequiredOption(product)
+          ) {
+
+            openProduct(
+              product.id
+            );
+
+            toast(
+              `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
+              "info"
+            );
+
+            return;
+
+          }
+
+          addToCart(
+            product.id
+          );
+
         }
       );
 
@@ -1598,7 +2186,11 @@ function renderProducts() {
       button.addEventListener(
         "click",
         () => {
-          openProduct(button.dataset.view);
+
+          openProduct(
+            button.dataset.view
+          );
+
         }
       );
 
@@ -1615,7 +2207,9 @@ function renderProducts() {
           const id =
             button.dataset.favorite;
 
-          if (favorites.includes(id)) {
+          if (
+            favorites.includes(id)
+          ) {
 
             favorites =
               favorites.filter(
@@ -1687,10 +2281,14 @@ function openProduct(id) {
   }
 
   const rating =
-    Number(product.rating || 4.2);
+    Number(
+      product.rating || 4.2
+    );
 
   const reviewCount =
-    Number(product.reviewCount || 1248);
+    Number(
+      product.reviewCount || 1248
+    );
 
   showModal(
     product.name,
@@ -1710,7 +2308,7 @@ function openProduct(id) {
         ">
 
           <img
-            src="${escapeAttr(product.image)}"
+            src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
             alt="${escapeHTML(product.name)}"
             style="
               width:auto;
@@ -1757,9 +2355,7 @@ function openProduct(id) {
             ${rating.toFixed(1)}/5
           </strong>
 
-          <span style="
-            opacity:.6;
-          ">
+          <span style="opacity:.6;">
             ${reviewCount.toLocaleString("fr-FR")} avis
           </span>
 
@@ -1771,8 +2367,14 @@ function openProduct(id) {
           color:var(--accent,#2d8cff);
           margin:12px 0;
         ">
-          ${money(product.price)}
+          ${
+            Number(product.price || 0) > 0
+              ? money(product.price)
+              : "Prix à définir"
+          }
         </div>
+
+        ${showProductOptions(product)}
 
         <button
           type="button"
@@ -1799,11 +2401,58 @@ function openProduct(id) {
     `
   );
 
+  setupProductOptions();
+
   $("modalAddProduct")
     ?.addEventListener(
       "click",
       () => {
-        addToCart(product.id);
+
+        const option =
+          getSelectedProductOption();
+
+        if (
+          hasRequiredOption(product) &&
+          !option
+        ) {
+
+          $("productOptionsError") &&
+            ($("productOptionsError").style.display =
+              "block");
+
+          toast(
+            `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
+            "error"
+          );
+
+          return;
+
+        }
+
+        if (
+          Number(product.price || 0) <= 0
+        ) {
+
+          toast(
+            "Le prix de ce produit n'est pas encore défini.",
+            "error"
+          );
+
+          return;
+
+        }
+
+        if (
+          addToCart(
+            product.id,
+            option
+          )
+        ) {
+
+          closeModal();
+
+        }
+
       }
     );
 
@@ -1811,7 +2460,11 @@ function openProduct(id) {
     ?.addEventListener(
       "click",
       () => {
-        openProductReviews(product.id);
+
+        openProductReviews(
+          product.id
+        );
+
       }
     );
 
@@ -1889,7 +2542,9 @@ async function openProductReviews(productId) {
       );
 
     const snapshot =
-      await getDocs(reviewsQuery);
+      await getDocs(
+        reviewsQuery
+      );
 
     const reviews = [];
 
@@ -1927,6 +2582,7 @@ async function openProductReviews(productId) {
       `;
 
       return;
+
     }
 
     list.innerHTML =
@@ -1937,14 +2593,19 @@ async function openProductReviews(productId) {
             1,
             Math.min(
               5,
-              Number(review.rating || 5)
+              Number(
+                review.rating || 5
+              )
             )
           );
 
         const stars =
-          "★".repeat(Math.round(rating)) +
+          "★".repeat(
+            Math.round(rating)
+          ) +
           "☆".repeat(
-            5 - Math.round(rating)
+            5 -
+            Math.round(rating)
           );
 
         return `
@@ -2133,10 +2794,12 @@ function showLoginForm() {
         event.preventDefault();
 
         const email =
-          $("loginEmail")?.value.trim() || "";
+          $("loginEmail")
+            ?.value.trim() || "";
 
         const password =
-          $("loginPassword")?.value || "";
+          $("loginPassword")
+            ?.value || "";
 
         const errorBox =
           $("loginError");
@@ -2145,9 +2808,11 @@ function showLoginForm() {
           $("loginSubmit");
 
         if (submit) {
+
           submit.disabled = true;
           submit.textContent =
             "Connexion...";
+
         }
 
         try {
@@ -2200,8 +2865,9 @@ function showLoginForm() {
       showRegisterForm
     );
 
-}
-
+}// ============================================================
+// INSCRIPTION
+// ============================================================
 
 function showRegisterForm() {
 
@@ -2296,13 +2962,16 @@ function showRegisterForm() {
         event.preventDefault();
 
         const email =
-          $("registerEmail")?.value.trim() || "";
+          $("registerEmail")
+            ?.value.trim() || "";
 
         const password =
-          $("registerPassword")?.value || "";
+          $("registerPassword")
+            ?.value || "";
 
         const password2 =
-          $("registerPassword2")?.value || "";
+          $("registerPassword2")
+            ?.value || "";
 
         const errorBox =
           $("registerError");
@@ -2320,6 +2989,7 @@ function showRegisterForm() {
           }
 
           return;
+
         }
 
         const submit =
@@ -2435,7 +3105,9 @@ onAuthStateChanged(
         ADMIN_EMAIL.toLowerCase();
 
       adminBtn.style.display =
-        isAdmin ? "" : "none";
+        isAdmin
+          ? ""
+          : "none";
 
     }
 
@@ -2499,9 +3171,7 @@ function openAccount() {
           type="button"
           class="view-btn"
           id="accountLogout"
-          style="
-            width:100%;
-          "
+          style="width:100%;"
         >
           🚪 Se déconnecter
         </button>
@@ -2596,7 +3266,9 @@ async function openOrders() {
       );
 
     const snapshot =
-      await getDocs(ordersQuery);
+      await getDocs(
+        ordersQuery
+      );
 
     const orders = [];
 
@@ -2656,13 +3328,16 @@ async function openOrders() {
       `;
 
       return;
+
     }
 
     list.innerHTML =
       orders.map(order => {
 
         const total =
-          Number(order.total || 0);
+          Number(
+            order.total || 0
+          );
 
         const status =
           order.status ||
@@ -2692,7 +3367,7 @@ async function openOrders() {
 
               <strong>
                 Commande #${escapeHTML(
-                  order.id.slice(0, 8)
+                  order.id.slice(0,8)
                 )}
               </strong>
 
@@ -2715,9 +3390,7 @@ async function openOrders() {
                 : ""
             }
 
-            <div style="
-              margin-bottom:12px;
-            ">
+            <div style="margin-bottom:12px;">
               Statut :
               <strong>
                 ${escapeHTML(status)}
@@ -2831,6 +3504,11 @@ function openOrderDetails(order) {
         item.name ||
         "Produit";
 
+      const displayName =
+        item.option
+          ? `${name} (${item.option})`
+          : name;
+
       const price =
         Number(
           product?.price ??
@@ -2839,7 +3517,9 @@ function openOrderDetails(order) {
         );
 
       const quantity =
-        Number(item.quantity || 1);
+        Number(
+          item.quantity || 1
+        );
 
       return `
         <div style="
@@ -2851,7 +3531,7 @@ function openOrderDetails(order) {
         ">
 
           <span>
-            ${escapeHTML(name)}
+            ${escapeHTML(displayName)}
             × ${quantity}
           </span>
 
@@ -2881,7 +3561,7 @@ function openOrderDetails(order) {
         </div>
       `
       : timeline.map(
-          (step, index) => {
+          (step,index) => {
 
             const active =
               currentIndex >= index;
@@ -2911,7 +3591,7 @@ function openOrderDetails(order) {
 
   showModal(
     `Commande #${escapeHTML(
-      order.id.slice(0, 8)
+      order.id.slice(0,8)
     )}`,
     `
       <div>
@@ -2959,9 +3639,7 @@ function openOrderDetails(order) {
               ? `
                 <div style="margin-top:8px;">
                   Suivi :
-                  ${escapeHTML(
-                    order.tracking
-                  )}
+                  ${escapeHTML(order.tracking)}
                 </div>
               `
               : ""
@@ -2972,9 +3650,7 @@ function openOrderDetails(order) {
               ? `
                 <div style="margin-top:8px;">
                   Livraison estimée :
-                  ${escapeHTML(
-                    order.estimatedDelivery
-                  )}
+                  ${escapeHTML(order.estimatedDelivery)}
                 </div>
               `
               : ""
@@ -3023,9 +3699,7 @@ function openOrderDetails(order) {
               <p style="
                 margin:8px 0 20px;
               ">
-                ${escapeHTML(
-                  order.address
-                )}
+                ${escapeHTML(order.address)}
               </p>
             `
             : ""
@@ -3075,7 +3749,7 @@ function openOrderDetails(order) {
 
 
 // ============================================================
-// CARTE LOCALE
+// CARTE TEST
 // ============================================================
 
 function getTestCard() {
@@ -3109,6 +3783,7 @@ function getTestCard() {
   } catch {
 
     return null;
+
   }
 
 }
@@ -3118,7 +3793,7 @@ function generateTestCard() {
 
   const digits =
     Array.from(
-      { length: 12 },
+      {length:12},
       () =>
         Math.floor(
           Math.random() * 10
@@ -3126,22 +3801,21 @@ function generateTestCard() {
     ).join("");
 
   const number =
-    `9999 ${digits.slice(0, 4)} ${digits.slice(4, 8)} ${digits.slice(8, 12)}`;
+    `9999 ${digits.slice(0,4)} ${digits.slice(4,8)} ${digits.slice(8,12)}`;
 
   const month =
     String(
       Math.floor(
         Math.random() * 12
       ) + 1
-    ).padStart(2, "0");
+    ).padStart(2,"0");
 
   const year =
     String(
       new Date().getFullYear() +
       Math.floor(
         Math.random() * 5
-      ) +
-      1
+      ) + 1
     ).slice(-2);
 
   const cvv =
@@ -3153,8 +3827,8 @@ function generateTestCard() {
 
   const card = {
     number,
-    holder: "NOVASHOP CARD",
-    expiry: `${month}/${year}`,
+    holder:"NOVASHOP CARD",
+    expiry:`${month}/${year}`,
     cvv
   };
 
@@ -3212,9 +3886,7 @@ function renderTestCardHTML() {
   }
 
   return `
-    <div style="
-      margin-top:15px;
-    ">
+    <div style="margin-top:15px;">
 
       <div style="
         width:100%;
@@ -3319,15 +3991,14 @@ function renderTestCardHTML() {
         type="button"
         class="add-btn"
         id="generateTestCard"
-        style="
-          width:100%;
-        "
+        style="width:100%;"
       >
         🔄 Générer une nouvelle carte
       </button>
 
     </div>
   `;
+
 }
 
 
@@ -3726,62 +4397,58 @@ function openCheckout() {
 
         if (!firstName) {
 
-          if (errorBox) {
-
-            errorBox.textContent =
-              "Indique ton prénom.";
-
-            errorBox.style.display =
-              "block";
-
-          }
+          errorBox &&
+            (
+              errorBox.textContent =
+                "Indique ton prénom.",
+              errorBox.style.display =
+                "block"
+            );
 
           return;
+
         }
 
         if (!lastName) {
 
-          if (errorBox) {
-
-            errorBox.textContent =
-              "Indique ton nom.";
-
-            errorBox.style.display =
-              "block";
-
-          }
+          errorBox &&
+            (
+              errorBox.textContent =
+                "Indique ton nom.",
+              errorBox.style.display =
+                "block"
+            );
 
           return;
+
         }
 
         if (!address) {
 
-          if (errorBox) {
-
-            errorBox.textContent =
-              "Indique ton adresse de livraison.";
-
-            errorBox.style.display =
-              "block";
-
-          }
+          errorBox &&
+            (
+              errorBox.textContent =
+                "Indique ton adresse de livraison.",
+              errorBox.style.display =
+                "block"
+            );
 
           return;
+
         }
 
         if (!paymentMethod) {
 
-          if (errorBox) {
-
-            errorBox.textContent =
-              "Choisis un moyen de paiement.";
-
-            errorBox.style.display =
-              "block";
-
-          }
+          errorBox &&
+            (
+              errorBox.textContent =
+                "Choisis un moyen de paiement.",
+              errorBox.style.display =
+                "block"
+            );
 
           return;
+
         }
 
         const submit =
@@ -3826,12 +4493,12 @@ function openCheckout() {
                 $("cardNumber")
                   ?.value || ""
               )
-                .replace(/\s+/g, "")
+                .replace(/\s+/g,"")
                 .trim();
 
             const storedNumber =
               card.number
-                .replace(/\s+/g, "")
+                .replace(/\s+/g,"")
                 .trim();
 
             const enteredHolder =
@@ -3860,14 +4527,10 @@ function openCheckout() {
               ).trim();
 
             if (
-              enteredNumber !==
-                storedNumber ||
-              enteredHolder !==
-                storedHolder ||
-              enteredExpiry !==
-                card.expiry ||
-              enteredCvv !==
-                card.cvv
+              enteredNumber !== storedNumber ||
+              enteredHolder !== storedHolder ||
+              enteredExpiry !== card.expiry ||
+              enteredCvv !== card.cvv
             ) {
 
               throw new Error(
@@ -3887,16 +4550,34 @@ function openCheckout() {
               const product =
                 getProduct(item.id);
 
+              const baseName =
+                product?.name ||
+                "Produit";
+
+              const displayName =
+                item.option
+                  ? `${baseName} (${item.option})`
+                  : baseName;
+
               return {
-                id: item.id,
+
+                id:
+                  item.id,
+
                 name:
-                  product?.name ||
-                  "Produit",
+                  displayName,
+
+                option:
+                  item.option || "",
+
                 price:
-                  product?.price ||
-                  0,
+                  product?.price || 0,
+
                 quantity:
-                  Number(item.quantity || 1)
+                  Number(
+                    item.quantity || 1
+                  )
+
               };
 
             });
@@ -3940,11 +4621,15 @@ function openCheckout() {
 
             createdAt:
               serverTimestamp()
+
           };
 
           const orderRef =
             await addDoc(
-              collection(db, "orders"),
+              collection(
+                db,
+                "orders"
+              ),
               orderData
             );
 
@@ -3956,13 +4641,12 @@ function openCheckout() {
           closeModal();
 
           toast(
-            `Commande #${orderRef.id.slice(0, 8)} créée 🎉`,
+            `Commande #${orderRef.id.slice(0,8)} créée 🎉`,
             "success"
           );
 
           if (
-            paymentMethod ===
-              "paypal" &&
+            paymentMethod === "paypal" &&
             total > 0
           ) {
 
@@ -4042,10 +4726,15 @@ function printInvoice(order) {
       const product =
         getProduct(item.id);
 
-      const name =
+      const baseName =
         product?.name ||
         item.name ||
         "Produit";
+
+      const name =
+        item.option
+          ? `${baseName} (${item.option})`
+          : baseName;
 
       const price =
         Number(
@@ -4055,7 +4744,9 @@ function printInvoice(order) {
         );
 
       const quantity =
-        Number(item.quantity || 1);
+        Number(
+          item.quantity || 1
+        );
 
       return `
         <tr>
@@ -4073,9 +4764,7 @@ function printInvoice(order) {
           </td>
 
           <td>
-            ${money(
-              price * quantity
-            )}
+            ${money(price * quantity)}
           </td>
 
         </tr>
@@ -4101,6 +4790,7 @@ function printInvoice(order) {
     );
 
     return;
+
   }
 
   invoiceWindow.document.write(`
@@ -4186,9 +4876,7 @@ function printInvoice(order) {
           </strong>
 
           <p>
-            Commande #${escapeHTML(
-              order.id
-            )}
+            Commande #${escapeHTML(order.id)}
           </p>
 
         </div>
@@ -4282,7 +4970,10 @@ function printInvoice(order) {
 
   invoiceWindow.document.close();
 
-}// ============================================================
+}
+
+
+// ============================================================
 // ADMIN
 // ============================================================
 
@@ -4336,12 +5027,14 @@ function openAdmin() {
       );
 
       return;
+
     }
 
     localStorage.setItem(
       ADMIN_ACCESS_KEY,
       "true"
     );
+
   }
 
   loadAdmin();
@@ -4372,7 +5065,7 @@ async function loadAdmin() {
 
     const snapshot =
       await getDocs(
-        collection(db, "orders")
+        collection(db,"orders")
       );
 
     const orders = [];
@@ -4380,14 +5073,14 @@ async function loadAdmin() {
     snapshot.forEach(item => {
 
       orders.push({
-        id: item.id,
+        id:item.id,
         ...item.data()
       });
 
     });
 
     orders.sort(
-      (a, b) => {
+      (a,b) => {
 
         const aTime =
           a.createdAt?.seconds || 0;
@@ -4402,7 +5095,7 @@ async function loadAdmin() {
 
     renderAdmin(orders);
 
-  } catch (error) {
+  } catch(error) {
 
     console.error(
       "Admin Firestore Error:",
@@ -4535,14 +5228,23 @@ function renderAdmin(orders) {
               const productsText =
                 items
                   .map(
-                    item =>
-                      `${
+                    item => {
+
+                      const baseName =
                         item.name ||
-                        item.id
+                        item.id;
+
+                      return `${
+                        baseName
+                      }${
+                        item.option
+                          ? ` (${item.option})`
+                          : ""
                       } ×${
-                        item.quantity ||
-                        1
-                      }`
+                        item.quantity || 1
+                      }`;
+
+                    }
                   )
                   .join(", ");
 
@@ -4571,7 +5273,7 @@ function renderAdmin(orders) {
 
                     <strong>
                       #${escapeHTML(
-                        order.id.slice(0, 8)
+                        order.id.slice(0,8)
                       )}
                     </strong>
 
@@ -4648,9 +5350,7 @@ function renderAdmin(orders) {
 
                   <select
                     class="admin-status"
-                    data-id="${escapeAttr(
-                      order.id
-                    )}"
+                    data-id="${escapeAttr(order.id)}"
                     style="
                       width:100%;
                       margin:6px 0 10px;
@@ -4662,9 +5362,7 @@ function renderAdmin(orders) {
                         .map(
                           status => `
                             <option
-                              value="${escapeAttr(
-                                status
-                              )}"
+                              value="${escapeAttr(status)}"
                               ${
                                 order.status ===
                                 status
@@ -4672,9 +5370,7 @@ function renderAdmin(orders) {
                                   : ""
                               }
                             >
-                              ${escapeHTML(
-                                status
-                              )}
+                              ${escapeHTML(status)}
                             </option>
                           `
                         )
@@ -4685,12 +5381,8 @@ function renderAdmin(orders) {
 
                   <input
                     class="admin-city"
-                    data-id="${escapeAttr(
-                      order.id
-                    )}"
-                    value="${escapeAttr(
-                      order.city || ""
-                    )}"
+                    data-id="${escapeAttr(order.id)}"
+                    value="${escapeAttr(order.city || "")}"
                     placeholder="Ville de destination"
                     style="
                       width:100%;
@@ -4700,12 +5392,8 @@ function renderAdmin(orders) {
 
                   <input
                     class="admin-tracking"
-                    data-id="${escapeAttr(
-                      order.id
-                    )}"
-                    value="${escapeAttr(
-                      order.tracking || ""
-                    )}"
+                    data-id="${escapeAttr(order.id)}"
+                    value="${escapeAttr(order.tracking || "")}"
                     placeholder="Numéro de suivi"
                     style="
                       width:100%;
@@ -4715,13 +5403,8 @@ function renderAdmin(orders) {
 
                   <input
                     class="admin-delivery"
-                    data-id="${escapeAttr(
-                      order.id
-                    )}"
-                    value="${escapeAttr(
-                      order.estimatedDelivery ||
-                      ""
-                    )}"
+                    data-id="${escapeAttr(order.id)}"
+                    value="${escapeAttr(order.estimatedDelivery || "")}"
                     placeholder="Livraison estimée"
                     style="
                       width:100%;
@@ -4738,9 +5421,7 @@ function renderAdmin(orders) {
                     <button
                       type="button"
                       class="add-btn admin-save"
-                      data-id="${escapeAttr(
-                        order.id
-                      )}"
+                      data-id="${escapeAttr(order.id)}"
                     >
                       💾 Enregistrer
                     </button>
@@ -4748,9 +5429,7 @@ function renderAdmin(orders) {
                     <button
                       type="button"
                       class="view-btn admin-paid"
-                      data-id="${escapeAttr(
-                        order.id
-                      )}"
+                      data-id="${escapeAttr(order.id)}"
                     >
                       💰 Marquer payé
                     </button>
@@ -4758,9 +5437,7 @@ function renderAdmin(orders) {
                     <button
                       type="button"
                       class="view-btn admin-invoice"
-                      data-id="${escapeAttr(
-                        order.id
-                      )}"
+                      data-id="${escapeAttr(order.id)}"
                     >
                       🧾 Facture
                     </button>
@@ -4768,12 +5445,8 @@ function renderAdmin(orders) {
                     <button
                       type="button"
                       class="view-btn admin-delete"
-                      data-id="${escapeAttr(
-                        order.id
-                      )}"
-                      style="
-                        color:#ff7777;
-                      "
+                      data-id="${escapeAttr(order.id)}"
+                      style="color:#ff7777;"
                     >
                       🗑️ Supprimer
                     </button>
@@ -4791,9 +5464,7 @@ function renderAdmin(orders) {
               padding:30px;
             ">
 
-              <div style="
-                font-size:50px;
-              ">
+              <div style="font-size:50px;">
                 📦
               </div>
 
@@ -4990,7 +5661,11 @@ async function saveAdminOrder(id) {
       "";
 
     await updateDoc(
-      doc(db, "orders", id),
+      doc(
+        db,
+        "orders",
+        id
+      ),
       {
         status,
         city,
@@ -5004,7 +5679,7 @@ async function saveAdminOrder(id) {
       "success"
     );
 
-  } catch (error) {
+  } catch(error) {
 
     console.error(error);
 
@@ -5026,10 +5701,13 @@ async function markOrderPaid(id) {
   try {
 
     await updateDoc(
-      doc(db, "orders", id),
+      doc(
+        db,
+        "orders",
+        id
+      ),
       {
-        paymentStatus:
-          "Payé"
+        paymentStatus:"Payé"
       }
     );
 
@@ -5040,7 +5718,7 @@ async function markOrderPaid(id) {
 
     loadAdmin();
 
-  } catch (error) {
+  } catch(error) {
 
     console.error(error);
 
@@ -5071,7 +5749,11 @@ async function deleteAdminOrder(id) {
   try {
 
     await deleteDoc(
-      doc(db, "orders", id)
+      doc(
+        db,
+        "orders",
+        id
+      )
     );
 
     toast(
@@ -5081,7 +5763,7 @@ async function deleteAdminOrder(id) {
 
     loadAdmin();
 
-  } catch (error) {
+  } catch(error) {
 
     console.error(error);
 
@@ -5292,9 +5974,7 @@ window.addEventListener(
     );
 
     if (
-      error?.code?.startsWith(
-        "auth/"
-      )
+      error?.code?.startsWith("auth/")
     ) {
 
       toast(

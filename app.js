@@ -42,6 +42,7 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
@@ -55,45 +56,6 @@ const ADMIN_CODE = "NOVA-ADMIN-2026";
 const ADMIN_ACCESS_KEY = "novaAdminAuthorized";
 const TEST_CARD_STORAGE_KEY = "novaTestCard";
 
-const FALLBACK_IMAGE =
-  "https://placehold.co/400x300/111827/ffffff?text=NovaShop";
-
-
-// ============================================================
-// DOM
-// ============================================================
-
-const $ = id => document.getElementById(id);
-
-const searchInput = $("searchInput");
-const categoriesEl = $("categories");
-const productsGrid = $("productGrid");
-const productCount = $("productCount");
-
-const cartBtn = $("cartBtn");
-const cartBadge = $("cartBadge");
-const cartOverlay = $("overlay");
-const cartDrawer = $("cartDrawer");
-const cartClose = $("closeCart");
-const cartItems = $("cartItems");
-const cartTotal = $("cartTotal");
-const checkoutBtn = $("checkoutBtn");
-
-const settingsBtn = $("settingsBtn");
-const accountBtn = $("accountBtn");
-const ordersBtn = $("ordersBtn");
-const adminBtn = $("adminBtn");
-
-const modal = $("modalLayer");
-const modalContent = $("modalContent");
-const modalClose = $("modalClose");
-const modalTitle = $("modalTitle");
-
-const toastContainer = $("toast");
-
-const heroCartBtn = $("heroCartBtn");
-const sortSelect = $("sortSelect");
-
 
 // ============================================================
 // PRODUITS
@@ -102,135 +64,133 @@ const sortSelect = $("sortSelect");
 const products = [
 
   {
-    id: "p1",
-    name: "Gigabyte B650 AORUS Elite AX",
-    category: "Composants",
-    price: 189.99,
-    image: "https://m.media-amazon.com/images/I/81JFKzNyl+L._AC_SL1500_.jpg"
+    id:"p1",
+    name:"Gigabyte B650 AORUS Elite AX",
+    category:"Composants",
+    price:189.99,
+    image:"https://m.media-amazon.com/images/I/81JFKzNyl+L._AC_SL1500_.jpg"
   },
 
   {
-    id: "p2",
-    name: "PC Gamer AMD Ryzen 7 7800X3D | RX 9070 XT | 32 Go DDR5",
-    category: "PC Gamer",
-    price: 2237.65,
-    image: "https://www.memorypc.fr/thumbnail/53/79/73/1786604635/019f8f1c2c6972a8a3ea1ee9516a0652_1784812416_800x800.png"
+    id:"p2",
+    name:"PC Gamer AMD Ryzen 7 7800X3D | RX 9070 XT | 32 Go DDR5",
+    category:"PC Gamer",
+    price:2237.65,
+    image:"https://www.memorypc.fr/thumbnail/53/79/73/1786604635/019f8f1c2c6972a8a3ea1ee9516a0652_1784812416_800x800.png"
   },
 
   {
-    id: "p3",
-    name: "HyperX Cloud II",
-    category: "Casques",
-    price: 49.99,
-    image: "https://fr.hyperx.com/cdn/shop/files/hyperx_cloud_ii_red_1_main.jpg?v=1764129756"
+    id:"p3",
+    name:"HyperX Cloud II",
+    category:"Casques",
+    price:49.99,
+    image:"https://fr.hyperx.com/cdn/shop/files/hyperx_cloud_ii_red_1_main.jpg?v=1764129756"
   },
 
   {
-    id: "p4",
-    name: "TECORS Clavier Gamer Mécanique 60% AZERTY",
-    category: "Claviers",
-    price: 30,
-    image: "https://m.media-amazon.com/images/I/71-lhAU97VL._AC_SL1500_.jpg"
+    id:"p4",
+    name:"TECORS Clavier Gamer Mécanique 60% AZERTY",
+    category:"Claviers",
+    price:30,
+    image:"https://m.media-amazon.com/images/I/71-lhAU97VL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p5",
-    name: "Clavier Magnétique 65% Celshading Noir",
-    category: "Claviers",
-    price: 120.90,
-    image: "https://tryhard-gear.com/cdn/shop/files/TestCelshadingnoirV2.webp?v=1762273866&width=832"
+    id:"p5",
+    name:"Clavier Magnétique 65% Celshading Noir",
+    category:"Claviers",
+    price:120.90,
+    image:"https://tryhard-gear.com/cdn/shop/files/TestCelshadingnoirV2.webp?v=1762273866&width=832"
   },
 
   {
-    id: "p6",
-    name: "Ajazz AJ199 MAX Carbon Fiber Wireless Gaming Mouse",
-    category: "Souris",
-    price: 49.99,
-    image: "https://ae-pic-a1.aliexpress-media.com/kf/S1e981b53ccfe4e1391cd5b5deb4fce87o.png_960x960.png_.avif"
+    id:"p6",
+    name:"Ajazz AJ199 MAX Carbon Fiber Wireless Gaming Mouse",
+    category:"Souris",
+    price:49.99,
+    image:"https://ae-pic-a1.aliexpress-media.com/kf/S1e981b53ccfe4e1391cd5b5deb4fce87o.png_960x960.png_.avif"
   },
 
   {
-    id: "p7",
-    name: "Logitech G PRO X2 Superstrike Blanc et Noir",
-    category: "Souris",
-    price: 150.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/7a/34/bc/29111418/1540-1.jpg"
+    id:"p7",
+    name:"Logitech G PRO X2 Superstrike Blanc et Noir",
+    category:"Souris",
+    price:150.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/7a/34/bc/29111418/1540-1.jpg"
   },
 
   {
-    id: "p8",
-    name: "Samsung 990 PRO 1TB",
-    category: "Stockage",
-    price: 249.99,
-    image: "https://content.pearl.fr/media/cache/default/article_ultralarge_high_nocrop/shared/images/articles/M/MW1/disque-dur-interne-ssd-990-pro-pcie-nvme-m-2-2280-1-to-ref_MW1148_2.jpg"
+    id:"p8",
+    name:"Samsung 990 PRO 1TB",
+    category:"Stockage",
+    price:249.99,
+    image:"https://content.pearl.fr/media/cache/default/article_ultralarge_high_nocrop/shared/images/articles/M/MW1/disque-dur-interne-ssd-990-pro-pcie-nvme-m-2-2280-1-to-ref_MW1148_2.jpg"
   },
 
   {
-    id: "p9",
-    name: "Samsung 990 PRO 2TB",
-    category: "Stockage",
-    price: 199.93,
-    image: "https://pc.comparer.fr/500x500/310191422.webp"
+    id:"p9",
+    name:"Samsung 990 PRO 2TB",
+    category:"Stockage",
+    price:199.93,
+    image:"https://pc.comparer.fr/500x500/310191422.webp"
   },
 
   {
-    id: "p10",
-    name: "CORSAIR RM1000x EU",
-    category: "Alimentations",
-    price: 159.90,
-    image: "https://assets.corsair.com/image/upload/c_pad,q_85,h_608,w_608,f_auto/products/Power-Supply-Units/base-rmx-2024-config/gallery/black/1000/RM1000x_2024_01.webp"
+    id:"p10",
+    name:"CORSAIR RM1000x EU",
+    category:"Alimentations",
+    price:159.90,
+    image:"https://assets.corsair.com/image/upload/c_pad,q_85,h_608,w_608,f_auto/products/Power-Supply-Units/base-rmx-2024-config/gallery/black/1000/RM1000x_2024_01.webp"
   },
 
   {
-    id: "p11",
-    name: "CORSAIR RM850x EU",
-    category: "Alimentations",
-    price: 134.90,
-    image: "https://assets.corsair.com/image/upload/c_pad,q_85,h_608,w_608,f_auto/products/Power-Supply-Units/base-rmx-2024-config/gallery/black/850/RM850x_2024_01.webp"
+    id:"p11",
+    name:"CORSAIR RM850x EU",
+    category:"Alimentations",
+    price:134.90,
+    image:"https://assets.corsair.com/image/upload/c_pad,q_85,h_608,w_608,f_auto/products/Power-Supply-Units/base-rmx-2024-config/gallery/black/850/RM850x_2024_01.webp"
   },
 
   {
-    id: "p12",
-    name: "Corsair Frame 5000D RS ARGB Noir",
-    category: "Boîtiers",
-    price: 159.90,
-    image: "https://media.ldlc.com/r1600/ld/products/00/06/26/05/LD0006260502.jpg"
+    id:"p12",
+    name:"Corsair Frame 5000D RS ARGB Noir",
+    category:"Boîtiers",
+    price:159.90,
+    image:"https://media.ldlc.com/r1600/ld/products/00/06/26/05/LD0006260502.jpg"
   },
 
   {
-    id: "p13",
-    name: "ARCTIC Liquid Freezer III Pro 360 A-RGB Black",
-    category: "Refroidissement",
-    price: 129.90,
-    image: "https://cdn.idealo.com/folder/Product/206182/0/206182034/s4_produktbild_gross/arctic-liquid-freezer-iii-pro-360-a-rgb-black.jpg"
+    id:"p13",
+    name:"ARCTIC Liquid Freezer III Pro 360 A-RGB Black",
+    category:"Refroidissement",
+    price:129.90,
+    image:"https://cdn.idealo.com/folder/Product/206182/0/206182034/s4_produktbild_gross/arctic-liquid-freezer-iii-pro-360-a-rgb-black.jpg"
   },
 
   {
-    id: "p14",
-    name: "Samsung 27 QD-OLED Odyssey G6",
-    category: "Écrans",
-    price: 399.95,
-    image: "https://media.ldlc.com/r705/ld/products/00/06/32/99/LD0006329977.jpg"
+    id:"p14",
+    name:"Samsung 27 QD-OLED Odyssey G6",
+    category:"Écrans",
+    price:399.95,
+    image:"https://media.ldlc.com/r705/ld/products/00/06/32/99/LD0006329977.jpg"
   },
 
   {
-    id: "p15",
-    name: "ELGATO Wave Mic Arm Pro",
-    category: "Streaming",
-    price: 229.90,
-    image: "https://www.digit-photo.com/images/produits/ELGATO10AAT9901/1.jpg"
+    id:"p15",
+    name:"ELGATO Wave Mic Arm Pro",
+    category:"Streaming",
+    price:229.90,
+    image:"https://www.digit-photo.com/images/produits/ELGATO10AAT9901/1.jpg"
   },
 
   {
-    id: "p16",
-    name: "Sony DualSense PS5/PC",
-    category: "Manettes",
-    price: 74.90,
-    image: "https://media.carrefour.fr/media/referential/media/cc07d7de4b9e4bea8c063e8f9bb46d94/p_200x200/0711719023005_0.jpg",
-    options: {
-      label: "Couleur",
-      required: true,
-      values: [
+    id:"p16",
+    name:"Sony DualSense PS5/PC",
+    category:"Manettes",
+    price:74.90,
+    image:"https://media.carrefour.fr/media/referential/media/cc07d7de4b9e4bea8c063e8f9bb46d94/p_200x200/0711719023005_0.jpg",
+    options:{
+      "Couleur":[
         "Rouge",
         "Blanc",
         "Noir",
@@ -240,532 +200,526 @@ const products = [
   },
 
   {
-    id: "p17",
-    name: "ASUS TUF Gaming B650-PLUS",
-    category: "Composants",
-    price: 179.90,
-    image: "https://media.materiel.net/r550/products/MN0005986139.jpg"
+    id:"p17",
+    name:"ASUS TUF Gaming B650-PLUS",
+    category:"Composants",
+    price:179.90,
+    image:"https://media.materiel.net/r550/products/MN0005986139.jpg"
   },
 
   {
-    id: "p18",
-    name: "MSI MAG B650 Tomahawk WiFi",
-    category: "Composants",
-    price: 189.90,
-    image: "https://m.media-amazon.com/images/I/71TYAcZ4J8L._AC_SL1200_.jpg"
+    id:"p18",
+    name:"MSI MAG B650 Tomahawk WiFi",
+    category:"Composants",
+    price:189.90,
+    image:"https://m.media-amazon.com/images/I/71TYAcZ4J8L._AC_SL1200_.jpg"
   },
 
   {
-    id: "p19",
-    name: "KOORUI Ecran PC Gamer 27 Pouces 200Hz IPS QHD HDR400 1ms",
-    category: "Écrans",
-    price: 74.99,
-    image: "https://m.media-amazon.com/images/I/71CJ1DF-8sL._AC_SL1500_.jpg"
+    id:"p19",
+    name:"KOORUI Ecran PC Gamer 27 Pouces 200Hz IPS QHD HDR400 1ms",
+    category:"Écrans",
+    price:74.99,
+    image:"https://m.media-amazon.com/images/I/71CJ1DF-8sL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p20",
-    name: 'iiyama 23.8" LED - G-Master GB2471HS-B1 Red Eagle',
-    category: "Écrans",
-    price: 65.99,
-    image: "https://media.ldlc.com/r1600/ld/products/00/06/34/20/LD0006342033.jpg"
+    id:"p20",
+    name:"iiyama 23.8\" LED - G-Master GB2471HS-B1 Red Eagle",
+    category:"Écrans",
+    price:65.99,
+    image:"https://media.ldlc.com/r1600/ld/products/00/06/34/20/LD0006342033.jpg"
   },
 
   {
-    id: "p21",
-    name: "SONGMICS Chaise de jeu ergonomique avec repose-pieds 150 kg gris ardoise",
-    category: "Chaises gaming",
-    price: 129.99,
-    image: "https://static.songmics.fr/fit-in/1000x1000/image/Product/B34OBG077G01/B34OBG077G01-1.jpg"
+    id:"p21",
+    name:"SONGMICS Chaise de jeu ergonomique avec repose-pieds 150 kg gris ardoise",
+    category:"Chaises gaming",
+    price:129.99,
+    image:"https://static.songmics.fr/fit-in/1000x1000/image/Product/B34OBG077G01/B34OBG077G01-1.jpg"
   },
 
   {
-    id: "p22",
-    name: "Dowinx Série Luxe Suède LS-66D68E Blanc",
-    category: "Chaises gaming",
-    price: 79.99,
-    image: "https://eu.dowinx.com/cdn/shop/files/11_5f72b693-5f79-4d06-b48a-7cb2b2f0244a.png?v=1752139814&width=1220"
+    id:"p22",
+    name:"Dowinx Série Luxe Suède LS-66D68E Blanc",
+    category:"Chaises gaming",
+    price:79.99,
+    image:"https://eu.dowinx.com/cdn/shop/files/11_5f72b693-5f79-4d06-b48a-7cb2b2f0244a.png?v=1752139814&width=1220"
   },
 
   {
-    id: "p23",
-    name: "Chaise GTPLAYER Ergonomique Gaming Soutien Lombaire Repose-pieds",
-    category: "Chaises gaming",
-    price: 109.99,
-    image: "https://thumb.pccomponentes.com/w-530-530/articles/1118/11186247/167-silla-gaming-gtplayer-ergonomica-con-reposapies-y-soporte-lumbar-4d.jpg"
+    id:"p23",
+    name:"Chaise GTPLAYER Ergonomique Gaming Soutien Lombaire Repose-pieds",
+    category:"Chaises gaming",
+    price:109.99,
+    image:"https://thumb.pccomponentes.com/w-530-530/articles/1118/11186247/167-silla-gaming-gtplayer-ergonomica-con-reposapies-y-soporte-lumbar-4d.jpg"
   },
 
   {
-    id: "p24",
-    name: "Desk Lite - Height-Adjustable Desk",
-    category: "Bureaux gaming",
-    price: 110.99,
-    image: "https://yaasa.com/cdn/shop/files/yaasa-desk-lite_nr01_black_100_01-04545-01_1200x.jpg?v=1753169928"
+    id:"p24",
+    name:"Desk Lite - Height-Adjustable Desk",
+    category:"Bureaux gaming",
+    price:110.99,
+    image:"https://yaasa.com/cdn/shop/files/yaasa-desk-lite_nr01_black_100_01-04545-01_1200x.jpg?v=1753169928"
   },
 
   {
-    id: "p25",
-    name: "EUREKA ERGONOMIC Bureau Gaming LED 182x76cm en Forme d'Aile",
-    category: "Bureaux gaming",
-    price: 86.99,
-    image: "https://m.media-amazon.com/images/I/71Gd5G3wRsL._AC_SL1500_.jpg"
+    id:"p25",
+    name:"EUREKA ERGONOMIC Bureau Gaming LED 182x76cm en Forme d'Aile",
+    category:"Bureaux gaming",
+    price:86.99,
+    image:"https://m.media-amazon.com/images/I/71Gd5G3wRsL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p26",
-    name: "Bureau gaming d’angle HOMCOM réversible support écran",
-    category: "Bureaux gaming",
-    price: 44.99,
-    image: "https://cdn.manomano.com/pim-media/images/medium/74eca1cb1cefa063c8f600ee293ae6ee826794f8.jpg"
+    id:"p26",
+    name:"Bureau gaming d’angle HOMCOM réversible support écran",
+    category:"Bureaux gaming",
+    price:44.99,
+    image:"https://cdn.manomano.com/pim-media/images/medium/74eca1cb1cefa063c8f600ee293ae6ee826794f8.jpg"
   },
 
   {
-    id: "p27",
-    name: "Logitech G Pro X 2 Lightspeed Noir + Repose casque",
-    category: "Casques",
-    price: 99.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/6d/e9/6e/24045933/1540-1/tsp20260429154901/Casque-PC-gaming-sans-fil-Logitech-G-Pro-X-2-Lightspeed-Noir-Repose-casque.jpg"
+    id:"p27",
+    name:"Logitech G Pro X 2 Lightspeed Noir + Repose casque",
+    category:"Casques",
+    price:99.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/6d/e9/6e/24045933/1540-1/tsp20260429154901/Casque-PC-gaming-sans-fil-Logitech-G-Pro-X-2-Lightspeed-Noir-Repose-casque.jpg"
   },
 
   {
-    id: "p28",
-    name: "Razer BlackShark V2 Pro 2023 Noir",
-    category: "Casques",
-    price: 75.99,
-    image: "https://media.ldlc.com/r1600/ld/products/00/06/07/71/LD0006077125.jpg"
+    id:"p28",
+    name:"Razer BlackShark V2 Pro 2023 Noir",
+    category:"Casques",
+    price:75.99,
+    image:"https://media.ldlc.com/r1600/ld/products/00/06/07/71/LD0006077125.jpg"
   },
 
   {
-    id: "p29",
-    name: "beyerdynamic DT-990 Pro 250 Ohm",
-    category: "Casques",
-    price: 60.99,
-    image: "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/106865/18443258_800.jpg"
+    id:"p29",
+    name:"beyerdynamic DT-990 Pro 250 Ohm",
+    category:"Casques",
+    price:60.99,
+    image:"https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_10/106865/18443258_800.jpg"
   },
 
   {
-    id: "p30",
-    name: "Logitech PRO X TKL Rapid Noir, filaire AZERTY",
-    category: "Claviers",
-    price: 78.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/6a/89/8f/26184042/1540-1.jpg"
+    id:"p30",
+    name:"Logitech PRO X TKL Rapid Noir, filaire AZERTY",
+    category:"Claviers",
+    price:78.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/6a/89/8f/26184042/1540-1.jpg"
   },
 
   {
-    id: "p31",
-    name: "QwertyKey75 HE Striker, Magnetic Hall Effect, Rapid Trigger, Snap Tap",
-    category: "Claviers",
-    price: 56.99,
-    image: "https://cdn.shopify.com/s/files/1/0814/2530/1746/files/QK75-HE-STRIKER-qwertykey-tastatura-mecanica-gaming-hotswap-2025_1eee355b-72ca-46e6-a458-751384d0595c_1800x.webp?v=1771799537"
+    id:"p31",
+    name:"QwertyKey75 HE Striker, Magnetic Hall Effect, Rapid Trigger, Snap Tap",
+    category:"Claviers",
+    price:56.99,
+    image:"https://cdn.shopify.com/s/files/1/0814/2530/1746/files/QK75-HE-STRIKER-qwertykey-tastatura-mecanica-gaming-hotswap-2025_1eee355b-72ca-46e6-a458-751384d0595c_1800x.webp?v=1771799537"
   },
 
   {
-    id: "p32",
-    name: "GravaStar Mercury K1 Clavier Gamer sans Fil en Aluminium, Noir Dégradé",
-    category: "Claviers",
-    price: 91.99,
-    image: "https://m.media-amazon.com/images/I/6144lt2l5JL._AC_SL1200_.jpg"
+    id:"p32",
+    name:"GravaStar Mercury K1 Clavier Gamer sans Fil en Aluminium, Noir Dégradé",
+    category:"Claviers",
+    price:91.99,
+    image:"https://m.media-amazon.com/images/I/6144lt2l5JL._AC_SL1200_.jpg"
   },
 
   {
-    id: "p33",
-    name: "ATTACK SHARK R11 Ultra, fibre de carbone, 8000Hz, 49g, 42000 DPI",
-    category: "Souris",
-    price: 26.99,
-    image: "https://m.media-amazon.com/images/I/71bMz15SqcL._AC_SL1500_.jpg"
+    id:"p33",
+    name:"ATTACK SHARK R11 Ultra, fibre de carbone, 8000Hz, 49g, 42000 DPI",
+    category:"Souris",
+    price:26.99,
+    image:"https://m.media-amazon.com/images/I/71bMz15SqcL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p34",
-    name: "HyperX QuadCast 2 – Microphone USB – RGB",
-    category: "Microphones",
-    price: 98.99,
-    image: "https://fr.hyperx.com/cdn/shop/files/hyperx_quadcast_2_872v1aa_main_1_2d47a555-f537-457b-9002-8b9e9010dc00.jpg?v=1763067608"
+    id:"p34",
+    name:"HyperX QuadCast 2 – Microphone USB – RGB",
+    category:"Microphones",
+    price:98.99,
+    image:"https://fr.hyperx.com/cdn/shop/files/hyperx_quadcast_2_872v1aa_main_1_2d47a555-f537-457b-9002-8b9e9010dc00.jpg?v=1763067608"
   },
 
   {
-    id: "p35",
-    name: "Shure SM7 dB",
-    category: "Microphones",
-    price: 121.99,
-    image: "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_57/573672/18492412_800.jpg"
+    id:"p35",
+    name:"Shure SM7 dB",
+    category:"Microphones",
+    price:121.99,
+    image:"https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_57/573672/18492412_800.jpg"
   },
 
   {
-    id: "p36",
-    name: "Razer Seiren V3 Chroma Noir",
-    category: "Microphones",
-    price: 13.99,
-    image: "https://media.ldlc.com/r1600/ld/products/00/06/13/25/LD0006132588.jpg"
+    id:"p36",
+    name:"Razer Seiren V3 Chroma Noir",
+    category:"Microphones",
+    price:13.99,
+    image:"https://media.ldlc.com/r1600/ld/products/00/06/13/25/LD0006132588.jpg"
   },
 
   {
-    id: "p37",
-    name: "Stairville LED Pixel Rail 40 RGB MKII",
-    category: "Éclairage RGB",
-    price: 18.90,
-    image: "https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_44/449739/14448905_800.jpg"
+    id:"p37",
+    name:"Stairville LED Pixel Rail 40 RGB MKII",
+    category:"Éclairage RGB",
+    price:18.90,
+    image:"https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_44/449739/14448905_800.jpg"
   },
 
   {
-    id: "p38",
-    name: "Govee LED Strip Light RGBIC Wi-Fi + Bluetooth 5m Matter",
-    category: "Éclairage RGB",
-    price: 8,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/ab/7a/9d/27097771/1520-2/tsp20260429155350/Ruban-LED-Govee-LED-Strip-Light-RGBIC-Wi-Fi-avec-BT-5M-Matter.jpg"
+    id:"p38",
+    name:"Govee LED Strip Light RGBIC Wi-Fi + Bluetooth 5m Matter",
+    category:"Éclairage RGB",
+    price:8,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/ab/7a/9d/27097771/1520-2/tsp20260429155350/Ruban-LED-Govee-LED-Strip-Light-RGBIC-Wi-Fi-avec-BT-5M-Matter.jpg"
   },
 
   {
-    id: "p39",
-    name: "Lampe de plafond hexagone nid d’abeille LED 2.4m x 4.8m contour bleu",
-    category: "Éclairage RGB",
-    price: 91.10,
-    image: "https://www.discount-autosport.com/wp-content/webp-express/webp-images/uploads/2025/02/lampe-hexagone-plafond-led-4m80-contour-bleu-.jpg.webp"
+    id:"p39",
+    name:"Lampe de plafond hexagone nid d’abeille LED 2.4m x 4.8m contour bleu",
+    category:"Éclairage RGB",
+    price:91.10,
+    image:"https://www.discount-autosport.com/wp-content/webp-express/webp-images/uploads/2025/02/lampe-hexagone-plafond-led-4m80-contour-bleu-.jpg.webp"
   },
 
   {
-    id: "p40",
-    name: "GIGABYTE GeForce RTX 5050 WINDFORCE OC 8G",
-    category: "Cartes graphiques",
-    price: 147,
-    image: "https://m.media-amazon.com/images/I/41kmHFMFPOL._SL500_.jpg"
+    id:"p40",
+    name:"GIGABYTE GeForce RTX 5050 WINDFORCE OC 8G",
+    category:"Cartes graphiques",
+    price:147,
+    image:"https://m.media-amazon.com/images/I/41kmHFMFPOL._SL500_.jpg"
   },
 
   {
-    id: "p41",
-    name: "MSI GeForce RTX 3050 LP E 6G OC",
-    category: "Cartes graphiques",
-    price: 100,
-    image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTCe_rha_tAAHPWnQ8VV7GIvF-uSqUaEyU61TSnwgM4CK8g3-x_3Hq4wOgH36Ri63eAiWHsvhmRJHzVrUQR9-IwMx31WH0w"
+    id:"p41",
+    name:"MSI GeForce RTX 3050 LP E 6G OC",
+    category:"Cartes graphiques",
+    price:100,
+    image:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTCe_rha_tAAHPWnQ8VV7GIvF-uSqUaEyU61TSnwgM4CK8g3-x_3Hq4wOgH36Ri63eAiWHsvhmRJHzVrUQR9-IwMx31WH0w"
   },
 
   {
-    id: "p42",
-    name: "ASUS Dual Radeon RX 7600 EVO OC Edition 8GB GDDR6",
-    category: "Cartes graphiques",
-    price: 140,
-    image: "https://m.media-amazon.com/images/I/81QItJufypL._AC_SL1500_.jpg"
+    id:"p42",
+    name:"ASUS Dual Radeon RX 7600 EVO OC Edition 8GB GDDR6",
+    category:"Cartes graphiques",
+    price:140,
+    image:"https://m.media-amazon.com/images/I/81QItJufypL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p43",
-    name: "PC Gamer Fixe, Ryzen 7 5700G, Vega 8, 16G DDR4, 1T SSD",
-    category: "PC Gamer",
-    price: 650,
-    image: "https://m.media-amazon.com/images/I/81M3iU5S4QL._AC_SL1500_.jpg",
-    new: true
+    id:"p43",
+    name:"PC Gamer Fixe, Ryzen 7 5700G, Vega 8, 16G DDR4, 1T SSD",
+    category:"PC Gamer",
+    price:650,
+    image:"https://m.media-amazon.com/images/I/81M3iU5S4QL._AC_SL1500_.jpg",
+    new:true
   },
 
   {
-    id: "p44",
-    name: "Apple iPhone 14 Pro 6,1\" 5G Double SIM 128 Go Argent",
-    category: "Smartphones",
-    price: 400,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/07/3b/32/20069127/1540-1/tsp20260630131025/Apple-iPhone-14-Pro-6-1-5G-Double-SIM-128-Go-Argent.jpg"
+    id:"p44",
+    name:"Apple iPhone 14 Pro 6,1\" 5G Double SIM 128 Go Argent",
+    category:"Smartphones",
+    price:400,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/07/3b/32/20069127/1540-1/tsp20260630131025/Apple-iPhone-14-Pro-6-1-5G-Double-SIM-128-Go-Argent.jpg"
   },
 
   {
-    id: "p45",
-    name: "Apple iPhone 15 6,1\" 5G Double SIM 128 Go Noir",
-    category: "Smartphones",
-    price: 750,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/cd/f0/52/22212813/1540-1/tsp20260914144304/Apple-iPhone-15-6-1-5G-Double-SIM-128-Go-Noir.jpg"
+    id:"p45",
+    name:"Apple iPhone 15 6,1\" 5G Double SIM 128 Go Noir",
+    category:"Smartphones",
+    price:750,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/cd/f0/52/22212813/1540-1/tsp20260914144304/Apple-iPhone-15-6-1-5G-Double-SIM-128-Go-Noir.jpg"
   },
 
   {
-    id: "p46",
-    name: "Apple iPhone 16 6,1\" 5G 128 Go Double SIM Noir",
-    category: "Smartphones",
-    price: 949.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/fe/47/66/23480318/3756-1/tsp20260920085557/Apple-iPhone-16-6-1-5G-128-Go-Double-SIM-Noir.jpg"
+    id:"p46",
+    name:"Apple iPhone 16 6,1\" 5G 128 Go Double SIM Noir",
+    category:"Smartphones",
+    price:949.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/fe/47/66/23480318/3756-1/tsp20260920085557/Apple-iPhone-16-6-1-5G-128-Go-Double-SIM-Noir.jpg"
   },
 
   {
-    id: "p47",
-    name: "Apple iPhone 17 6,3\" 5G Double SIM 256 Go Noir",
-    category: "Smartphones",
-    price: 1000,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/19/86/b6/28739097/3756-1/tsp20260909180923/Apple-iPhone-17-6-3-5G-Double-SIM-256-Go-Noir.jpg"
+    id:"p47",
+    name:"Apple iPhone 17 6,3\" 5G Double SIM 256 Go Noir",
+    category:"Smartphones",
+    price:1000,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/19/86/b6/28739097/3756-1/tsp20260909180923/Apple-iPhone-17-6-3-5G-Double-SIM-256-Go-Noir.jpg"
   },
 
   {
-    id: "p48",
-    name: "Apple iPhone 18 Pro 6,3\" 5G Double SIM 256 Go Noir",
-    category: "Smartphones",
-    price: 1199.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/62/73/c7/29848418/1540-1/tsp20260920091102/Apple-iPhone-18-Pro-6-3-5G-Double-SIM-256-Go-Noir.jpg"
+    id:"p48",
+    name:"Apple iPhone 18 Pro 6,3\" 5G Double SIM 256 Go Noir",
+    category:"Smartphones",
+    price:1199.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/62/73/c7/29848418/1540-1/tsp20260920091102/Apple-iPhone-18-Pro-6-3-5G-Double-SIM-256-Go-Noir.jpg"
   },
 
   {
-    id: "p49",
-    name: "Samsung Galaxy S23 6,1\" 5G 8 Go RAM 256 Go Noir",
-    category: "Smartphones",
-    price: 230,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/0d/c0/44/21282829/1540-1/tsp20260829031739/Smartphone-Samsung-Galaxy-S23-6-1-Nano-SIM-5G-8-Go-RAM-256-Go-Noir.jpg"
+    id:"p49",
+    name:"Samsung Galaxy S23 6,1\" 5G 8 Go RAM 256 Go Noir",
+    category:"Smartphones",
+    price:230,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/0d/c0/44/21282829/1540-1/tsp20260829031739/Smartphone-Samsung-Galaxy-S23-6-1-Nano-SIM-5G-8-Go-RAM-256-Go-Noir.jpg"
   },
 
   {
-    id: "p50",
-    name: "Samsung Galaxy S24 6,2\" 5G 256 Go Noir",
-    category: "Smartphones",
-    price: 449.90,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/f6/5a/22738598/1540-1/tsp20260319135101/Smartphone-Samsung-Galaxy-S24-6-2-5G-Nano-SIM-256-Go-Noir.jpg"
+    id:"p50",
+    name:"Samsung Galaxy S24 6,2\" 5G 256 Go Noir",
+    category:"Smartphones",
+    price:449.90,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/f6/5a/22738598/1540-1/tsp20260319135101/Smartphone-Samsung-Galaxy-S24-6-2-5G-Nano-SIM-256-Go-Noir.jpg"
   },
 
   {
-    id: "p51",
-    name: "Samsung Galaxy S25 Edge 6,7\" 5G 256 Go Noir absolu Titane",
-    category: "Smartphones",
-    price: 469.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/42/7b/ab/28015426/1540-1/tsp20260909180103/Smartphone-Samsung-Galaxy-S25-Edge-6-7-5G-Nano-SIM-256-Go-Noir-absolu-Titane.jpg"
+    id:"p51",
+    name:"Samsung Galaxy S25 Edge 6,7\" 5G 256 Go Noir absolu Titane",
+    category:"Smartphones",
+    price:469.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/42/7b/ab/28015426/1540-1/tsp20260909180103/Smartphone-Samsung-Galaxy-S25-Edge-6-7-5G-Nano-SIM-256-Go-Noir-absolu-Titane.jpg"
   },
 
   {
-    id: "p52",
-    name: "Samsung Galaxy S26 6,3\" 5G 256 Go Noir + Buds4 Noir",
-    category: "Smartphones",
-    price: 650.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/e8/a2/c7/29860584/1540-1/tsp20260903144909/Pack-Smartphone-Samsung-Galaxy-S26-6-3-5G-Nano-SIM-256-Go-Noir-Buds4-Noir.jpg"
+    id:"p52",
+    name:"Samsung Galaxy S26 6,3\" 5G 256 Go Noir + Buds4 Noir",
+    category:"Smartphones",
+    price:650.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/e8/a2/c7/29860584/1540-1/tsp20260903144909/Pack-Smartphone-Samsung-Galaxy-S26-6-3-5G-Nano-SIM-256-Go-Noir-Buds4-Noir.jpg"
   },
 
   {
-    id: "p53",
-    name: "Google Pixel 8 6,2\" 5G Double SIM 128 Go Vert Sauge",
-    category: "Smartphones",
-    price: 200,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/37/bc/52/22199351/1540-1/tsp20260722081937/Smartphone-Google-Pixel-8-6-2-5G-Double-SIM-128-Go-Vert-Sauge.jpg"
+    id:"p53",
+    name:"Google Pixel 8 6,2\" 5G Double SIM 128 Go Vert Sauge",
+    category:"Smartphones",
+    price:200,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/37/bc/52/22199351/1540-1/tsp20260722081937/Smartphone-Google-Pixel-8-6-2-5G-Double-SIM-128-Go-Vert-Sauge.jpg"
   },
 
   {
-    id: "p54",
-    name: "Google Pixel 9 6,3\" 5G Double nano-SIM 128 Go Noir Obsidienne",
-    category: "Smartphones",
-    price: 400,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/f6/00/6d/23920886/1540-1/tsp20260914084700/Smartphone-Google-Pixel-9-6-3-5G-Double-nano-SIM-128-Go-Noir-Obsidienne.jpg"
+    id:"p54",
+    name:"Google Pixel 9 6,3\" 5G Double nano-SIM 128 Go Noir Obsidienne",
+    category:"Smartphones",
+    price:400,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDMFR/MDM/f6/00/6d/23920886/1540-1/tsp20260914084700/Smartphone-Google-Pixel-9-6-3-5G-Double-nano-SIM-128-Go-Noir-Obsidienne.jpg"
   },
 
   {
-    id: "p55",
-    name: "Google Pixel 10 6,3\" 5G Double SIM 256 Go Noir Volcanique",
-    category: "Smartphones",
-    price: 600,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/4a/5f/b3/28532554/1540-1/tsp20260717111851/Smartphone-Google-Pixel-10-6-3-5G-Double-SIM-256-Go-Noir-Volcanique.jpg"
+    id:"p55",
+    name:"Google Pixel 10 6,3\" 5G Double SIM 256 Go Noir Volcanique",
+    category:"Smartphones",
+    price:600,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/4a/5f/b3/28532554/1540-1/tsp20260717111851/Google-Pixel-10-6-3-5G-Double-SIM-256-Go-Noir-Volcanique.jpg"
   },
 
-  // ==========================================================
-  // NOUVEAUX PRODUITS
-  // ==========================================================
-
   {
-    id: "p56",
-    name: "Flashforge Adventurer 5M Pro",
-    category: "Imprimantes 3D",
-    price: 115,
-    image: "https://www.makershop.fr/cdn/shop/files/13458.jpg?v=1760745366&width=150"
+    id:"p56",
+    name:"Flashforge Adventurer 5M Pro",
+    category:"Imprimantes 3D",
+    price:115,
+    image:"https://www.makershop.fr/cdn/shop/files/13458.jpg?v=1760745366&width=150"
   },
 
   {
-    id: "p57",
-    name: "Elegoo Centauri 2",
-    category: "Imprimantes 3D",
-    price: 200,
-    image: "https://fr.elegoo.com/cdn/shop/files/C2-_-260811.jpg?crop=center&v=1786696280&width=345"
+    id:"p57",
+    name:"Elegoo Centauri 2",
+    category:"Imprimantes 3D",
+    price:200,
+    image:"https://fr.elegoo.com/cdn/shop/files/C2-_-260811.jpg?crop=center&v=1786696280&width=345"
   },
 
   {
-    id: "p58",
-    name: "Anycubic Photon P1 Max",
-    category: "Imprimantes 3D",
-    price: 600,
-    image: "https://fr.anycubic.com/cdn/shop/files/P1M_8bd4d344-b751-4497-a535-4e647ecef572.jpg?v=1784100048&width=150"
+    id:"p58",
+    name:"Anycubic Photon P1 Max",
+    category:"Imprimantes 3D",
+    price:600,
+    image:"https://fr.anycubic.com/cdn/shop/files/P1M_8bd4d344-b751-4497-a535-4e647ecef572.jpg?v=1784100048&width=150"
   },
 
   {
-    id: "p59",
-    name: "GTA VI Key PlayStation",
-    category: "Logiciels & licences",
-    image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ9VsG_IxAanmrCSqCyACtuyCqCD5rwiQ3P3Iylexch3XnCT4sevDBCz-vnqlVCBvZroOpYIX9T0Flc8EzGSZuyPMibCcQm",
-    price: 0
+    id:"p59",
+    name:"GTA VI Key PlayStation",
+    category:"Logiciels & licences",
+    price:69.99,
+    image:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ9VsG_IxAanmrCSqCyACtuyCqCD5rwiQ3P3Iylexch3XnCT4sevDBCz-vnqlVCBvZroOpYIX9T0Flc8EzGSZuyPMibCcQm"
   },
 
   {
-    id: "p60",
-    name: "Microsoft Windows 11 Pro Key",
-    category: "Logiciels & licences",
-    image: "https://imgproxy.eneba.games/0A9PW8DP7_YSTA-WUru4IVJnFXsKikaoYM5RHNb3nHQ/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0/cy5lbmViYS5nYW1l/cy9wcm9kdWN0cy93/YUFhcnZicFhzSm8y/NjZSZ3hKSVpuYjVX/ZzRkVWY3a3YyUDQx/bm1nakJjLnBuZw",
-    price: 0
+    id:"p60",
+    name:"Microsoft Windows 11 Pro Key",
+    category:"Logiciels & licences",
+    price:24.99,
+    image:"https://imgproxy.eneba.games/0A9PW8DP7_YSTA-WUru4IVJnFXsKikaoYM5RHNb3nHQ/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0/cy5lbmViYS5nYW1l/cy9wcm9kdWN0cy93/YUFhcnZicFhzSm8y/NjZSZ3hKSVpuYjVX/ZzRkVWY3a3YyUDQx/bm1nakJjLnBuZw"
   },
 
   {
-    id: "p61",
-    name: "AsiaHorse Aurora-CO Gaines de Câble ARGB",
-    category: "Accessoires composants PC",
-    price: 15.99,
-    image: "https://m.media-amazon.com/images/I/71NF0H-6FXL._SL1500_.jpg"
+    id:"p61",
+    name:"AsiaHorse Aurora-CO Gaines de Câble ARGB",
+    category:"Accessoires composants PC",
+    price:15.99,
+    image:"https://m.media-amazon.com/images/I/71NF0H-6FXL._SL1500_.jpg"
   },
 
   {
-    id: "p62",
-    name: "Câble vidéo Accsup HDMI 2.0 4K UHD avec Ethernet 5 m Noir",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 12.99,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/db/90/4a/21663963/1540-1/tsp20260909104107/Cable-video-Accsup-HDMI-2-0-4K-UHD-avec-Ethernet-5-m-Noir.jpg"
+    id:"p62",
+    name:"Câble vidéo Accsup HDMI 2.0 4K UHD avec Ethernet 5 m Noir",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:12.99,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/db/90/4a/21663963/1540-1/tsp20260909104107/Cable-video-Accsup-HDMI-2-0-4K-UHD-avec-Ethernet-5-m-Noir.jpg"
   },
 
   {
-    id: "p63",
-    name: "Cable Relier ecran pour pc Certifié Câble DP vers DP 10K 240Hz",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 0,
-    image: "https://m.media-amazon.com/images/I/71BeNtX7nuL._SL1500_.jpg"
+    id:"p63",
+    name:"Cable Relier ecran pour pc Certifié Câble DP vers DP 10K 240Hz",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:19.99,
+    image:"https://m.media-amazon.com/images/I/71BeNtX7nuL._SL1500_.jpg"
   },
 
   {
-    id: "p64",
-    name: "Câble USB-C ESSENTIELB vers USB-C 1M Noir",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 1,
-    image: "https://boulanger.scene7.com/is/image/Boulanger/3497674179939_h_f_l_2?wid=2140&hei=2140&resMode=sharp2&op_usm=1.75,0.3,2,0&fmt=png-alpha"
+    id:"p64",
+    name:"Câble USB-C ESSENTIELB vers USB-C 1M Noir",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:1,
+    image:"https://boulanger.scene7.com/is/image/Boulanger/3497674179939_h_f_l_2?wid=2140&hei=2140&resMode=sharp2&op_usm=1.75,0.3,2,0&fmt=png-alpha"
   },
 
   {
-    id: "p65",
-    name: "Cables USB Accsup CABLE USB-C VERS USB-A 1M NOIR",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 1,
-    image: ""
+    id:"p65",
+    name:"Cables USB Accsup CABLE USB-C VERS USB-A 1M NOIR",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:1,
+    image:"https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRTbZBP9B2ZFpEsUD0AvNVwSq0_B-6_0GsDu3IetIMN8RMZJ2lyTDuYx7bb9GPIQjXhISHbaR4aEk-SzagBrynePs6wAuNpNgtJ3t4ZQj0FS9_oBKzFpPBG7Q"
   },
 
   {
-    id: "p66",
-    name: "Câble USB-C vers Lightning pour Apple iPhone/iPad/iPod 1m Blanc",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 1,
-    image: "https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/b8/07/17283238/1540-1/tsp20260617130730/Cable-USB-C-vers-Lightning-pour-Apple-iPhone-iPad-iPod-1m-Blanc.jpg"
+    id:"p66",
+    name:"Câble USB-C vers Lightning pour Apple iPhone/iPad/iPod 1m Blanc",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:1,
+    image:"https://static.fnac-static.com/multimedia/Images/FR/MDM/a6/b8/07/17283238/1540-1/tsp20260617130730/Cable-USB-C-vers-Lightning-pour-Apple-iPhone-iPad-iPod-1m-Blanc.jpg"
   },
 
   {
-    id: "p67",
-    name: "BSTOEM pour Apple Watch Chargeur, Station de Charge USB C Magnétique 1M",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 2.99,
-    image: "https://m.media-amazon.com/images/I/61rGkIZqqCL._SL1500_.jpg"
+    id:"p67",
+    name:"BSTOEM pour Apple Watch Chargeur, Station de Charge USB C Magnétique 1M",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:2.99,
+    image:"https://m.media-amazon.com/images/I/61rGkIZqqCL._SL1500_.jpg"
   },
 
   {
-    id: "p68",
-    name: "StarTech Cordon d'alimentation PC de 1m - CEE 7/7 à C13",
-    category: "Adaptateurs / câbles / chargeurs",
-    price: 4.50,
-    image: "https://m.media-amazon.com/images/I/81b1fyIWcOL._AC_SL1500_.jpg"
+    id:"p68",
+    name:"StarTech Cordon d'alimentation PC de 1m - CEE 7/7 à C13",
+    category:"Adaptateurs / câbles / chargeurs",
+    price:4.50,
+    image:"https://m.media-amazon.com/images/I/81b1fyIWcOL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p69",
-    name: "Unicavu Webcam PC 2K 30 FPS Full HD 1080P",
-    category: "Caméras & webcams",
-    price: 10,
-    image: "https://m.media-amazon.com/images/I/61CJsbKfonL._AC_SL1500_.jpg"
+    id:"p69",
+    name:"Unicavu Webcam PC 2K 30 FPS Full HD 1080P",
+    category:"Caméras & webcams",
+    price:10,
+    image:"https://m.media-amazon.com/images/I/61CJsbKfonL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p70",
-    name: "eMeet Nova 4K Webcam 4K Ultra HD avec 2 Microphones",
-    category: "Caméras & webcams",
-    price: 23.99,
-    image: "https://m.media-amazon.com/images/I/61bCeQBjUwL._AC_SL1500_.jpg"
+    id:"p70",
+    name:"eMeet Nova 4K Webcam 4K Ultra HD avec 2 Microphones",
+    category:"Caméras & webcams",
+    price:23.99,
+    image:"https://m.media-amazon.com/images/I/61bCeQBjUwL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p71",
-    name: "Quntis Lampe Écran Pc RGB, Monitor Light Bar IM 40 cm Noir",
-    category: "Barres lumineuses pour écran",
-    price: 8.99,
-    image: "https://m.media-amazon.com/images/I/71ESgk4ETPL._AC_SL1500_.jpg"
+    id:"p71",
+    name:"Quntis Lampe Écran Pc RGB, Monitor Light Bar IM 40 cm Noir",
+    category:"Barres lumineuses pour écran",
+    price:8.99,
+    image:"https://m.media-amazon.com/images/I/71ESgk4ETPL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p72",
-    name: "TONOR Micro Cardioïde Dynamique USB/XLR TD510+",
-    category: "Microphones",
-    price: 20.99,
-    image: "https://m.media-amazon.com/images/I/61EZnm+ijZL._AC_SL1500_.jpg"
+    id:"p72",
+    name:"TONOR Micro Cardioïde Dynamique USB/XLR TD510+",
+    category:"Microphones",
+    price:20.99,
+    image:"https://m.media-amazon.com/images/I/61EZnm+ijZL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p73",
-    name: "BONTEC Bras Ecran PC à Ressort à Gaz, 13-32 Pouces",
-    category: "Supports écrans / écrans / TV",
-    price: 16,
-    image: "https://m.media-amazon.com/images/I/61gjjZxKbeL._AC_SL1500_.jpg"
+    id:"p73",
+    name:"BONTEC Bras Ecran PC à Ressort à Gaz, 13-32 Pouces",
+    category:"Supports écrans / écrans / TV",
+    price:16,
+    image:"https://m.media-amazon.com/images/I/61gjjZxKbeL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p74",
-    name: "BONTEC Support Ecran PC 2 Ecran Articulé à Ressort à Gaz, 13-32 Pouces",
-    category: "Supports écrans / écrans / TV",
-    price: 0,
-    image: "https://m.media-amazon.com/images/I/71kZjwcU4SL._AC_SL1500_.jpg"
+    id:"p74",
+    name:"BONTEC Support Ecran PC 2 Ecran Articulé à Ressort à Gaz, 13-32 Pouces",
+    category:"Supports écrans / écrans / TV",
+    price:29.99,
+    image:"https://m.media-amazon.com/images/I/71kZjwcU4SL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p75",
-    name: "BONTEC Bras Ecran PC Mural à Ressort à Gaz, 13-42 Pouces, Charge 38kg",
-    category: "Supports écrans / écrans / TV",
-    price: 0,
-    image: "https://m.media-amazon.com/images/I/71-oseIdQXL._AC_SL1500_.jpg"
+    id:"p75",
+    name:"BONTEC Bras Ecran PC Mural à Ressort à Gaz, 13-42 Pouces, Charge 38kg",
+    category:"Supports écrans / écrans / TV",
+    price:34.99,
+    image:"https://m.media-amazon.com/images/I/71-oseIdQXL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p76",
-    name: "KTC Écran PC Gamer Incurvé 24 Pouces FHD 240 Hz (VESA 100×100 mm)",
-    category: "Supports écrans / écrans / TV",
-    price: 80,
-    image: "https://m.media-amazon.com/images/I/71wUlFXcaZL._AC_SL1500_.jpg"
+    id:"p76",
+    name:"KTC Écran PC Gamer Incurvé 24 Pouces FHD 240 Hz",
+    category:"Supports écrans / écrans / TV",
+    price:80,
+    image:"https://m.media-amazon.com/images/I/71wUlFXcaZL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p77",
-    name: "KTC Écran PC Gamer Incurvé 27 Pouces QHD 180Hz (OC 185Hz) H27S5 (VESA 100×100 mm)",
-    category: "Supports écrans / écrans / TV",
-    price: 110,
-    image: "https://m.media-amazon.com/images/I/61Rehn5YTWL._AC_SL1000_.jpg"
+    id:"p77",
+    name:"KTC Écran PC Gamer Incurvé 27 Pouces QHD 180Hz",
+    category:"Supports écrans / écrans / TV",
+    price:110,
+    image:"https://m.media-amazon.com/images/I/61Rehn5YTWL._AC_SL1000_.jpg"
   },
 
   {
-    id: "p78",
-    name: "HKC Écran PC Gaming 34 Pouces Incurvé UWQHD 120 Hz HDR400 (VESA 100×100 mm)",
-    category: "Supports écrans / écrans / TV",
-    price: 170,
-    image: "https://m.media-amazon.com/images/I/71useoNrGEL._AC_SL1500_.jpg"
+    id:"p78",
+    name:"HKC Écran PC Gaming 34 Pouces Incurvé UWQHD 120 Hz HDR400",
+    category:"Supports écrans / écrans / TV",
+    price:170,
+    image:"https://m.media-amazon.com/images/I/71useoNrGEL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p79",
-    name: "HKC 27 Pouces Ecran Gaming 4K Dual Mode UHD 160Hz / FHD 320Hz G27H7P (VESA 100×100 mm)",
-    category: "Supports écrans / écrans / TV",
-    price: 140,
-    image: "https://m.media-amazon.com/images/I/81MjOWRE0SL._AC_SL1500_.jpg"
+    id:"p79",
+    name:"HKC 27 Pouces Ecran Gaming 4K Dual Mode UHD 160Hz / FHD 320Hz G27H7P",
+    category:"Supports écrans / écrans / TV",
+    price:140,
+    image:"https://m.media-amazon.com/images/I/81MjOWRE0SL._AC_SL1500_.jpg"
   },
 
   {
-    id: "p80",
-    name: "XIAOMI TV F 65 Pouces 2025 4K UHD Smart TV",
-    category: "Supports écrans / écrans / TV",
-    price: 249.99,
-    image: "https://m.media-amazon.com/images/I/61Jk8xxkLZL._AC_SL1000_.jpg"
+    id:"p80",
+    name:"XIAOMI TV F 65 Pouces 2025 4K UHD Smart TV",
+    category:"Supports écrans / écrans / TV",
+    price:249.99,
+    image:"https://m.media-amazon.com/images/I/61Jk8xxkLZL._AC_SL1000_.jpg"
   },
 
   {
-    id: "p81",
-    name: "Xbox Manette sans fil",
-    category: "Manettes & consoles",
-    price: 59.99,
-    image: "https://m.media-amazon.com/images/I/71fQ5g9X8PL._AC_SL1500_.jpg",
-    options: {
-      label: "Couleur",
-      required: true,
-      values: [
+    id:"p81",
+    name:"Xbox Manette sans fil",
+    category:"Manettes & consoles",
+    price:59.99,
+    image:"https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ6wIhtxNP2QaG-jop_9zEc3ocgOoyylR8yGQtaOLB03vo8XmDPnxXQ28G-mPSoQrkAa8KKzGM2epP28dnD111Wswi0WwK5SzwB6lXHJD3HehOVs4qWa_hJ",
+    options:{
+      "Couleur":[
         "Rose",
         "Bleu",
         "Noir",
@@ -777,15 +731,13 @@ const products = [
   },
 
   {
-    id: "p82",
-    name: "PlayStation 5 avec 1 Manette Sans Fil DualSense",
-    category: "Manettes & consoles",
-    price: 320,
-    image: "https://m.media-amazon.com/images/I/61h7VjYt-fL._AC_SL1500_.jpg",
-    options: {
-      label: "Console",
-      required: true,
-      values: [
+    id:"p82",
+    name:"PlayStation 5 avec 1 Manette Sans Fil DualSense",
+    category:"Manettes & consoles",
+    price:320,
+    image:"https://m.media-amazon.com/images/I/61h7VjYt-fL._AC_SL1500_.jpg",
+    options:{
+      "Console":[
         "PS5 avec lecteur",
         "PS5 Pro"
       ]
@@ -793,43 +745,22 @@ const products = [
   },
 
   {
-    id: "p83",
-    name: "Xbox Series X - 1TB Digital Edition avec 1 manette sans fil",
-    category: "Manettes & consoles",
-    price: 599.99,
-    image: "https://m.media-amazon.com/images/I/51OVjV4-GqL._AC_SL1500_.jpg"
+    id:"p83",
+    name:"Xbox Series X - 1TB Digital Edition avec 1 manette sans fil",
+    category:"Manettes & consoles",
+    price:599.99,
+    image:"https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTcusD9yD4CjvQ0KMaGfy7gks_86ZGPuTzO_g1WC408gKBPciVCGw0ZWdXs1XwR0ShylmqAB0NldAlBiHbyg-vFex0zI51YOExZsztGXboUXrL31Z5qHNHDew"
   },
 
   {
-    id: "p84",
-    name: "Xbox Series S - All Digital Gaming Console - 512GB SSD",
-    category: "Manettes & consoles",
-    price: 500,
-    image: "https://m.media-amazon.com/images/I/61PI59RfWvL._AC_SX425_.jpg"
+    id:"p84",
+    name:"Xbox Series S - All Digital Gaming Console - 512GB SSD",
+    category:"Manettes & consoles",
+    price:500,
+    image:"https://m.media-amazon.com/images/I/61PI59RfWvL._AC_SX425_.jpg"
   }
 
 ];
-
-
-// ============================================================
-// NOTES AUTOMATIQUES
-// ============================================================
-
-products.forEach((product, index) => {
-
-  product.rating =
-    Number(
-      (
-        4.2 +
-        ((index * 17) % 81) / 100
-      ).toFixed(1)
-    );
-
-  product.reviewCount =
-    1248 +
-    ((index * 137) % 2028);
-
-});
 
 
 // ============================================================
@@ -837,372 +768,221 @@ products.forEach((product, index) => {
 // ============================================================
 
 let currentUser = null;
-let selectedCategory = "Tous";
-let searchValue = "";
-let sortValue = "default";
-let cart = [];
-let favorites = [];
-let reviewsCache = {};
 
-try {
+let cart = loadStorage(
+  "nova_cart",
+  []
+);
 
-  cart =
-    JSON.parse(
-      localStorage.getItem("novaCart") || "[]"
-    );
+let favorites = loadStorage(
+  "nova_favorites",
+  []
+);
 
-  if (!Array.isArray(cart)) {
-    cart = [];
-  }
+let state = {
+  search:"",
+  category:"Toutes",
+  sort:"default"
+};
 
-} catch {
 
-  cart = [];
+// ============================================================
+// DOM
+// ============================================================
 
-}
+const $ = id =>
+  document.getElementById(id);
 
-try {
+const productGrid =
+  $("productGrid");
 
-  favorites =
-    JSON.parse(
-      localStorage.getItem("novaFavorites") || "[]"
-    );
+const productCount =
+  $("productCount");
 
-  if (!Array.isArray(favorites)) {
-    favorites = [];
-  }
+const categories =
+  $("categories");
 
-} catch {
+const searchInput =
+  $("searchInput");
 
-  favorites = [];
+const sortSelect =
+  $("sortSelect");
 
-}
+const cartBtn =
+  $("cartBtn");
+
+const heroCartBtn =
+  $("heroCartBtn");
+
+const cartDrawer =
+  $("cartDrawer");
+
+const cartItems =
+  $("cartItems");
+
+const cartTotal =
+  $("cartTotal");
+
+const cartBadge =
+  $("cartBadge");
+
+const checkoutBtn =
+  $("checkoutBtn");
+
+const overlay =
+  $("overlay");
+
+const modal =
+  $("modalLayer");
+
+const modalTitle =
+  $("modalTitle");
+
+const modalContent =
+  $("modalContent");
+
+const modalClose =
+  $("modalClose");
+
+const closeCartButton =
+  $("closeCart");
+
+const accountBtn =
+  $("accountBtn");
+
+const ordersBtn =
+  $("ordersBtn");
+
+const adminBtn =
+  $("adminBtn");
+
+const settingsBtn =
+  $("settingsBtn");
+
+const toastContainer =
+  $("toast");
 
 
 // ============================================================
 // UTILITAIRES
 // ============================================================
 
-function money(value) {
+function loadStorage(key, fallback){
 
-  return Number(value || 0).toLocaleString(
+  try{
+
+    const raw =
+      localStorage.getItem(key);
+
+    if(!raw){
+      return fallback;
+    }
+
+    const parsed =
+      JSON.parse(raw);
+
+    return parsed;
+
+  }catch{
+
+    return fallback;
+
+  }
+
+}
+
+
+function saveStorage(key,value){
+
+  try{
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+
+  }catch(error){
+
+    console.error(
+      "LocalStorage error:",
+      error
+    );
+
+  }
+
+}
+
+
+function saveCart(){
+
+  saveStorage(
+    "nova_cart",
+    cart
+  );
+
+}
+
+
+function saveFavorites(){
+
+  saveStorage(
+    "nova_favorites",
+    favorites
+  );
+
+}
+
+
+function money(value){
+
+  const number =
+    Number(value) || 0;
+
+  return number.toLocaleString(
     "fr-FR",
     {
-      style: "currency",
-      currency: "EUR"
+      style:"currency",
+      currency:"EUR"
     }
   );
 
 }
 
 
-function escapeHTML(value) {
+function escapeHTML(value){
 
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(
+    value ?? ""
+  )
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
 
-function escapeAttr(value) {
+function escapeAttr(value){
 
   return escapeHTML(value);
 
 }
 
 
-function getProduct(id) {
+function getProduct(id){
 
   return products.find(
-    product => product.id === id
+    product =>
+      product.id === id
   );
 
 }
 
 
-function saveCart() {
+function toast(message,type="info"){
 
-  localStorage.setItem(
-    "novaCart",
-    JSON.stringify(cart)
-  );
-
-}
-
-
-function saveFavorites() {
-
-  localStorage.setItem(
-    "novaFavorites",
-    JSON.stringify(favorites)
-  );
-
-}
-
-
-function getCartCount() {
-
-  return cart.reduce(
-    (total, item) =>
-      total + Number(item.quantity || 0),
-    0
-  );
-
-}
-
-
-function getCartSubtotal() {
-
-  return cart.reduce(
-    (total, item) => {
-
-      const product =
-        getProduct(item.id);
-
-      if (!product) {
-        return total;
-      }
-
-      return (
-        total +
-        product.price *
-        Number(item.quantity || 1)
-      );
-
-    },
-    0
-  );
-
-}
-
-
-// ============================================================
-// VARIANTES / OPTIONS
-// ============================================================
-
-function hasRequiredOption(product) {
-
-  return !!(
-    product?.options?.required &&
-    Array.isArray(product.options.values) &&
-    product.options.values.length
-  );
-
-}
-
-
-function getCartProductName(item) {
-
-  const product =
-    getProduct(item.id);
-
-  const name =
-    product?.name ||
-    item.name ||
-    "Produit";
-
-  if (item.option) {
-    return `${name} (${item.option})`;
-  }
-
-  return name;
-
-}
-
-
-function findCartItem(id, option = "") {
-
-  return cart.find(
-    item =>
-      item.id === id &&
-      (item.option || "") === option
-  );
-
-}
-
-
-function showProductOptions(product, containerId = "productOptions") {
-
-  if (!hasRequiredOption(product)) {
-    return "";
-  }
-
-  return `
-    <div
-      id="${escapeAttr(containerId)}"
-      style="
-        margin:15px 0;
-        padding:14px;
-        border-radius:14px;
-        background:rgba(255,255,255,.045);
-      "
-    >
-
-      <strong style="
-        display:block;
-        margin-bottom:10px;
-      ">
-        ${escapeHTML(product.options.label)}
-      </strong>
-
-      <div style="
-        display:flex;
-        flex-wrap:wrap;
-        gap:8px;
-      ">
-
-        ${
-          product.options.values.map(
-            value => `
-              <button
-                type="button"
-                class="view-btn product-option"
-                data-option="${escapeAttr(value)}"
-                style="
-                  flex:1 1 110px;
-                  min-width:100px;
-                "
-              >
-                ${escapeHTML(value)}
-              </button>
-            `
-          ).join("")
-        }
-
-      </div>
-
-      <div
-        id="${escapeAttr(containerId)}Error"
-        style="
-          display:none;
-          color:#ff7777;
-          margin-top:10px;
-          font-size:13px;
-        "
-      >
-        Choisis une option avant d'ajouter au panier.
-      </div>
-
-      <input
-        type="hidden"
-        id="${escapeAttr(containerId)}Value"
-        value=""
-      >
-
-    </div>
-  `;
-
-}
-
-
-function setupProductOptions(containerId = "productOptions") {
-
-  const container =
-    $(containerId);
-
-  if (!container) {
-    return;
-  }
-
-  const input =
-    $(`${containerId}Value`);
-
-  const error =
-    $(`${containerId}Error`);
-
-  container
-    .querySelectorAll(".product-option")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          container
-            .querySelectorAll(".product-option")
-            .forEach(item => {
-
-              item.classList.remove(
-                "selected"
-              );
-
-              item.style.border =
-                "";
-
-            });
-
-          button.classList.add(
-            "selected"
-          );
-
-          button.style.border =
-            "2px solid var(--accent,#2d8cff)";
-
-          if (input) {
-            input.value =
-              button.dataset.option || "";
-          }
-
-          if (error) {
-            error.style.display =
-              "none";
-          }
-
-        }
-      );
-
-    });
-
-}
-
-
-function getSelectedProductOption(containerId = "productOptions") {
-
-  return (
-    $(`${containerId}Value`)?.value.trim() ||
-    ""
-  );
-
-}
-
-
-// ============================================================
-// ÉTOILES
-// ============================================================
-
-function getRatingStars(rating) {
-
-  const value =
-    Math.max(
-      1,
-      Math.min(
-        5,
-        Number(rating || 4.2)
-      )
-    );
-
-  const full =
-    Math.round(value);
-
-  return (
-    "★".repeat(full) +
-    "☆".repeat(5 - full)
-  );
-
-}
-
-
-// ============================================================
-// TOAST
-// ============================================================
-
-function toast(message, type = "info") {
-
-  if (!toastContainer) {
+  if(!toastContainer){
     return;
   }
 
@@ -1210,1470 +990,43 @@ function toast(message, type = "info") {
     document.createElement("div");
 
   item.className =
-    `toast-item toast-${type}`;
+    `toast-item ${type}`;
 
-  item.textContent =
-    message;
+  item.innerHTML = `
+    <span>
+      ${escapeHTML(message)}
+    </span>
 
-  item.style.cssText = `
-    padding:12px 16px;
-    margin-top:10px;
-    border-radius:12px;
-    background:#111827;
-    color:white;
-    border:1px solid rgba(255,255,255,.1);
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
-    animation:novaToastIn .2s ease;
+    <button
+      type="button"
+      aria-label="Fermer"
+    >
+      ×
+    </button>
   `;
+
+  item
+    .querySelector("button")
+    ?.addEventListener(
+      "click",
+      () => item.remove()
+    );
 
   toastContainer.appendChild(item);
 
-  setTimeout(() => {
-
-    item.style.opacity = "0";
-
-    setTimeout(() => {
-      item.remove();
-    }, 250);
-
-  }, 2800);
-
-}
-
-
-// ============================================================
-// MODAL
-// ============================================================
-
-function showModal(title, content) {
-
-  if (!modal) {
-    return;
-  }
-
-  if (modalTitle) {
-    modalTitle.textContent =
-      title;
-  }
-
-  if (modalContent) {
-    modalContent.innerHTML =
-      content;
-  }
-
-  modal.style.display =
-    "flex";
-
-  document.body.style.overflow =
-    "hidden";
-
-}
-
-
-function closeModal() {
-
-  if (!modal) {
-    return;
-  }
-
-  modal.style.display =
-    "none";
-
-  document.body.style.overflow =
-    "";
-
-}
-
-
-modalClose?.addEventListener(
-  "click",
-  closeModal
-);
-
-
-// ============================================================
-// PANIER
-// ============================================================
-
-function openCart() {
-
-  if (!cartDrawer) {
-    return;
-  }
-
-  renderCart();
-
-  cartDrawer.classList.add("open");
-
-  cartOverlay?.classList.add("open");
-
-}
-
-
-function closeCart() {
-
-  cartDrawer?.classList.remove("open");
-  cartOverlay?.classList.remove("open");
-
-}
-
-
-cartBtn?.addEventListener(
-  "click",
-  openCart
-);
-
-heroCartBtn?.addEventListener(
-  "click",
-  openCart
-);
-
-cartClose?.addEventListener(
-  "click",
-  closeCart
-);
-
-cartOverlay?.addEventListener(
-  "click",
-  closeCart
-);
-
-
-// ============================================================
-// AJOUT PANIER
-// ============================================================
-
-function addToCart(id, option = null) {
-
-  const product =
-    getProduct(id);
-
-  if (!product) {
-    return false;
-  }
-
-  if (hasRequiredOption(product) && !option) {
-
-    openProduct(id);
-
-    toast(
-      `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
-      "error"
-    );
-
-    return false;
-  }
-
-  const safeOption =
-    option || "";
-
-  const existing =
-    findCartItem(
-      id,
-      safeOption
-    );
-
-  if (existing) {
-
-    existing.quantity =
-      Number(existing.quantity || 0) + 1;
-
-  } else {
-
-    cart.push({
-      id,
-      option: safeOption,
-      quantity: 1
-    });
-
-  }
-
-  saveCart();
-  renderCart();
-
-  toast(
-    `${getCartProductName({
-      id,
-      option: safeOption
-    })} ajouté au panier 🛒`,
-    "success"
+  setTimeout(
+    () => item.remove(),
+    4500
   );
 
-  return true;
-
-}
-
-
-function removeFromCart(id, option = "") {
-
-  cart =
-    cart.filter(
-      item =>
-        !(
-          item.id === id &&
-          (item.option || "") === option
-        )
-    );
-
-  saveCart();
-  renderCart();
-
-}
-
-
-function changeCartQuantity(
-  id,
-  quantity,
-  option = ""
-) {
-
-  const item =
-    findCartItem(
-      id,
-      option
-    );
-
-  if (!item) {
-    return;
-  }
-
-  item.quantity =
-    Math.max(
-      1,
-      Number(quantity || 1)
-    );
-
-  saveCart();
-  renderCart();
-
 }
 
 
 // ============================================================
-// AFFICHAGE PANIER
+// FIREBASE ERREURS
 // ============================================================
 
-function renderCart() {
-
-  if (cartBadge) {
-    cartBadge.textContent =
-      getCartCount();
-  }
-
-  if (!cartItems) {
-    return;
-  }
-
-  if (!cart.length) {
-
-    cartItems.innerHTML = `
-      <div style="
-        text-align:center;
-        padding:30px 15px;
-        opacity:.75;
-      ">
-
-        <div style="font-size:45px;">
-          🛒
-        </div>
-
-        <h3>
-          Ton panier est vide
-        </h3>
-
-        <p>
-          Ajoute des produits pour commencer.
-        </p>
-
-      </div>
-    `;
-
-    cartTotal &&
-      (cartTotal.textContent =
-        money(0));
-
-    checkoutBtn &&
-      (checkoutBtn.disabled = true);
-
-    return;
-  }
-
-  cartItems.innerHTML =
-    cart.map(item => {
-
-      const product =
-        getProduct(item.id);
-
-      if (!product) {
-        return "";
-      }
-
-      const quantity =
-        Number(item.quantity || 1);
-
-      const optionText =
-        item.option
-          ? ` (${escapeHTML(item.option)})`
-          : "";
-
-      return `
-        <div style="
-          display:grid;
-          grid-template-columns:70px 1fr;
-          gap:12px;
-          padding:12px 0;
-          border-bottom:1px solid rgba(255,255,255,.08);
-        ">
-
-          <div style="
-            width:70px;
-            height:60px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-            border-radius:10px;
-            background:rgba(255,255,255,.04);
-          ">
-
-            <img
-              src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
-              alt="${escapeHTML(product.name)}"
-              style="
-                width:100%;
-                height:100%;
-                object-fit:contain;
-                display:block;
-              "
-              onerror="
-                this.onerror=null;
-                this.src='${FALLBACK_IMAGE}';
-              "
-            >
-
-          </div>
-
-          <div>
-
-            <strong style="
-              display:block;
-              font-size:14px;
-              line-height:1.3;
-            ">
-              ${escapeHTML(product.name)}
-              ${optionText}
-            </strong>
-
-            <div style="
-              margin-top:5px;
-              color:var(--accent,#2d8cff);
-              font-weight:700;
-            ">
-              ${money(product.price)}
-            </div>
-
-            <div style="
-              display:flex;
-              align-items:center;
-              gap:7px;
-              margin-top:8px;
-            ">
-
-              <button
-                type="button"
-                class="view-btn cart-minus"
-                data-id="${escapeAttr(item.id)}"
-                data-option="${escapeAttr(item.option || "")}"
-              >
-                −
-              </button>
-
-              <strong>
-                ${quantity}
-              </strong>
-
-              <button
-                type="button"
-                class="view-btn cart-plus"
-                data-id="${escapeAttr(item.id)}"
-                data-option="${escapeAttr(item.option || "")}"
-              >
-                +
-              </button>
-
-              <button
-                type="button"
-                class="view-btn cart-remove"
-                data-id="${escapeAttr(item.id)}"
-                data-option="${escapeAttr(item.option || "")}"
-                style="margin-left:auto;"
-              >
-                Supprimer
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-  if (cartTotal) {
-    cartTotal.textContent =
-      money(getCartSubtotal());
-  }
-
-  if (checkoutBtn) {
-    checkoutBtn.disabled =
-      false;
-  }
-
-  cartItems
-    .querySelectorAll(".cart-minus")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const id =
-            button.dataset.id;
-
-          const option =
-            button.dataset.option || "";
-
-          const item =
-            findCartItem(
-              id,
-              option
-            );
-
-          if (!item) {
-            return;
-          }
-
-          if (
-            Number(item.quantity) <= 1
-          ) {
-
-            removeFromCart(
-              id,
-              option
-            );
-
-          } else {
-
-            changeCartQuantity(
-              id,
-              Number(item.quantity) - 1,
-              option
-            );
-
-          }
-
-        }
-      );
-
-    });
-
-  cartItems
-    .querySelectorAll(".cart-plus")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const id =
-            button.dataset.id;
-
-          const option =
-            button.dataset.option || "";
-
-          const item =
-            findCartItem(
-              id,
-              option
-            );
-
-          if (item) {
-
-            changeCartQuantity(
-              id,
-              Number(item.quantity) + 1,
-              option
-            );
-
-          }
-
-        }
-      );
-
-    });
-
-  cartItems
-    .querySelectorAll(".cart-remove")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          removeFromCart(
-            button.dataset.id,
-            button.dataset.option || ""
-          );
-
-        }
-      );
-
-    });
-
-}
-
-
-// ============================================================
-// CATÉGORIES
-// ============================================================
-
-function renderCategories() {
-
-  if (!categoriesEl) {
-    return;
-  }
-
-  const categories = [
-    "Tous",
-    ...new Set(
-      products.map(
-        product => product.category
-      )
-    )
-  ];
-
-  categoriesEl.innerHTML =
-    categories.map(
-      category => `
-        <button
-          type="button"
-          class="category-btn ${
-            category === selectedCategory
-              ? "active"
-              : ""
-          }"
-          data-category="${escapeAttr(category)}"
-        >
-          ${escapeHTML(category)}
-        </button>
-      `
-    ).join("");
-
-  categoriesEl
-    .querySelectorAll(".category-btn")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          selectedCategory =
-            button.dataset.category;
-
-          renderCategories();
-          renderProducts();
-
-        }
-      );
-
-    });
-
-}
-
-
-// ============================================================
-// FILTRES
-// ============================================================
-
-function getFilteredProducts() {
-
-  let result =
-    products.filter(product => {
-
-      const categoryMatch =
-        selectedCategory === "Tous" ||
-        product.category ===
-          selectedCategory;
-
-      const searchMatch =
-        !searchValue ||
-        product.name
-          .toLowerCase()
-          .includes(
-            searchValue.toLowerCase()
-          );
-
-      return (
-        categoryMatch &&
-        searchMatch
-      );
-
-    });
-
-  if (sortValue === "priceAsc") {
-
-    result.sort(
-      (a, b) =>
-        Number(a.price || 0) -
-        Number(b.price || 0)
-    );
-
-  } else if (
-    sortValue === "priceDesc"
-  ) {
-
-    result.sort(
-      (a, b) =>
-        Number(b.price || 0) -
-        Number(a.price || 0)
-    );
-
-  } else if (
-    sortValue === "name"
-  ) {
-
-    result.sort(
-      (a, b) =>
-        a.name.localeCompare(
-          b.name,
-          "fr"
-        )
-    );
-
-  } else if (
-    sortValue === "new"
-  ) {
-
-    result.sort(
-      (a, b) =>
-        Number(!!b.new) -
-        Number(!!a.new)
-    );
-
-  }
-
-  return result;
-
-}
-
-
-// ============================================================
-// AFFICHAGE PRODUITS
-// ============================================================
-
-function renderProducts() {
-
-  if (!productsGrid) {
-    return;
-  }
-
-  const filtered =
-    getFilteredProducts();
-
-  if (productCount) {
-
-    productCount.textContent =
-      `${filtered.length} produit${
-        filtered.length > 1
-          ? "s"
-          : ""
-      }`;
-
-  }
-
-  if (!filtered.length) {
-
-    productsGrid.innerHTML = `
-      <div style="
-        grid-column:1/-1;
-        text-align:center;
-        padding:40px;
-      ">
-
-        <div style="font-size:50px;">
-          🔎
-        </div>
-
-        <h3>
-          Aucun produit trouvé
-        </h3>
-
-        <p>
-          Essaie une autre recherche.
-        </p>
-
-      </div>
-    `;
-
-    return;
-
-  }
-
-  productsGrid.innerHTML =
-    filtered.map(product => {
-
-      const isFavorite =
-        favorites.includes(
-          product.id
-        );
-
-      const rating =
-        Number(
-          product.rating || 4.2
-        );
-
-      const reviewCount =
-        Number(
-          product.reviewCount ||
-          1248
-        );
-
-      return `
-        <article
-          class="product-card"
-          data-product-id="${escapeAttr(product.id)}"
-          style="overflow:hidden;"
-        >
-
-          <div
-            class="product-image-wrap"
-            style="
-              width:100%;
-              height:120px !important;
-              min-height:120px !important;
-              max-height:120px !important;
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              overflow:hidden;
-              border-radius:12px;
-              background:rgba(255,255,255,.035);
-              margin-bottom:10px;
-            "
-          >
-
-            <img
-              class="product-image"
-              src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
-              alt="${escapeHTML(product.name)}"
-              loading="lazy"
-              style="
-                display:block;
-                width:auto !important;
-                height:auto !important;
-                max-width:90% !important;
-                max-height:110px !important;
-                object-fit:contain !important;
-                object-position:center;
-                margin:auto;
-              "
-              onerror="
-                this.onerror=null;
-                this.src='${FALLBACK_IMAGE}';
-              "
-            >
-
-          </div>
-
-          <div
-            class="product-info"
-            style="min-width:0;"
-          >
-
-            ${
-              product.new
-                ? `
-                  <span style="
-                    display:inline-block;
-                    padding:4px 7px;
-                    border-radius:7px;
-                    background:rgba(37,214,149,.12);
-                    color:#25d695;
-                    font-size:10px;
-                    font-weight:800;
-                    margin-bottom:6px;
-                  ">
-                    NOUVEAU
-                  </span>
-                `
-                : ""
-            }
-
-            <div style="
-              color:var(--muted,#8c96a8);
-              font-size:11px;
-              margin-bottom:4px;
-            ">
-              ${escapeHTML(product.category)}
-            </div>
-
-            <h3 style="
-              font-size:14px;
-              line-height:1.25;
-              margin:0;
-              min-height:35px;
-            ">
-              ${escapeHTML(product.name)}
-            </h3>
-
-            <div style="
-              display:flex;
-              align-items:center;
-              gap:6px;
-              margin-top:7px;
-              white-space:nowrap;
-            ">
-
-              <span style="
-                color:#ffd45a;
-                font-size:13px;
-                letter-spacing:1px;
-              ">
-                ${getRatingStars(rating)}
-              </span>
-
-              <strong style="
-                font-size:12px;
-              ">
-                ${rating.toFixed(1)}
-              </strong>
-
-              <span style="
-                opacity:.58;
-                font-size:11px;
-              ">
-                (${reviewCount.toLocaleString("fr-FR")})
-              </span>
-
-            </div>
-
-            <div style="
-              display:flex;
-              align-items:center;
-              justify-content:space-between;
-              gap:8px;
-              margin-top:8px;
-            ">
-
-              <strong style="
-                font-size:17px;
-                color:var(--accent,#2d8cff);
-              ">
-                ${
-                  Number(product.price || 0) > 0
-                    ? money(product.price)
-                    : "Prix à définir"
-                }
-              </strong>
-
-              <button
-                type="button"
-                class="favorite-btn"
-                data-favorite="${escapeAttr(product.id)}"
-                title="Favori"
-                style="
-                  border:0;
-                  background:transparent;
-                  cursor:pointer;
-                  font-size:17px;
-                "
-              >
-                ${isFavorite ? "❤️" : "🤍"}
-              </button>
-
-            </div>
-
-            <div style="
-              display:grid;
-              grid-template-columns:1fr;
-              gap:6px;
-              margin-top:9px;
-            ">
-
-              <button
-                type="button"
-                class="add-btn product-add"
-                data-add="${escapeAttr(product.id)}"
-                style="
-                  width:100%;
-                  padding:8px 10px;
-                  font-size:12px;
-                "
-              >
-                Ajouter
-              </button>
-
-              <button
-                type="button"
-                class="view-btn product-view"
-                data-view="${escapeAttr(product.id)}"
-                style="
-                  width:100%;
-                  padding:7px 10px;
-                  font-size:12px;
-                "
-              >
-                Voir
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-      `;
-
-    }).join("");
-
-  productsGrid
-    .querySelectorAll("[data-add]")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const product =
-            getProduct(
-              button.dataset.add
-            );
-
-          if (!product) {
-            return;
-          }
-
-          if (
-            hasRequiredOption(product)
-          ) {
-
-            openProduct(
-              product.id
-            );
-
-            toast(
-              `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
-              "info"
-            );
-
-            return;
-
-          }
-
-          addToCart(
-            product.id
-          );
-
-        }
-      );
-
-    });
-
-  productsGrid
-    .querySelectorAll("[data-view]")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          openProduct(
-            button.dataset.view
-          );
-
-        }
-      );
-
-    });
-
-  productsGrid
-    .querySelectorAll("[data-favorite]")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const id =
-            button.dataset.favorite;
-
-          if (
-            favorites.includes(id)
-          ) {
-
-            favorites =
-              favorites.filter(
-                item => item !== id
-              );
-
-          } else {
-
-            favorites.push(id);
-
-          }
-
-          saveFavorites();
-          renderProducts();
-
-        }
-      );
-
-    });
-
-}
-
-
-// ============================================================
-// RECHERCHE
-// ============================================================
-
-searchInput?.addEventListener(
-  "input",
-  () => {
-
-    searchValue =
-      searchInput.value.trim();
-
-    renderProducts();
-
-  }
-);
-
-
-// ============================================================
-// TRI
-// ============================================================
-
-sortSelect?.addEventListener(
-  "change",
-  () => {
-
-    sortValue =
-      sortSelect.value;
-
-    renderProducts();
-
-  }
-);
-
-
-// ============================================================
-// PRODUIT
-// ============================================================
-
-function openProduct(id) {
-
-  const product =
-    getProduct(id);
-
-  if (!product) {
-    return;
-  }
-
-  const rating =
-    Number(
-      product.rating || 4.2
-    );
-
-  const reviewCount =
-    Number(
-      product.reviewCount || 1248
-    );
-
-  showModal(
-    product.name,
-    `
-      <div>
-
-        <div style="
-          width:100%;
-          height:180px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          overflow:hidden;
-          border-radius:15px;
-          background:rgba(255,255,255,.04);
-          margin-bottom:16px;
-        ">
-
-          <img
-            src="${escapeAttr(product.image || FALLBACK_IMAGE)}"
-            alt="${escapeHTML(product.name)}"
-            style="
-              width:auto;
-              height:auto;
-              max-width:90%;
-              max-height:165px;
-              object-fit:contain;
-            "
-            onerror="
-              this.onerror=null;
-              this.src='${FALLBACK_IMAGE}';
-            "
-          >
-
-        </div>
-
-        <div style="
-          opacity:.7;
-          margin-bottom:7px;
-        ">
-          ${escapeHTML(product.category)}
-        </div>
-
-        <h2>
-          ${escapeHTML(product.name)}
-        </h2>
-
-        <div style="
-          display:flex;
-          align-items:center;
-          gap:7px;
-          margin-top:10px;
-        ">
-
-          <span style="
-            color:#ffd45a;
-            font-size:19px;
-            letter-spacing:1px;
-          ">
-            ${getRatingStars(rating)}
-          </span>
-
-          <strong>
-            ${rating.toFixed(1)}/5
-          </strong>
-
-          <span style="opacity:.6;">
-            ${reviewCount.toLocaleString("fr-FR")} avis
-          </span>
-
-        </div>
-
-        <div style="
-          font-size:24px;
-          font-weight:800;
-          color:var(--accent,#2d8cff);
-          margin:12px 0;
-        ">
-          ${
-            Number(product.price || 0) > 0
-              ? money(product.price)
-              : "Prix à définir"
-          }
-        </div>
-
-        ${showProductOptions(product)}
-
-        <button
-          type="button"
-          class="add-btn"
-          id="modalAddProduct"
-          style="width:100%;"
-        >
-          🛒 Ajouter au panier
-        </button>
-
-        <button
-          type="button"
-          class="view-btn"
-          id="modalReviews"
-          style="
-            width:100%;
-            margin-top:8px;
-          "
-        >
-          ⭐ Voir les avis
-        </button>
-
-      </div>
-    `
-  );
-
-  setupProductOptions();
-
-  $("modalAddProduct")
-    ?.addEventListener(
-      "click",
-      () => {
-
-        const option =
-          getSelectedProductOption();
-
-        if (
-          hasRequiredOption(product) &&
-          !option
-        ) {
-
-          $("productOptionsError") &&
-            ($("productOptionsError").style.display =
-              "block");
-
-          toast(
-            `Choisis ${product.options.label.toLowerCase()} avant d'ajouter.`,
-            "error"
-          );
-
-          return;
-
-        }
-
-        if (
-          Number(product.price || 0) <= 0
-        ) {
-
-          toast(
-            "Le prix de ce produit n'est pas encore défini.",
-            "error"
-          );
-
-          return;
-
-        }
-
-        if (
-          addToCart(
-            product.id,
-            option
-          )
-        ) {
-
-          closeModal();
-
-        }
-
-      }
-    );
-
-  $("modalReviews")
-    ?.addEventListener(
-      "click",
-      () => {
-
-        openProductReviews(
-          product.id
-        );
-
-      }
-    );
-
-}
-
-
-// ============================================================
-// AVIS
-// ============================================================
-
-async function openProductReviews(productId) {
-
-  const product =
-    getProduct(productId);
-
-  if (!product) {
-    return;
-  }
-
-  showModal(
-    `Avis - ${product.name}`,
-    `
-      <div style="
-        padding:15px;
-        border-radius:14px;
-        background:rgba(255,255,255,.04);
-        margin-bottom:15px;
-      ">
-
-        <div style="
-          color:#ffd45a;
-          font-size:20px;
-          letter-spacing:1px;
-        ">
-          ${getRatingStars(product.rating)}
-        </div>
-
-        <strong>
-          ${Number(product.rating).toFixed(1)}/5
-        </strong>
-
-        <span style="
-          opacity:.6;
-          margin-left:6px;
-        ">
-          ${Number(product.reviewCount).toLocaleString("fr-FR")} avis
-        </span>
-
-      </div>
-
-      <div
-        id="reviewsLoading"
-        style="
-          text-align:center;
-          padding:25px;
-        "
-      >
-        Chargement des avis...
-      </div>
-
-      <div id="reviewsList"></div>
-    `
-  );
-
-  try {
-
-    const reviewsQuery =
-      query(
-        collection(db, "reviews"),
-        where(
-          "productId",
-          "==",
-          productId
-        )
-      );
-
-    const snapshot =
-      await getDocs(
-        reviewsQuery
-      );
-
-    const reviews = [];
-
-    snapshot.forEach(item => {
-
-      reviews.push({
-        id: item.id,
-        ...item.data()
-      });
-
-    });
-
-    reviewsCache[productId] =
-      reviews;
-
-    $("reviewsLoading")?.remove();
-
-    const list =
-      $("reviewsList");
-
-    if (!list) {
-      return;
-    }
-
-    if (!reviews.length) {
-
-      list.innerHTML = `
-        <div style="
-          text-align:center;
-          padding:25px;
-          opacity:.7;
-        ">
-          ⭐ Aucun avis détaillé pour le moment.
-        </div>
-      `;
-
-      return;
-
-    }
-
-    list.innerHTML =
-      reviews.map(review => {
-
-        const rating =
-          Math.max(
-            1,
-            Math.min(
-              5,
-              Number(
-                review.rating || 5
-              )
-            )
-          );
-
-        const stars =
-          "★".repeat(
-            Math.round(rating)
-          ) +
-          "☆".repeat(
-            5 -
-            Math.round(rating)
-          );
-
-        return `
-          <div style="
-            padding:14px 0;
-            border-bottom:1px solid rgba(255,255,255,.08);
-          ">
-
-            <div style="
-              color:#ffd45a;
-              font-size:18px;
-            ">
-              ${stars}
-            </div>
-
-            <strong>
-              ${escapeHTML(
-                review.userName ||
-                "Client"
-              )}
-            </strong>
-
-            <p style="
-              margin-top:7px;
-              opacity:.85;
-            ">
-              ${escapeHTML(
-                review.text || ""
-              )}
-            </p>
-
-          </div>
-        `;
-
-      }).join("");
-
-  } catch (error) {
-
-    console.error(error);
-
-    $("reviewsLoading")?.remove();
-
-    const list =
-      $("reviewsList");
-
-    if (list) {
-
-      list.innerHTML = `
-        <div style="
-          color:#ff7777;
-          padding:20px;
-        ">
-          Impossible de charger les avis.
-        </div>
-      `;
-
-    }
-
-  }
-
-}
-
-
-// ============================================================
-// AUTH
-// ============================================================
-
-function authError(error) {
+function authError(error){
 
   const code =
     error?.code || "";
@@ -2681,19 +1034,19 @@ function authError(error) {
   const messages = {
 
     "auth/invalid-credential":
-      "E-mail ou mot de passe incorrect.",
+      "Email ou mot de passe incorrect.",
 
     "auth/invalid-email":
-      "Adresse e-mail invalide.",
+      "Adresse email invalide.",
 
     "auth/email-already-in-use":
-      "Cette adresse e-mail est déjà utilisée.",
+      "Cette adresse email est déjà utilisée.",
 
     "auth/weak-password":
-      "Le mot de passe doit contenir au moins 6 caractères.",
+      "Le mot de passe est trop faible.",
 
     "auth/user-not-found":
-      "Aucun compte trouvé avec cette adresse.",
+      "Aucun compte trouvé avec cet email.",
 
     "auth/wrong-password":
       "Mot de passe incorrect.",
@@ -2702,7 +1055,10 @@ function authError(error) {
       "Trop de tentatives. Réessaie plus tard.",
 
     "auth/network-request-failed":
-      "Erreur réseau."
+      "Erreur réseau.",
+
+    "permission-denied":
+      "Accès refusé par Firebase."
 
   };
 
@@ -2715,7 +1071,1134 @@ function authError(error) {
 }
 
 
-function showLoginForm() {
+// ============================================================
+// PRODUITS
+// ============================================================
+
+function renderCategories(){
+
+  if(!categories){
+    return;
+  }
+
+  const list = [
+    "Toutes",
+    ...new Set(
+      products.map(
+        product =>
+          product.category
+      )
+    )
+  ];
+
+  categories.innerHTML =
+    list.map(
+      category => `
+        <button
+          type="button"
+          class="category-btn ${
+            state.category === category
+              ? "active"
+              : ""
+          }"
+          data-category="${escapeAttr(category)}"
+        >
+          ${escapeHTML(category)}
+        </button>
+      `
+    ).join("");
+
+  categories
+    .querySelectorAll(
+      ".category-btn"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          state.category =
+            button.dataset.category ||
+            "Toutes";
+
+          renderCategories();
+          renderProducts();
+
+        }
+      );
+
+    });
+
+}
+
+
+function getFilteredProducts(){
+
+  let list =
+    [...products];
+
+  const search =
+    state.search
+      .trim()
+      .toLowerCase();
+
+  if(search){
+
+    list =
+      list.filter(
+        product =>
+          product.name
+            .toLowerCase()
+            .includes(search) ||
+          product.category
+            .toLowerCase()
+            .includes(search)
+      );
+
+  }
+
+  if(
+    state.category !==
+    "Toutes"
+  ){
+
+    list =
+      list.filter(
+        product =>
+          product.category ===
+          state.category
+      );
+
+  }
+
+  switch(state.sort){
+
+    case "price-low":
+
+      list.sort(
+        (a,b) =>
+          Number(a.price || 0) -
+          Number(b.price || 0)
+      );
+
+      break;
+
+    case "price-high":
+
+      list.sort(
+        (a,b) =>
+          Number(b.price || 0) -
+          Number(a.price || 0)
+      );
+
+      break;
+
+    case "name":
+
+      list.sort(
+        (a,b) =>
+          a.name.localeCompare(
+            b.name,
+            "fr"
+          )
+      );
+
+      break;
+
+    case "new":
+
+      list.sort(
+        (a,b) =>
+          Number(Boolean(b.new)) -
+          Number(Boolean(a.new))
+      );
+
+      break;
+
+  }
+
+  return list;
+
+}
+
+
+function renderProducts(){
+
+  if(!productGrid){
+    return;
+  }
+
+  const list =
+    getFilteredProducts();
+
+  if(productCount){
+
+    productCount.textContent =
+      `${list.length} produit${
+        list.length > 1
+          ? "s"
+          : ""
+      }`;
+
+  }
+
+  if(!list.length){
+
+    productGrid.innerHTML = `
+      <div class="empty-products">
+        <div style="font-size:48px;">
+          🔎
+        </div>
+
+        <h3>
+          Aucun produit trouvé
+        </h3>
+
+        <p style="margin-top:8px;">
+          Essaie une autre recherche ou catégorie.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  productGrid.innerHTML =
+    list.map(
+      product => {
+
+        const favorite =
+          favorites.includes(
+            product.id
+          );
+
+        const rating =
+          product.rating ||
+          4.7;
+
+        return `
+          <article
+            class="product"
+            data-product-id="${escapeAttr(product.id)}"
+          >
+
+            <div class="product-img">
+
+              ${
+                product.new
+                  ? `
+                    <span class="new-badge">
+                      NOUVEAU
+                    </span>
+                  `
+                  : ""
+              }
+
+              ${
+                product.image
+                  ? `
+                    <img
+                      src="${escapeAttr(product.image)}"
+                      alt="${escapeAttr(product.name)}"
+                      loading="lazy"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
+
+            </div>
+
+            <div class="product-body">
+
+              <div class="product-cat">
+                ${escapeHTML(product.category)}
+              </div>
+
+              <h3>
+                ${escapeHTML(product.name)}
+              </h3>
+
+              <div class="rating">
+
+                <span class="stars">
+                  ★★★★★
+                </span>
+
+                <span>
+                  ${Number(rating).toFixed(1)}
+                </span>
+
+              </div>
+
+              <div class="price">
+                ${money(product.price)}
+              </div>
+
+              <div class="product-actions">
+
+                <button
+                  type="button"
+                  class="view-btn product-view"
+                  data-id="${escapeAttr(product.id)}"
+                >
+                  Voir
+                </button>
+
+                <button
+                  type="button"
+                  class="add-btn product-add"
+                  data-id="${escapeAttr(product.id)}"
+                >
+                  Ajouter
+                </button>
+
+              </div>
+
+              <button
+                type="button"
+                class="view-btn favorite-btn"
+                data-favorite-id="${escapeAttr(product.id)}"
+                style="
+                  width:100%;
+                  margin-top:8px;
+                "
+              >
+                ${
+                  favorite
+                    ? "❤️ Retirer des favoris"
+                    : "♡ Ajouter aux favoris"
+                }
+              </button>
+
+            </div>
+
+          </article>
+        `;
+
+      }
+    ).join("");
+
+  productGrid
+    .querySelectorAll(
+      ".product-view"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          openProduct(
+            button.dataset.id
+          );
+
+        }
+      );
+
+    });
+
+  productGrid
+    .querySelectorAll(
+      ".product-add"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          addToCart(
+            button.dataset.id
+          );
+
+        }
+      );
+
+    });
+
+  productGrid
+    .querySelectorAll(
+      ".favorite-btn"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          toggleFavorite(
+            button.dataset.favoriteId
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+// ============================================================
+// FAVORIS
+// ============================================================
+
+function toggleFavorite(id){
+
+  if(!id){
+    return;
+  }
+
+  if(
+    favorites.includes(id)
+  ){
+
+    favorites =
+      favorites.filter(
+        item => item !== id
+      );
+
+    toast(
+      "Retiré des favoris."
+    );
+
+  }else{
+
+    favorites.push(id);
+
+    toast(
+      "Ajouté aux favoris ❤️",
+      "success"
+    );
+
+  }
+
+  saveFavorites();
+
+  renderProducts();
+
+}
+
+
+// ============================================================
+// OPTIONS PRODUITS
+// ============================================================
+
+function productHasOptions(product){
+
+  return (
+    product &&
+    product.options &&
+    Object.keys(
+      product.options
+    ).length > 0
+  );
+
+}
+
+
+function openProduct(id){
+
+  const product =
+    getProduct(id);
+
+  if(!product){
+    return;
+  }
+
+  let optionsHTML = "";
+
+  if(
+    productHasOptions(product)
+  ){
+
+    optionsHTML = `
+      <div style="
+        display:grid;
+        gap:12px;
+        margin-top:18px;
+      ">
+
+        ${
+          Object.entries(
+            product.options
+          ).map(
+            ([label,values]) => `
+              <div>
+
+                <label>
+                  ${escapeHTML(label)}
+                </label>
+
+                <select
+                  class="product-option"
+                  data-option-label="${escapeAttr(label)}"
+                  style="width:100%;margin-top:6px;"
+                >
+
+                  ${values.map(
+                    value => `
+                      <option value="${escapeAttr(value)}">
+                        ${escapeHTML(value)}
+                      </option>
+                    `
+                  ).join("")}
+
+                </select>
+
+              </div>
+            `
+          ).join("")
+        }
+
+      </div>
+    `;
+
+  }
+
+  showModal(
+    product.name,
+    `
+      <div>
+
+        ${
+          product.image
+            ? `
+              <div style="
+                background:#fff;
+                border-radius:16px;
+                padding:20px;
+                margin-bottom:18px;
+                text-align:center;
+              ">
+
+                <img
+                  src="${escapeAttr(product.image)}"
+                  alt="${escapeAttr(product.name)}"
+                  style="
+                    width:100%;
+                    max-height:360px;
+                    object-fit:contain;
+                  "
+                  onerror="this.style.display='none'"
+                >
+
+              </div>
+            `
+            : ""
+        }
+
+        <div class="product-cat">
+          ${escapeHTML(product.category)}
+        </div>
+
+        <h2 style="
+          margin-top:7px;
+          line-height:1.35;
+        ">
+          ${escapeHTML(product.name)}
+        </h2>
+
+        <div style="
+          margin-top:12px;
+          color:var(--yellow);
+        ">
+          ★★★★★
+          <span style="
+            color:var(--muted);
+            margin-left:7px;
+          ">
+            4.7
+          </span>
+        </div>
+
+        <div style="
+          font-size:28px;
+          font-weight:900;
+          margin-top:18px;
+        ">
+          ${money(product.price)}
+        </div>
+
+        ${optionsHTML}
+
+        <button
+          type="button"
+          class="add-btn"
+          id="modalAddProduct"
+          style="
+            width:100%;
+            margin-top:20px;
+          "
+        >
+          🛒 Ajouter au panier
+        </button>
+
+        <button
+          type="button"
+          class="view-btn"
+          id="modalFavoriteProduct"
+          style="
+            width:100%;
+            margin-top:8px;
+          "
+        >
+          ${
+            favorites.includes(product.id)
+              ? "❤️ Retirer des favoris"
+              : "♡ Ajouter aux favoris"
+          }
+        </button>
+
+      </div>
+    `
+  );
+
+  $("modalAddProduct")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        let option = "";
+
+        const optionElements =
+          document.querySelectorAll(
+            ".product-option"
+          );
+
+        if(optionElements.length){
+
+          option =
+            Array.from(
+              optionElements
+            )
+              .map(
+                element =>
+                  `${element.dataset.optionLabel}: ${element.value}`
+              )
+              .join(" | ");
+
+        }
+
+        addToCart(
+          product.id,
+          option
+        );
+
+        closeModal();
+
+      }
+    );
+
+  $("modalFavoriteProduct")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        toggleFavorite(
+          product.id
+        );
+
+        closeModal();
+
+      }
+    );
+
+}
+
+
+// ============================================================
+// PANIER
+// ============================================================
+
+function getCartCount(){
+
+  return cart.reduce(
+    (total,item) =>
+      total +
+      Number(item.quantity || 1),
+    0
+  );
+
+}
+
+
+function getCartSubtotal(){
+
+  return cart.reduce(
+    (total,item) => {
+
+      const product =
+        getProduct(item.id);
+
+      if(!product){
+        return total;
+      }
+
+      return total +
+        Number(product.price || 0) *
+        Number(item.quantity || 1);
+
+    },
+    0
+  );
+
+}
+
+
+function addToCart(id,option=""){
+
+  const product =
+    getProduct(id);
+
+  if(!product){
+    return;
+  }
+
+  const existing =
+    cart.find(
+      item =>
+        item.id === id &&
+        item.option === option
+    );
+
+  if(existing){
+
+    existing.quantity =
+      Number(existing.quantity || 1) + 1;
+
+  }else{
+
+    cart.push({
+      id,
+      option,
+      quantity:1
+    });
+
+  }
+
+  saveCart();
+  renderCart();
+
+  toast(
+    "Produit ajouté au panier 🛒",
+    "success"
+  );
+
+}
+
+
+function removeFromCart(index){
+
+  if(
+    index < 0 ||
+    index >= cart.length
+  ){
+    return;
+  }
+
+  cart.splice(index,1);
+
+  saveCart();
+  renderCart();
+
+}
+
+
+function changeCartQuantity(index,delta){
+
+  const item =
+    cart[index];
+
+  if(!item){
+    return;
+  }
+
+  item.quantity =
+    Number(item.quantity || 1) +
+    Number(delta);
+
+  if(item.quantity <= 0){
+
+    cart.splice(index,1);
+
+  }
+
+  saveCart();
+  renderCart();
+
+}
+
+
+function renderCart(){
+
+  if(cartBadge){
+
+    const count =
+      getCartCount();
+
+    cartBadge.textContent =
+      count;
+
+    cartBadge.style.display =
+      count > 0
+        ? "flex"
+        : "none";
+
+  }
+
+  if(cartTotal){
+
+    cartTotal.textContent =
+      money(
+        getCartSubtotal()
+      );
+
+  }
+
+  if(!cartItems){
+    return;
+  }
+
+  if(!cart.length){
+
+    cartItems.innerHTML = `
+      <div class="empty-cart">
+
+        <div style="
+          font-size:50px;
+          margin-bottom:10px;
+        ">
+          🛒
+        </div>
+
+        <h3>
+          Ton panier est vide
+        </h3>
+
+        <p style="margin-top:7px;">
+          Ajoute des produits pour commencer.
+        </p>
+
+      </div>
+    `;
+
+    if(checkoutBtn){
+      checkoutBtn.disabled = true;
+    }
+
+    return;
+
+  }
+
+  if(checkoutBtn){
+    checkoutBtn.disabled = false;
+  }
+
+  cartItems.innerHTML =
+    cart.map(
+      (item,index) => {
+
+        const product =
+          getProduct(item.id);
+
+        if(!product){
+          return "";
+        }
+
+        const quantity =
+          Number(
+            item.quantity || 1
+          );
+
+        const price =
+          Number(
+            product.price || 0
+          );
+
+        return `
+          <div class="cart-item">
+
+            <div>
+
+              ${
+                product.image
+                  ? `
+                    <img
+                      src="${escapeAttr(product.image)}"
+                      alt="${escapeAttr(product.name)}"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
+
+            </div>
+
+            <div class="cart-item-info">
+
+              <strong>
+                ${escapeHTML(product.name)}
+              </strong>
+
+              ${
+                item.option
+                  ? `
+                    <span style="
+                      color:var(--muted);
+                      font-size:12px;
+                      margin-top:4px;
+                    ">
+                      ${escapeHTML(item.option)}
+                    </span>
+                  `
+                  : ""
+              }
+
+              <span>
+                ${money(price)}
+              </span>
+
+              <div class="cart-quantity">
+
+                <button
+                  type="button"
+                  data-cart-minus="${index}"
+                >
+                  −
+                </button>
+
+                <strong>
+                  ${quantity}
+                </strong>
+
+                <button
+                  type="button"
+                  data-cart-plus="${index}"
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              class="remove-cart"
+              data-cart-remove="${index}"
+              aria-label="Supprimer"
+            >
+              ×
+            </button>
+
+          </div>
+        `;
+
+      }
+    ).join("");
+
+  cartItems
+    .querySelectorAll(
+      "[data-cart-minus]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeCartQuantity(
+            Number(
+              button.dataset.cartMinus
+            ),
+            -1
+          );
+
+        }
+      );
+
+    });
+
+  cartItems
+    .querySelectorAll(
+      "[data-cart-plus]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeCartQuantity(
+            Number(
+              button.dataset.cartPlus
+            ),
+            1
+          );
+
+        }
+      );
+
+    });
+
+  cartItems
+    .querySelectorAll(
+      "[data-cart-remove]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          removeFromCart(
+            Number(
+              button.dataset.cartRemove
+            )
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+function openCart(){
+
+  cartDrawer?.classList.add(
+    "open"
+  );
+
+  overlay?.classList.add(
+    "open"
+  );
+
+}
+
+
+function closeCart(){
+
+  cartDrawer?.classList.remove(
+    "open"
+  );
+
+  overlay?.classList.remove(
+    "open"
+  );
+
+}
+
+
+cartBtn?.addEventListener(
+  "click",
+  openCart
+);
+
+
+heroCartBtn?.addEventListener(
+  "click",
+  openCart
+);
+
+
+closeCartButton?.addEventListener(
+  "click",
+  closeCart
+);
+
+
+overlay?.addEventListener(
+  "click",
+  closeCart
+);
+
+
+// ============================================================
+// MODALES
+// ============================================================
+
+function showModal(title,content){
+
+  if(!modal){
+    return;
+  }
+
+  modalTitle.textContent =
+    title;
+
+  modalContent.innerHTML =
+    content;
+
+  modal.classList.add(
+    "open"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+}
+
+
+function closeModal(){
+
+  modal?.classList.remove(
+    "open"
+  );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+
+modalClose?.addEventListener(
+  "click",
+  closeModal
+);
+
+
+// ============================================================
+// RECHERCHE / TRI
+// ============================================================
+
+searchInput?.addEventListener(
+  "input",
+  event => {
+
+    state.search =
+      event.target.value || "";
+
+    renderProducts();
+
+  }
+);
+
+
+sortSelect?.addEventListener(
+  "change",
+  event => {
+
+    state.sort =
+      event.target.value || "default";
+
+    renderProducts();
+
+  }
+);
+
+
+// ============================================================
+// LOGIN
+// ============================================================
+
+function showLoginForm(){
 
   showModal(
     "Connexion",
@@ -2723,20 +2206,20 @@ function showLoginForm() {
       <form id="loginForm">
 
         <label for="loginEmail">
-          Adresse e-mail
+          Email
         </label>
 
         <input
           id="loginEmail"
           type="email"
           autocomplete="email"
-          required
           placeholder="ton@email.com"
+          required
         >
 
         <label
           for="loginPassword"
-          style="margin-top:14px"
+          style="display:block;margin-top:12px;"
         >
           Mot de passe
         </label>
@@ -2745,23 +2228,13 @@ function showLoginForm() {
           id="loginPassword"
           type="password"
           autocomplete="current-password"
+          placeholder="Mot de passe"
           required
-          placeholder="Ton mot de passe"
         >
-
-        <div
-          id="loginError"
-          style="
-            display:none;
-            margin-top:12px;
-            color:#ff7777;
-          "
-        ></div>
 
         <button
           type="submit"
           class="add-btn"
-          id="loginSubmit"
           style="
             width:100%;
             margin-top:16px;
@@ -2773,103 +2246,44 @@ function showLoginForm() {
         <button
           type="button"
           class="view-btn"
-          id="goRegister"
+          id="openRegister"
           style="
             width:100%;
-            margin-top:10px;
+            margin-top:8px;
           "
         >
           Créer un compte
         </button>
 
+        <div
+          id="loginError"
+          style="
+            display:none;
+            color:#ff7777;
+            margin-top:12px;
+          "
+        ></div>
+
       </form>
     `
   );
 
-  $("loginForm")
-    ?.addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const email =
-          $("loginEmail")
-            ?.value.trim() || "";
-
-        const password =
-          $("loginPassword")
-            ?.value || "";
-
-        const errorBox =
-          $("loginError");
-
-        const submit =
-          $("loginSubmit");
-
-        if (submit) {
-
-          submit.disabled = true;
-          submit.textContent =
-            "Connexion...";
-
-        }
-
-        try {
-
-          await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-
-          closeModal();
-
-          toast(
-            "Connexion réussie 👋",
-            "success"
-          );
-
-        } catch (error) {
-
-          console.error(error);
-
-          if (errorBox) {
-
-            errorBox.textContent =
-              authError(error);
-
-            errorBox.style.display =
-              "block";
-
-          }
-
-        } finally {
-
-          if (submit) {
-
-            submit.disabled = false;
-            submit.textContent =
-              "Se connecter";
-
-          }
-
-        }
-
-      }
-    );
-
-  $("goRegister")
+  $("openRegister")
     ?.addEventListener(
       "click",
       showRegisterForm
     );
 
-}// ============================================================
-// INSCRIPTION
-// ============================================================
+  $("loginForm")
+    ?.addEventListener(
+      "submit",
+      login
+    );
 
-function showRegisterForm() {
+}
+
+
+function showRegisterForm(){
 
   showModal(
     "Créer un compte",
@@ -2877,19 +2291,20 @@ function showRegisterForm() {
       <form id="registerForm">
 
         <label for="registerEmail">
-          Adresse e-mail
+          Email
         </label>
 
         <input
           id="registerEmail"
           type="email"
-          required
+          autocomplete="email"
           placeholder="ton@email.com"
+          required
         >
 
         <label
           for="registerPassword"
-          style="margin-top:14px"
+          style="display:block;margin-top:12px;"
         >
           Mot de passe
         </label>
@@ -2897,39 +2312,15 @@ function showRegisterForm() {
         <input
           id="registerPassword"
           type="password"
+          autocomplete="new-password"
+          placeholder="Mot de passe"
           minlength="6"
           required
-          placeholder="Minimum 6 caractères"
         >
-
-        <label
-          for="registerPassword2"
-          style="margin-top:14px"
-        >
-          Confirmer le mot de passe
-        </label>
-
-        <input
-          id="registerPassword2"
-          type="password"
-          minlength="6"
-          required
-          placeholder="Retape ton mot de passe"
-        >
-
-        <div
-          id="registerError"
-          style="
-            display:none;
-            margin-top:12px;
-            color:#ff7777;
-          "
-        ></div>
 
         <button
           type="submit"
           class="add-btn"
-          id="registerSubmit"
           style="
             width:100%;
             margin-top:16px;
@@ -2941,120 +2332,169 @@ function showRegisterForm() {
         <button
           type="button"
           class="view-btn"
-          id="goLogin"
+          id="backToLogin"
           style="
             width:100%;
-            margin-top:10px;
+            margin-top:8px;
           "
         >
-          J'ai déjà un compte
+          Retour à la connexion
         </button>
+
+        <div
+          id="registerError"
+          style="
+            display:none;
+            color:#ff7777;
+            margin-top:12px;
+          "
+        ></div>
 
       </form>
     `
   );
 
-  $("registerForm")
-    ?.addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-        const email =
-          $("registerEmail")
-            ?.value.trim() || "";
-
-        const password =
-          $("registerPassword")
-            ?.value || "";
-
-        const password2 =
-          $("registerPassword2")
-            ?.value || "";
-
-        const errorBox =
-          $("registerError");
-
-        if (password !== password2) {
-
-          if (errorBox) {
-
-            errorBox.textContent =
-              "Les deux mots de passe sont différents.";
-
-            errorBox.style.display =
-              "block";
-
-          }
-
-          return;
-
-        }
-
-        const submit =
-          $("registerSubmit");
-
-        if (submit) {
-
-          submit.disabled = true;
-          submit.textContent =
-            "Création...";
-
-        }
-
-        try {
-
-          await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-
-          closeModal();
-
-          toast(
-            "Compte créé avec succès 🎉",
-            "success"
-          );
-
-        } catch (error) {
-
-          console.error(error);
-
-          if (errorBox) {
-
-            errorBox.textContent =
-              authError(error);
-
-            errorBox.style.display =
-              "block";
-
-          }
-
-        } finally {
-
-          if (submit) {
-
-            submit.disabled = false;
-            submit.textContent =
-              "Créer mon compte";
-
-          }
-
-        }
-
-      }
-    );
-
-  $("goLogin")
+  $("backToLogin")
     ?.addEventListener(
       "click",
       showLoginForm
     );
 
+  $("registerForm")
+    ?.addEventListener(
+      "submit",
+      register
+    );
+
 }
 
+
+async function login(event){
+
+  event.preventDefault();
+
+  const email =
+    $("loginEmail")
+      ?.value.trim() || "";
+
+  const password =
+    $("loginPassword")
+      ?.value || "";
+
+  const errorBox =
+    $("loginError");
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    closeModal();
+
+    toast(
+      "Connexion réussie 👋",
+      "success"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    if(errorBox){
+
+      errorBox.textContent =
+        authError(error);
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+  }
+
+}
+
+
+async function register(event){
+
+  event.preventDefault();
+
+  const email =
+    $("registerEmail")
+      ?.value.trim() || "";
+
+  const password =
+    $("registerPassword")
+      ?.value || "";
+
+  const errorBox =
+    $("registerError");
+
+  try{
+
+    await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    closeModal();
+
+    toast(
+      "Compte créé avec succès 🎉",
+      "success"
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    if(errorBox){
+
+      errorBox.textContent =
+        authError(error);
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+  }
+
+}
+
+
+async function logout(){
+
+  try{
+
+    await signOut(auth);
+
+    closeModal();
+
+    toast(
+      "Déconnexion réussie.",
+      "success"
+    );
+
+  }catch(error){
+
+    toast(
+      authError(error),
+      "error"
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// COMPTE
+// ============================================================
 
 accountBtn?.addEventListener(
   "click",
@@ -3062,70 +2502,14 @@ accountBtn?.addEventListener(
 );
 
 
-// ============================================================
-// ÉTAT AUTH
-// ============================================================
+function openAccount(){
 
-onAuthStateChanged(
-  auth,
-  user => {
-
-    currentUser = user;
-
-    if (accountBtn) {
-
-      if (user) {
-
-        const email =
-          user.email || "";
-
-        const username =
-          email.split("@")[0] ||
-          "Compte";
-
-        accountBtn.textContent =
-          `👤 ${username}`;
-
-      } else {
-
-        accountBtn.textContent =
-          "👤 Compte";
-
-      }
-
-    }
-
-    if (adminBtn) {
-
-      const isAdmin =
-        !!user &&
-        (
-          user.email || ""
-        ).toLowerCase() ===
-        ADMIN_EMAIL.toLowerCase();
-
-      adminBtn.style.display =
-        isAdmin
-          ? ""
-          : "none";
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// COMPTE
-// ============================================================
-
-function openAccount() {
-
-  if (!currentUser) {
+  if(!currentUser){
 
     showLoginForm();
 
     return;
+
   }
 
   showModal(
@@ -3189,29 +2573,7 @@ function openAccount() {
   $("accountLogout")
     ?.addEventListener(
       "click",
-      async () => {
-
-        try {
-
-          await signOut(auth);
-
-          closeModal();
-
-          toast(
-            "Déconnexion réussie.",
-            "success"
-          );
-
-        } catch (error) {
-
-          toast(
-            authError(error),
-            "error"
-          );
-
-        }
-
-      }
+      logout
     );
 
 }
@@ -3227,13 +2589,14 @@ ordersBtn?.addEventListener(
 );
 
 
-async function openOrders() {
+async function openOrders(){
 
-  if (!currentUser) {
+  if(!currentUser){
 
     showLoginForm();
 
     return;
+
   }
 
   showModal(
@@ -3253,11 +2616,11 @@ async function openOrders() {
     `
   );
 
-  try {
+  try{
 
     const ordersQuery =
       query(
-        collection(db, "orders"),
+        collection(db,"orders"),
         where(
           "userId",
           "==",
@@ -3275,14 +2638,14 @@ async function openOrders() {
     snapshot.forEach(item => {
 
       orders.push({
-        id: item.id,
+        id:item.id,
         ...item.data()
       });
 
     });
 
     orders.sort(
-      (a, b) => {
+      (a,b) => {
 
         const dateA =
           a.createdAt?.seconds || 0;
@@ -3300,11 +2663,11 @@ async function openOrders() {
     const list =
       $("ordersList");
 
-    if (!list) {
+    if(!list){
       return;
     }
 
-    if (!orders.length) {
+    if(!orders.length){
 
       list.innerHTML = `
         <div style="
@@ -3320,7 +2683,7 @@ async function openOrders() {
             Aucune commande
           </h3>
 
-          <p>
+          <p style="margin-top:8px;">
             Tu n'as pas encore passé de commande.
           </p>
 
@@ -3332,83 +2695,85 @@ async function openOrders() {
     }
 
     list.innerHTML =
-      orders.map(order => {
+      orders.map(
+        order => {
 
-        const total =
-          Number(
-            order.total || 0
-          );
+          const total =
+            Number(
+              order.total || 0
+            );
 
-        const status =
-          order.status ||
-          "Enregistrée";
+          const status =
+            order.status ||
+            "Enregistrée";
 
-        const customerName =
-          `${order.firstName || ""} ${order.lastName || ""}`
-            .trim();
+          const customerName =
+            `${order.firstName || ""} ${order.lastName || ""}`
+              .trim();
 
-        return `
-          <div
-            class="order-card"
-            style="
-              padding:16px;
-              margin-bottom:12px;
-              border:1px solid rgba(255,255,255,.08);
-              border-radius:16px;
-            "
-          >
-
-            <div style="
-              display:flex;
-              justify-content:space-between;
-              gap:10px;
-              margin-bottom:8px;
-            ">
-
-              <strong>
-                Commande #${escapeHTML(
-                  order.id.slice(0,8)
-                )}
-              </strong>
-
-              <strong>
-                ${money(total)}
-              </strong>
-
-            </div>
-
-            ${
-              customerName
-                ? `
-                  <div style="
-                    margin-bottom:8px;
-                    opacity:.9;
-                  ">
-                    👤 ${escapeHTML(customerName)}
-                  </div>
-                `
-                : ""
-            }
-
-            <div style="margin-bottom:12px;">
-              Statut :
-              <strong>
-                ${escapeHTML(status)}
-              </strong>
-            </div>
-
-            <button
-              type="button"
-              class="view-btn"
-              data-order-id="${escapeAttr(order.id)}"
+          return `
+            <div
+              class="order-card"
+              style="
+                padding:16px;
+                margin-bottom:12px;
+                border:1px solid rgba(255,255,255,.08);
+                border-radius:16px;
+              "
             >
-              Voir la commande
-            </button>
 
-          </div>
-        `;
+              <div style="
+                display:flex;
+                justify-content:space-between;
+                gap:10px;
+                margin-bottom:8px;
+              ">
 
-      }).join("");
+                <strong>
+                  Commande #${escapeHTML(
+                    order.id.slice(0,8)
+                  )}
+                </strong>
+
+                <strong>
+                  ${money(total)}
+                </strong>
+
+              </div>
+
+              ${
+                customerName
+                  ? `
+                    <div style="
+                      margin-bottom:8px;
+                      opacity:.9;
+                    ">
+                      👤 ${escapeHTML(customerName)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div style="margin-bottom:12px;">
+                Statut :
+                <strong>
+                  ${escapeHTML(status)}
+                </strong>
+              </div>
+
+              <button
+                type="button"
+                class="view-btn"
+                data-order-id="${escapeAttr(order.id)}"
+              >
+                Voir la commande
+              </button>
+
+            </div>
+          `;
+
+        }
+      ).join("");
 
     list.addEventListener(
       "click",
@@ -3419,7 +2784,7 @@ async function openOrders() {
             "[data-order-id]"
           );
 
-        if (!button) {
+        if(!button){
           return;
         }
 
@@ -3430,14 +2795,14 @@ async function openOrders() {
               button.dataset.orderId
           );
 
-        if (order) {
+        if(order){
           openOrderDetails(order);
         }
 
       }
     );
 
-  } catch (error) {
+  }catch(error){
 
     console.error(
       "Firestore Orders Error:",
@@ -3447,7 +2812,7 @@ async function openOrders() {
     const loading =
       $("ordersLoading");
 
-    if (loading) {
+    if(loading){
 
       loading.innerHTML = `
         <div style="color:#ff7777;">
@@ -3470,7 +2835,7 @@ async function openOrders() {
 // DÉTAIL COMMANDE
 // ============================================================
 
-function openOrderDetails(order) {
+function openOrderDetails(order){
 
   const items =
     Array.isArray(order.items)
@@ -3494,55 +2859,57 @@ function openOrderDetails(order) {
     timeline.indexOf(status);
 
   const productsHTML =
-    items.map(item => {
+    items.map(
+      item => {
 
-      const product =
-        getProduct(item.id);
+        const product =
+          getProduct(item.id);
 
-      const name =
-        product?.name ||
-        item.name ||
-        "Produit";
+        const name =
+          product?.name ||
+          item.name ||
+          "Produit";
 
-      const displayName =
-        item.option
-          ? `${name} (${item.option})`
-          : name;
+        const displayName =
+          item.option
+            ? `${name} (${item.option})`
+            : name;
 
-      const price =
-        Number(
-          product?.price ??
-          item.price ??
-          0
-        );
+        const price =
+          Number(
+            product?.price ??
+            item.price ??
+            0
+          );
 
-      const quantity =
-        Number(
-          item.quantity || 1
-        );
+        const quantity =
+          Number(
+            item.quantity || 1
+          );
 
-      return `
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          gap:12px;
-          padding:10px 0;
-          border-bottom:1px solid rgba(255,255,255,.07);
-        ">
+        return `
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:10px 0;
+            border-bottom:1px solid rgba(255,255,255,.07);
+          ">
 
-          <span>
-            ${escapeHTML(displayName)}
-            × ${quantity}
-          </span>
+            <span>
+              ${escapeHTML(displayName)}
+              × ${quantity}
+            </span>
 
-          <strong>
-            ${money(price * quantity)}
-          </strong>
+            <strong>
+              ${money(price * quantity)}
+            </strong>
 
-        </div>
-      `;
+          </div>
+        `;
 
-    }).join("");
+      }
+    ).join("");
 
   const customerName =
     `${order.firstName || ""} ${order.lastName || ""}`
@@ -3752,35 +3119,37 @@ function openOrderDetails(order) {
 // CARTE TEST
 // ============================================================
 
-function getTestCard() {
+function getTestCard(){
 
-  try {
+  try{
 
     const raw =
       localStorage.getItem(
         TEST_CARD_STORAGE_KEY
       );
 
-    if (!raw) {
+    if(!raw){
       return null;
     }
 
     const parsed =
       JSON.parse(raw);
 
-    if (
+    if(
       !parsed ||
       typeof parsed.number !== "string" ||
       typeof parsed.expiry !== "string" ||
       typeof parsed.cvv !== "string" ||
       typeof parsed.holder !== "string"
-    ) {
+    ){
+
       return null;
+
     }
 
     return parsed;
 
-  } catch {
+  }catch{
 
     return null;
 
@@ -3789,7 +3158,7 @@ function getTestCard() {
 }
 
 
-function generateTestCard() {
+function generateTestCard(){
 
   const digits =
     Array.from(
@@ -3842,12 +3211,12 @@ function generateTestCard() {
 }
 
 
-function renderTestCardHTML() {
+function renderTestCardHTML(){
 
   const card =
     getTestCard();
 
-  if (!card) {
+  if(!card){
 
     return `
       <div style="
@@ -4012,18 +3381,19 @@ checkoutBtn?.addEventListener(
 );
 
 
-function openCheckout() {
+function openCheckout(){
 
-  if (!cart.length) {
+  if(!cart.length){
 
     toast(
       "Ton panier est vide 🛒"
     );
 
     return;
+
   }
 
-  if (!currentUser) {
+  if(!currentUser){
 
     toast(
       "Connecte-toi pour commander."
@@ -4032,6 +3402,7 @@ function openCheckout() {
     showLoginForm();
 
     return;
+
   }
 
   const subtotal =
@@ -4117,7 +3488,7 @@ function openCheckout() {
               Sous-total
             </span>
 
-            <strong id="checkoutSubtotal">
+            <strong>
               ${money(subtotal)}
             </strong>
 
@@ -4206,7 +3577,9 @@ function openCheckout() {
   let paymentMethod = "";
 
   document
-    .querySelectorAll(".payment-choice")
+    .querySelectorAll(
+      ".payment-choice"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -4219,7 +3592,7 @@ function openCheckout() {
           const input =
             $("paymentMethod");
 
-          if (input) {
+          if(input){
             input.value =
               paymentMethod;
           }
@@ -4243,14 +3616,14 @@ function openCheckout() {
           const info =
             $("paymentInfo");
 
-          if (!info) {
+          if(!info){
             return;
           }
 
-          if (
+          if(
             paymentMethod ===
             "paypal"
-          ) {
+          ){
 
             info.innerHTML = `
               <div style="
@@ -4263,7 +3636,7 @@ function openCheckout() {
               </div>
             `;
 
-          } else {
+          }else{
 
             info.innerHTML = `
               <div style="
@@ -4288,14 +3661,16 @@ function openCheckout() {
                   type="text"
                   inputmode="numeric"
                   autocomplete="off"
-                  value=""
                   placeholder="Numéro de carte"
                   required
                 >
 
                 <label
                   for="cardHolder"
-                  style="margin-top:10px"
+                  style="
+                    display:block;
+                    margin-top:10px;
+                  "
                 >
                   Nom sur la carte
                 </label>
@@ -4304,7 +3679,6 @@ function openCheckout() {
                   id="cardHolder"
                   type="text"
                   autocomplete="off"
-                  value=""
                   placeholder="Nom sur la carte"
                   required
                 >
@@ -4326,7 +3700,6 @@ function openCheckout() {
                       id="cardExpiry"
                       type="text"
                       autocomplete="off"
-                      value=""
                       placeholder="MM/AA"
                       required
                     >
@@ -4344,7 +3717,6 @@ function openCheckout() {
                       type="text"
                       inputmode="numeric"
                       autocomplete="off"
-                      value=""
                       placeholder="CVV"
                       required
                     >
@@ -4395,57 +3767,65 @@ function openCheckout() {
         const errorBox =
           $("checkoutError");
 
-        if (!firstName) {
+        if(!firstName){
 
-          errorBox &&
-            (
-              errorBox.textContent =
-                "Indique ton prénom.",
-              errorBox.style.display =
-                "block"
-            );
+          if(errorBox){
 
-          return;
+            errorBox.textContent =
+              "Indique ton prénom.";
 
-        }
+            errorBox.style.display =
+              "block";
 
-        if (!lastName) {
-
-          errorBox &&
-            (
-              errorBox.textContent =
-                "Indique ton nom.",
-              errorBox.style.display =
-                "block"
-            );
+          }
 
           return;
 
         }
 
-        if (!address) {
+        if(!lastName){
 
-          errorBox &&
-            (
-              errorBox.textContent =
-                "Indique ton adresse de livraison.",
-              errorBox.style.display =
-                "block"
-            );
+          if(errorBox){
+
+            errorBox.textContent =
+              "Indique ton nom.";
+
+            errorBox.style.display =
+              "block";
+
+          }
 
           return;
 
         }
 
-        if (!paymentMethod) {
+        if(!address){
 
-          errorBox &&
-            (
-              errorBox.textContent =
-                "Choisis un moyen de paiement.",
-              errorBox.style.display =
-                "block"
-            );
+          if(errorBox){
+
+            errorBox.textContent =
+              "Indique ton adresse de livraison.";
+
+            errorBox.style.display =
+              "block";
+
+          }
+
+          return;
+
+        }
+
+        if(!paymentMethod){
+
+          if(errorBox){
+
+            errorBox.textContent =
+              "Choisis un moyen de paiement.";
+
+            errorBox.style.display =
+              "block";
+
+          }
 
           return;
 
@@ -4454,7 +3834,7 @@ function openCheckout() {
         const submit =
           $("checkoutSubmit");
 
-        if (submit) {
+        if(submit){
 
           submit.disabled = true;
           submit.textContent =
@@ -4462,25 +3842,23 @@ function openCheckout() {
 
         }
 
-        try {
+        try{
 
           const total =
             getCartSubtotal();
 
           let paymentStatus =
-            total === 0
-              ? "Payé"
-              : "En attente";
+            "En attente";
 
-          if (
+          if(
             paymentMethod ===
             "card"
-          ) {
+          ){
 
             const card =
               getTestCard();
 
-            if (!card) {
+            if(!card){
 
               throw new Error(
                 "Aucune carte n'a été créée dans l'administration."
@@ -4518,20 +3896,22 @@ function openCheckout() {
               (
                 $("cardExpiry")
                   ?.value || ""
-              ).trim();
+              )
+                .trim();
 
             const enteredCvv =
               (
                 $("cardCvv")
                   ?.value || ""
-              ).trim();
+              )
+                .trim();
 
-            if (
+            if(
               enteredNumber !== storedNumber ||
               enteredHolder !== storedHolder ||
               enteredExpiry !== card.expiry ||
               enteredCvv !== card.cvv
-            ) {
+            ){
 
               throw new Error(
                 "Les informations de carte sont incorrectes."
@@ -4545,42 +3925,46 @@ function openCheckout() {
           }
 
           const orderItems =
-            cart.map(item => {
+            cart.map(
+              item => {
 
-              const product =
-                getProduct(item.id);
+                const product =
+                  getProduct(item.id);
 
-              const baseName =
-                product?.name ||
-                "Produit";
+                const baseName =
+                  product?.name ||
+                  "Produit";
 
-              const displayName =
-                item.option
-                  ? `${baseName} (${item.option})`
-                  : baseName;
+                const displayName =
+                  item.option
+                    ? `${baseName} (${item.option})`
+                    : baseName;
 
-              return {
+                return {
 
-                id:
-                  item.id,
+                  id:
+                    item.id,
 
-                name:
-                  displayName,
+                  name:
+                    displayName,
 
-                option:
-                  item.option || "",
+                  option:
+                    item.option || "",
 
-                price:
-                  product?.price || 0,
+                  price:
+                    Number(
+                      product?.price || 0
+                    ),
 
-                quantity:
-                  Number(
-                    item.quantity || 1
-                  )
+                  quantity:
+                    Number(
+                      item.quantity || 1
+                    )
 
-              };
+                };
 
-            });
+              }
+            );
 
           const orderData = {
 
@@ -4603,8 +3987,7 @@ function openCheckout() {
 
             address,
 
-            city:
-              "",
+            city:"",
 
             status:
               "Enregistrée",
@@ -4613,11 +3996,9 @@ function openCheckout() {
 
             paymentStatus,
 
-            tracking:
-              "",
+            tracking:"",
 
-            estimatedDelivery:
-              "",
+            estimatedDelivery:"",
 
             createdAt:
               serverTimestamp()
@@ -4645,10 +4026,10 @@ function openCheckout() {
             "success"
           );
 
-          if (
+          if(
             paymentMethod === "paypal" &&
             total > 0
-          ) {
+          ){
 
             const paypalUrl =
               `https://paypal.me/SH0PNOVA/${encodeURIComponent(
@@ -4670,14 +4051,14 @@ function openCheckout() {
 
           }
 
-        } catch (error) {
+        }catch(error){
 
           console.error(
             "Firestore Checkout Error:",
             error
           );
 
-          if (errorBox) {
+          if(errorBox){
 
             errorBox.textContent =
               `Erreur : ${
@@ -4691,9 +4072,9 @@ function openCheckout() {
 
           }
 
-        } finally {
+        }finally{
 
-          if (submit) {
+          if(submit){
 
             submit.disabled = false;
             submit.textContent =
@@ -4713,7 +4094,7 @@ function openCheckout() {
 // FACTURE
 // ============================================================
 
-function printInvoice(order) {
+function printInvoice(order){
 
   const items =
     Array.isArray(order.items)
@@ -4721,56 +4102,58 @@ function printInvoice(order) {
       : [];
 
   const rows =
-    items.map(item => {
+    items.map(
+      item => {
 
-      const product =
-        getProduct(item.id);
+        const product =
+          getProduct(item.id);
 
-      const baseName =
-        product?.name ||
-        item.name ||
-        "Produit";
+        const baseName =
+          product?.name ||
+          item.name ||
+          "Produit";
 
-      const name =
-        item.option
-          ? `${baseName} (${item.option})`
-          : baseName;
+        const name =
+          item.option
+            ? `${baseName} (${item.option})`
+            : baseName;
 
-      const price =
-        Number(
-          product?.price ??
-          item.price ??
-          0
-        );
+        const price =
+          Number(
+            product?.price ??
+            item.price ??
+            0
+          );
 
-      const quantity =
-        Number(
-          item.quantity || 1
-        );
+        const quantity =
+          Number(
+            item.quantity || 1
+          );
 
-      return `
-        <tr>
+        return `
+          <tr>
 
-          <td>
-            ${escapeHTML(name)}
-          </td>
+            <td>
+              ${escapeHTML(name)}
+            </td>
 
-          <td>
-            ${quantity}
-          </td>
+            <td>
+              ${quantity}
+            </td>
 
-          <td>
-            ${money(price)}
-          </td>
+            <td>
+              ${money(price)}
+            </td>
 
-          <td>
-            ${money(price * quantity)}
-          </td>
+            <td>
+              ${money(price * quantity)}
+            </td>
 
-        </tr>
-      `;
+          </tr>
+        `;
 
-    }).join("");
+      }
+    ).join("");
 
   const customerName =
     `${order.firstName || ""} ${order.lastName || ""}`
@@ -4783,10 +4166,11 @@ function printInvoice(order) {
       "width=900,height=700"
     );
 
-  if (!invoiceWindow) {
+  if(!invoiceWindow){
 
     toast(
-      "La fenêtre de facture a été bloquée."
+      "La fenêtre de facture a été bloquée.",
+      "error"
     );
 
     return;
@@ -4808,43 +4192,43 @@ function printInvoice(order) {
 
       <style>
 
-        body {
+        body{
           font-family:Arial,sans-serif;
           padding:40px;
           color:#111827;
         }
 
-        h1 {
+        h1{
           margin-bottom:5px;
         }
 
-        .top {
+        .top{
           display:flex;
           justify-content:space-between;
           margin-bottom:40px;
         }
 
-        table {
+        table{
           width:100%;
           border-collapse:collapse;
           margin-top:30px;
         }
 
         th,
-        td {
+        td{
           border-bottom:1px solid #ddd;
           padding:12px;
           text-align:left;
         }
 
-        .total {
+        .total{
           margin-top:30px;
           text-align:right;
           font-size:24px;
           font-weight:bold;
         }
 
-        .small {
+        .small{
           color:#666;
           margin-top:30px;
         }
@@ -4958,7 +4342,7 @@ function printInvoice(order) {
       </p>
 
       <script>
-        window.onload = function() {
+        window.onload = function(){
           window.print();
         };
       <\/script>
@@ -4983,7 +4367,7 @@ adminBtn?.addEventListener(
 );
 
 
-function isAdminUser() {
+function isAdminUser(){
 
   return (
     currentUser &&
@@ -4996,15 +4380,17 @@ function isAdminUser() {
 }
 
 
-function openAdmin() {
+function openAdmin(){
 
-  if (!isAdminUser()) {
+  if(!isAdminUser()){
 
     toast(
-      "Accès administrateur refusé."
+      "Accès administrateur refusé.",
+      "error"
     );
 
     return;
+
   }
 
   const authorized =
@@ -5012,14 +4398,14 @@ function openAdmin() {
       ADMIN_ACCESS_KEY
     ) === "true";
 
-  if (!authorized) {
+  if(!authorized){
 
     const code =
       prompt(
         "Code administrateur NovaShop :"
       );
 
-    if (code !== ADMIN_CODE) {
+    if(code !== ADMIN_CODE){
 
       toast(
         "Code administrateur incorrect.",
@@ -5042,7 +4428,18 @@ function openAdmin() {
 }
 
 
-async function loadAdmin() {
+async function loadAdmin(){
+
+  if(!isAdminUser()){
+
+    toast(
+      "Accès administrateur refusé.",
+      "error"
+    );
+
+    return;
+
+  }
 
   showModal(
     "Administration NovaShop",
@@ -5061,7 +4458,7 @@ async function loadAdmin() {
     `
   );
 
-  try {
+  try{
 
     const snapshot =
       await getDocs(
@@ -5093,9 +4490,11 @@ async function loadAdmin() {
       }
     );
 
-    renderAdmin(orders);
+    renderAdmin(
+      orders
+    );
 
-  } catch(error) {
+  }catch(error){
 
     console.error(
       "Admin Firestore Error:",
@@ -5105,7 +4504,7 @@ async function loadAdmin() {
     const loading =
       $("adminLoading");
 
-    if (loading) {
+    if(loading){
 
       loading.innerHTML = `
         <div style="color:#ff7777;">
@@ -5123,14 +4522,14 @@ async function loadAdmin() {
 }
 
 
-function renderAdmin(orders) {
+function renderAdmin(orders){
 
   $("adminLoading")?.remove();
 
   const content =
     $("adminContent");
 
-  if (!content) {
+  if(!content){
     return;
   }
 
@@ -5218,16 +4617,16 @@ function renderAdmin(orders) {
 
       ${
         orders.length
-          ? orders.map(order => {
+          ? orders.map(
+              order => {
 
-              const items =
-                Array.isArray(order.items)
-                  ? order.items
-                  : [];
+                const items =
+                  Array.isArray(order.items)
+                    ? order.items
+                    : [];
 
-              const productsText =
-                items
-                  .map(
+                const productsText =
+                  items.map(
                     item => {
 
                       const baseName =
@@ -5245,121 +4644,119 @@ function renderAdmin(orders) {
                       }`;
 
                     }
-                  )
-                  .join(", ");
+                  ).join(", ");
 
-              const customerName =
-                `${order.firstName || ""} ${order.lastName || ""}`
-                  .trim();
+                const customerName =
+                  `${order.firstName || ""} ${order.lastName || ""}`
+                    .trim();
 
-              return `
+                return `
 
-                <div
-                  class="admin-order"
-                  style="
-                    padding:16px;
-                    margin-bottom:15px;
-                    border:1px solid rgba(255,255,255,.1);
-                    border-radius:16px;
-                  "
-                >
-
-                  <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    gap:10px;
-                    flex-wrap:wrap;
-                  ">
-
-                    <strong>
-                      #${escapeHTML(
-                        order.id.slice(0,8)
-                      )}
-                    </strong>
-
-                    <strong>
-                      ${money(
-                        order.total || 0
-                      )}
-                    </strong>
-
-                  </div>
-
-                  ${
-                    customerName
-                      ? `
-                        <p style="
-                          margin:8px 0;
-                        ">
-                          👤 <strong>
-                            ${escapeHTML(customerName)}
-                          </strong>
-                        </p>
-                      `
-                      : `
-                        <p style="
-                          margin:8px 0;
-                        ">
-                          👤 Nom non renseigné
-                        </p>
-                      `
-                  }
-
-                  <p style="
-                    margin:8px 0;
-                    opacity:.85;
-                  ">
-                    📧 ${
-                      escapeHTML(
-                        order.userEmail ||
-                        "Inconnu"
-                      )
-                    }
-                  </p>
-
-                  <p style="
-                    margin:8px 0;
-                  ">
-                    💳 ${
-                      escapeHTML(
-                        order.paymentMethod ||
-                        "N/A"
-                      )
-                    }
-                    |
-                    ${
-                      escapeHTML(
-                        order.paymentStatus ||
-                        "En attente"
-                      )
-                    }
-                  </p>
-
-                  <p style="
-                    margin:8px 0;
-                    opacity:.8;
-                  ">
-                    ${escapeHTML(
-                      productsText
-                    )}
-                  </p>
-
-                  <label>
-                    Statut
-                  </label>
-
-                  <select
-                    class="admin-status"
-                    data-id="${escapeAttr(order.id)}"
+                  <div
+                    class="admin-order"
                     style="
-                      width:100%;
-                      margin:6px 0 10px;
+                      padding:16px;
+                      margin-bottom:15px;
+                      border:1px solid rgba(255,255,255,.1);
+                      border-radius:16px;
                     "
                   >
 
+                    <div style="
+                      display:flex;
+                      justify-content:space-between;
+                      gap:10px;
+                      flex-wrap:wrap;
+                    ">
+
+                      <strong>
+                        #${escapeHTML(
+                          order.id.slice(0,8)
+                        )}
+                      </strong>
+
+                      <strong>
+                        ${money(
+                          order.total || 0
+                        )}
+                      </strong>
+
+                    </div>
+
                     ${
-                      statuses
-                        .map(
+                      customerName
+                        ? `
+                          <p style="
+                            margin:8px 0;
+                          ">
+                            👤 <strong>
+                              ${escapeHTML(customerName)}
+                            </strong>
+                          </p>
+                        `
+                        : `
+                          <p style="
+                            margin:8px 0;
+                          ">
+                            👤 Nom non renseigné
+                          </p>
+                        `
+                    }
+
+                    <p style="
+                      margin:8px 0;
+                      opacity:.85;
+                    ">
+                      📧 ${
+                        escapeHTML(
+                          order.userEmail ||
+                          "Inconnu"
+                        )
+                      }
+                    </p>
+
+                    <p style="
+                      margin:8px 0;
+                    ">
+                      💳 ${
+                        escapeHTML(
+                          order.paymentMethod ||
+                          "N/A"
+                        )
+                      }
+                      |
+                      ${
+                        escapeHTML(
+                          order.paymentStatus ||
+                          "En attente"
+                        )
+                      }
+                    </p>
+
+                    <p style="
+                      margin:8px 0;
+                      opacity:.8;
+                    ">
+                      ${escapeHTML(
+                        productsText
+                      )}
+                    </p>
+
+                    <label>
+                      Statut
+                    </label>
+
+                    <select
+                      class="admin-status"
+                      data-id="${escapeAttr(order.id)}"
+                      style="
+                        width:100%;
+                        margin:6px 0 10px;
+                      "
+                    >
+
+                      ${
+                        statuses.map(
                           status => `
                             <option
                               value="${escapeAttr(status)}"
@@ -5373,91 +4770,91 @@ function renderAdmin(orders) {
                               ${escapeHTML(status)}
                             </option>
                           `
-                        )
-                        .join("")
-                    }
+                        ).join("")
+                      }
 
-                  </select>
+                    </select>
 
-                  <input
-                    class="admin-city"
-                    data-id="${escapeAttr(order.id)}"
-                    value="${escapeAttr(order.city || "")}"
-                    placeholder="Ville de destination"
-                    style="
-                      width:100%;
-                      margin-bottom:8px;
-                    "
-                  >
-
-                  <input
-                    class="admin-tracking"
-                    data-id="${escapeAttr(order.id)}"
-                    value="${escapeAttr(order.tracking || "")}"
-                    placeholder="Numéro de suivi"
-                    style="
-                      width:100%;
-                      margin-bottom:8px;
-                    "
-                  >
-
-                  <input
-                    class="admin-delivery"
-                    data-id="${escapeAttr(order.id)}"
-                    value="${escapeAttr(order.estimatedDelivery || "")}"
-                    placeholder="Livraison estimée"
-                    style="
-                      width:100%;
-                      margin-bottom:10px;
-                    "
-                  >
-
-                  <div style="
-                    display:flex;
-                    gap:8px;
-                    flex-wrap:wrap;
-                  ">
-
-                    <button
-                      type="button"
-                      class="add-btn admin-save"
+                    <input
+                      class="admin-city"
                       data-id="${escapeAttr(order.id)}"
+                      value="${escapeAttr(order.city || "")}"
+                      placeholder="Ville de destination"
+                      style="
+                        width:100%;
+                        margin-bottom:8px;
+                      "
                     >
-                      💾 Enregistrer
-                    </button>
 
-                    <button
-                      type="button"
-                      class="view-btn admin-paid"
+                    <input
+                      class="admin-tracking"
                       data-id="${escapeAttr(order.id)}"
+                      value="${escapeAttr(order.tracking || "")}"
+                      placeholder="Numéro de suivi"
+                      style="
+                        width:100%;
+                        margin-bottom:8px;
+                      "
                     >
-                      💰 Marquer payé
-                    </button>
 
-                    <button
-                      type="button"
-                      class="view-btn admin-invoice"
+                    <input
+                      class="admin-delivery"
                       data-id="${escapeAttr(order.id)}"
+                      value="${escapeAttr(order.estimatedDelivery || "")}"
+                      placeholder="Livraison estimée"
+                      style="
+                        width:100%;
+                        margin-bottom:10px;
+                      "
                     >
-                      🧾 Facture
-                    </button>
 
-                    <button
-                      type="button"
-                      class="view-btn admin-delete"
-                      data-id="${escapeAttr(order.id)}"
-                      style="color:#ff7777;"
-                    >
-                      🗑️ Supprimer
-                    </button>
+                    <div style="
+                      display:flex;
+                      gap:8px;
+                      flex-wrap:wrap;
+                    ">
+
+                      <button
+                        type="button"
+                        class="add-btn admin-save"
+                        data-id="${escapeAttr(order.id)}"
+                      >
+                        💾 Enregistrer
+                      </button>
+
+                      <button
+                        type="button"
+                        class="view-btn admin-paid"
+                        data-id="${escapeAttr(order.id)}"
+                      >
+                        💰 Marquer payé
+                      </button>
+
+                      <button
+                        type="button"
+                        class="view-btn admin-invoice"
+                        data-id="${escapeAttr(order.id)}"
+                      >
+                        🧾 Facture
+                      </button>
+
+                      <button
+                        type="button"
+                        class="view-btn admin-delete"
+                        data-id="${escapeAttr(order.id)}"
+                        style="color:#ff7777;"
+                      >
+                        🗑️ Supprimer
+                      </button>
+
+                    </div>
 
                   </div>
 
-                </div>
+                `;
 
-              `;
-
-            }).join("")
+              }
+            ).join("")
           : `
             <div style="
               text-align:center;
@@ -5510,7 +4907,9 @@ function renderAdmin(orders) {
 
 
   document
-    .querySelectorAll(".admin-save")
+    .querySelectorAll(
+      ".admin-save"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -5528,7 +4927,9 @@ function renderAdmin(orders) {
 
 
   document
-    .querySelectorAll(".admin-paid")
+    .querySelectorAll(
+      ".admin-paid"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -5546,7 +4947,9 @@ function renderAdmin(orders) {
 
 
   document
-    .querySelectorAll(".admin-invoice")
+    .querySelectorAll(
+      ".admin-invoice"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -5560,7 +4963,7 @@ function renderAdmin(orders) {
                 button.dataset.id
             );
 
-          if (order) {
+          if(order){
             printInvoice(order);
           }
 
@@ -5571,7 +4974,9 @@ function renderAdmin(orders) {
 
 
   document
-    .querySelectorAll(".admin-delete")
+    .querySelectorAll(
+      ".admin-delete"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -5590,12 +4995,12 @@ function renderAdmin(orders) {
 }
 
 
-function attachTestCardButton() {
+function attachTestCardButton(){
 
   const button =
     $("generateTestCard");
 
-  if (!button) {
+  if(!button){
     return;
   }
 
@@ -5608,7 +5013,7 @@ function attachTestCardButton() {
       const container =
         $("testCardContainer");
 
-      if (container) {
+      if(container){
 
         container.innerHTML =
           renderTestCardHTML();
@@ -5623,9 +5028,9 @@ function attachTestCardButton() {
 }
 
 
-async function saveAdminOrder(id) {
+async function saveAdminOrder(id){
 
-  try {
+  try{
 
     const safeId =
       typeof CSS !== "undefined" &&
@@ -5670,7 +5075,9 @@ async function saveAdminOrder(id) {
         status,
         city,
         tracking,
-        estimatedDelivery
+        estimatedDelivery,
+        updatedAt:
+          serverTimestamp()
       }
     );
 
@@ -5679,14 +5086,15 @@ async function saveAdminOrder(id) {
       "success"
     );
 
-  } catch(error) {
+  }catch(error){
 
     console.error(error);
 
     toast(
       `Erreur : ${
         error.message ||
-        error.code
+        error.code ||
+        "inconnue"
       }`,
       "error"
     );
@@ -5696,9 +5104,9 @@ async function saveAdminOrder(id) {
 }
 
 
-async function markOrderPaid(id) {
+async function markOrderPaid(id){
 
-  try {
+  try{
 
     await updateDoc(
       doc(
@@ -5707,7 +5115,9 @@ async function markOrderPaid(id) {
         id
       ),
       {
-        paymentStatus:"Payé"
+        paymentStatus:"Payé",
+        updatedAt:
+          serverTimestamp()
       }
     );
 
@@ -5718,14 +5128,15 @@ async function markOrderPaid(id) {
 
     loadAdmin();
 
-  } catch(error) {
+  }catch(error){
 
     console.error(error);
 
     toast(
       `Erreur : ${
         error.message ||
-        error.code
+        error.code ||
+        "inconnue"
       }`,
       "error"
     );
@@ -5735,18 +5146,18 @@ async function markOrderPaid(id) {
 }
 
 
-async function deleteAdminOrder(id) {
+async function deleteAdminOrder(id){
 
   const confirmed =
     confirm(
       "Supprimer définitivement cette commande ?"
     );
 
-  if (!confirmed) {
+  if(!confirmed){
     return;
   }
 
-  try {
+  try{
 
     await deleteDoc(
       doc(
@@ -5763,14 +5174,15 @@ async function deleteAdminOrder(id) {
 
     loadAdmin();
 
-  } catch(error) {
+  }catch(error){
 
     console.error(error);
 
     toast(
       `Erreur : ${
         error.message ||
-        error.code
+        error.code ||
+        "inconnue"
       }`,
       "error"
     );
@@ -5790,7 +5202,7 @@ settingsBtn?.addEventListener(
 );
 
 
-function getTheme() {
+function getTheme(){
 
   return (
     localStorage.getItem(
@@ -5801,22 +5213,22 @@ function getTheme() {
 }
 
 
-function applyTheme() {
+function applyTheme(){
 
   const theme =
     getTheme();
 
-  if (theme === "light") {
+  if(theme === "light"){
 
     document.documentElement.dataset.theme =
       "light";
 
-  } else if (theme === "dark") {
+  }else if(theme === "dark"){
 
     document.documentElement.dataset.theme =
       "dark";
 
-  } else {
+  }else{
 
     const prefersDark =
       window.matchMedia &&
@@ -5834,7 +5246,7 @@ function applyTheme() {
 }
 
 
-function openSettings() {
+function openSettings(){
 
   const current =
     getTheme();
@@ -5893,7 +5305,9 @@ function openSettings() {
   );
 
   document
-    .querySelectorAll(".theme-choice")
+    .querySelectorAll(
+      ".theme-choice"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -5923,6 +5337,30 @@ function openSettings() {
 
 
 // ============================================================
+// AUTH STATE
+// ============================================================
+
+onAuthStateChanged(
+  auth,
+  user => {
+
+    currentUser =
+      user || null;
+
+    if(adminBtn){
+
+      adminBtn.style.display =
+        isAdminUser()
+          ? "inline-flex"
+          : "none";
+
+    }
+
+  }
+);
+
+
+// ============================================================
 // ESC
 // ============================================================
 
@@ -5930,7 +5368,7 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if (event.key !== "Escape") {
+    if(event.key !== "Escape"){
       return;
     }
 
@@ -5949,8 +5387,10 @@ modal?.addEventListener(
   "click",
   event => {
 
-    if (event.target === modal) {
+    if(event.target === modal){
+
       closeModal();
+
     }
 
   }
@@ -5973,9 +5413,11 @@ window.addEventListener(
       error
     );
 
-    if (
-      error?.code?.startsWith("auth/")
-    ) {
+    if(
+      error?.code?.startsWith(
+        "auth/"
+      )
+    ){
 
       toast(
         authError(error),
@@ -6009,7 +5451,7 @@ window.NovaShop = {
 
   products,
 
-  get currentUser() {
+  get currentUser(){
     return currentUser;
   },
 
